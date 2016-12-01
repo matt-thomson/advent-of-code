@@ -1,8 +1,7 @@
 defmodule Day01Test do
   use ExUnit.Case
-  doctest Day01
 
-  test "the truth" do
-    assert 1 + 1 == 2
+  test "solves part one" do
+    assert Day01.part_one("data/example.txt") == 12
   end
 end

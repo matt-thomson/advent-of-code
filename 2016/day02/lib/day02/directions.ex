@@ -1,4 +1,7 @@
 defmodule Day02.Directions do
+  @moduledoc """
+  Parses directions from a line of characters.
+  """
   def parse(input) do
     input |> String.split |> Enum.map(&parse_line/1)
   end

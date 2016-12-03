@@ -1,17 +1,20 @@
 defmodule Day02.Step do
-  def step(:up, {0, col}),    do: {0, col}
-  def step(:up, {1, col}),    do: {0, col}
-  def step(:up, {2, col}),    do: {1, col}
+  @moduledoc """
+  Computes the co-ordinates after taking a step in a particular direction,
+  taking into account which co-ordinates represent buttons.
+  """
 
-  def step(:down, {0, col}),  do: {1, col}
-  def step(:down, {1, col}),  do: {2, col}
-  def step(:down, {2, col}),  do: {2, col}
+  def step(direction, current, position) do
+    destination = destination(direction, current)
 
-  def step(:left, {row, 0}),  do: {row, 0}
-  def step(:left, {row, 1}),  do: {row, 0}
-  def step(:left, {row, 2}),  do: {row, 1}
+    case position.(destination) do
+      nil -> current
+      _   -> destination
+    end
+  end
 
-  def step(:right, {row, 0}), do: {row, 1}
-  def step(:right, {row, 1}), do: {row, 2}
-  def step(:right, {row, 2}), do: {row, 2}
+  defp destination(:up,    {row, col}), do: {row - 1, col}
+  defp destination(:down,  {row, col}), do: {row + 1, col}
+  defp destination(:left,  {row, col}), do: {row    , col - 1}
+  defp destination(:right, {row, col}), do: {row    , col + 1}
 end

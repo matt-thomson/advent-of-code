@@ -1,4 +1,8 @@
 defmodule Day03.Triangle do
+  @moduledoc """
+  Functions to parse triangles and check if they're possible.
+  """
+
   def parse(input) do
     input |> to_integers |> Enum.sort
   end

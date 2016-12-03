@@ -1,4 +1,8 @@
 defmodule Day03 do
+  @moduledoc """
+  Entry point for day 3 solver.
+  """
+
   alias Day03.Triangle
 
   def part_one(filename) do

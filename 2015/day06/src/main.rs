@@ -1,5 +1,3 @@
-#![feature(iter_arith)]
-
 #[macro_use]
 extern crate nom;
 

@@ -1,4 +1,8 @@
 defmodule Day01.Move do
+  @moduledoc """
+  Calculates the destination of a move from a given point.
+  """
+
   def move({:right, steps}, {x, y, :north}), do: {x + steps, y, :east}
   def move({:left , steps}, {x, y, :north}), do: {x - steps, y, :west}
 

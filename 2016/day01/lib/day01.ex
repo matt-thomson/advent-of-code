@@ -1,4 +1,8 @@
 defmodule Day01 do
+  @moduledoc """
+  Entry point for day 1 solver.
+  """
+
   alias Day01.Directions
   alias Day01.Move
 

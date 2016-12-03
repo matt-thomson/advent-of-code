@@ -1,4 +1,8 @@
 defmodule Day01.Directions do
+  @moduledoc """
+  Parses a file containing a series of directions.
+  """
+
   def parse(input) do
     input
     |> String.strip

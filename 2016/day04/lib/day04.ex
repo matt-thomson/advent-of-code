@@ -6,10 +6,23 @@ defmodule Day04 do
 
   def part_one(filename) do
     filename
+    |> valid_rooms
+    |> Enum.map(&(&1.sector_id))
+    |> Enum.sum
+  end
+
+  def part_two(filename) do
+    room = filename
+      |> valid_rooms
+      |> Enum.find(&(Room.decrypt(&1) == "northpole object storage"))
+
+    room.sector_id
+  end
+
+  defp valid_rooms(filename) do
+    filename
     |> File.stream!
     |> Enum.map(&Room.parse/1)
     |> Enum.filter(&Room.valid?/1)
-    |> Enum.map(&(&1.sector_id))
-    |> Enum.sum
   end
 end

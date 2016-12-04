@@ -26,4 +26,11 @@ defmodule Day04.RoomTest do
     assert   valid |> Room.parse |> Room.valid?
     refute invalid |> Room.parse |> Room.valid?
   end
+
+  test "decrypts a room correctly" do
+    input = "qzmt-zixmtkozy-ivhz-343[zimth]"
+    decrypted = input |> Room.parse |> Room.decrypt
+
+    assert decrypted == "very encrypted name"
+  end
 end

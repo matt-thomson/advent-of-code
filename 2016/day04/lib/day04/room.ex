@@ -35,6 +35,12 @@ defmodule Day04.Room do
     checksum(room) == checksum
   end
 
+  def decrypt(%Room{words: words, sector_id: sector_id}) do
+    words
+    |> Enum.map(&(decrypt_word(&1, sector_id)))
+    |> Enum.join(" ")
+  end
+
   defp parse_last(last) do
     [sector_id_str, checksum] =
       @last_regex
@@ -52,5 +58,20 @@ defmodule Day04.Room do
       c1 <= c2 -> true
       c1 >  c2 -> false
     end
+  end
+
+  defp decrypt_word(word, sector_id) do
+    word
+    |> to_char_list
+    |> Enum.map(&(decrypt_character(&1, sector_id)))
+    |> to_string
+  end
+
+  defp decrypt_character(char, sector_id) do
+    char
+    |> (fn (x) -> x - ?a end).()
+    |> (fn (x) -> x + sector_id end).()
+    |> rem(26)
+    |> (fn (x) -> x + ?a end).()
   end
 end

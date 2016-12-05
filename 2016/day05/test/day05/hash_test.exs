@@ -14,9 +14,4 @@ defmodule Day05.HashTest do
     refute Hash.interesting?(<<0, 1,  0,   0>>)
     refute Hash.interesting?(<<1, 0,  0,   0>>)
   end
-
-  test "selects the password character from a hash" do
-    assert Hash.password_char(<<0, 0,  8, 100>>) == "8"
-    assert Hash.password_char(<<0, 0, 12, 100>>) == "c"
-  end
 end

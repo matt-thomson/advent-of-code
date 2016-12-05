@@ -7,7 +7,7 @@ defmodule Day04 do
   def part_one(filename) do
     filename
     |> valid_rooms
-    |> Enum.map(&(&1.sector_id))
+    |> Stream.map(&(&1.sector_id))
     |> Enum.sum
   end
 
@@ -22,7 +22,7 @@ defmodule Day04 do
   defp valid_rooms(filename) do
     filename
     |> File.stream!
-    |> Enum.map(&Room.parse/1)
-    |> Enum.filter(&Room.valid?/1)
+    |> Stream.map(&Room.parse/1)
+    |> Stream.filter(&Room.valid?/1)
   end
 end

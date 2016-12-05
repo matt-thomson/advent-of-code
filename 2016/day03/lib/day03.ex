@@ -8,17 +8,17 @@ defmodule Day03 do
   def part_one(filename) do
     filename
     |> File.stream!
-    |> Enum.map(&Triangle.parse/1)
-    |> Enum.filter(&Triangle.possible?/1)
+    |> Stream.map(&Triangle.parse/1)
+    |> Stream.filter(&Triangle.possible?/1)
     |> Enum.count
   end
 
   def part_two(filename) do
     filename
     |> File.stream!
-    |> Enum.chunk(3)
-    |> Enum.flat_map(&Triangle.parse_vertically/1)
-    |> Enum.filter(&Triangle.possible?/1)
+    |> Stream.chunk(3)
+    |> Stream.flat_map(&Triangle.parse_vertically/1)
+    |> Stream.filter(&Triangle.possible?/1)
     |> Enum.count
   end
 end

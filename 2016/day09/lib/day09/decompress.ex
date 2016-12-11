@@ -5,15 +5,21 @@ defmodule Day09.Decompress do
 
   @regex ~r{([A-Z]*)\((\d+)x(\d+)\)(.*)}
 
-  def decompress(input), do: decompress("", input |> String.strip)
+  def step(input), do: step("", input |> String.strip)
 
-  defp decompress(acc, input) do
+  def full(input) do
+    next = step(input)
+
+    if next == input, do: next, else: next |> full
+  end
+
+  defp step(acc, input) do
     case input |> match do
       {start, num_chars, times, rest} ->
         repeat = rest |> String.slice(0, num_chars) |> String.duplicate(times)
         rest = rest |> String.slice(num_chars..-1)
 
-        decompress(acc <> start <> repeat, rest)
+        step(acc <> start <> repeat, rest)
       nil -> acc <> input
     end
   end

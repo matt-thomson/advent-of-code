@@ -2,6 +2,7 @@ defmodule Day07.Address do
   @moduledoc """
   Represents an IP address.
   """
+  alias Day07.Aba
   alias Day07.Abba
   alias Day07.Address
 
@@ -28,5 +29,20 @@ defmodule Day07.Address do
       supernet |> Enum.any?(&Abba.has_abba?/1) -> true
       true                                     -> false
     end
+  end
+
+  def ssl?(%Address{supernet: supernet, hypernet: hypernet}) do
+    abas =
+      supernet
+      |> Enum.flat_map(&Aba.abas/1)
+      |> MapSet.new
+
+    babs =
+      hypernet
+      |> Enum.flat_map(&Aba.abas/1)
+      |> Enum.map(&Enum.reverse/1)
+      |> MapSet.new
+
+    abas |> MapSet.intersection(babs) |> Enum.any?
   end
 end

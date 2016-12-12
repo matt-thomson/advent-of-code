@@ -4,10 +4,13 @@ defmodule Day12.Machine do
   """
   alias Day12.Machine
 
+  @initial_registers %{a: 0, b: 0, c: 0, d: 0}
+
   defstruct [:position, :registers]
 
-  def new do
-    %Machine{position: 0, registers: %{a: 0, b: 0, c: 0, d: 0}}
+  def new(registers \\ %{}) do
+    registers = @initial_registers |> Map.merge(registers)
+    %Machine{position: 0, registers: registers}
   end
 
   def position(%Machine{position: position}), do: position

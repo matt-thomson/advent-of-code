@@ -15,6 +15,14 @@ defmodule Day13.Route do
     (route |> distance(destination)) || (route |> step |> find(destination))
   end
 
+  def cubicles_within(route, steps) do
+    if route |> unconfirmed_within(steps) do
+      cubicles_within(route |> step, steps)
+    else
+      route |> number_confirmed
+    end
+  end
+
   def step(route = %Route{input: input,
                           confirmed: confirmed,
                           unconfirmed: unconfirmed}) do
@@ -53,5 +61,13 @@ defmodule Day13.Route do
       true ->
         unconfirmed |> Map.put(neighbour, distance + 1)
     end
+  end
+
+  defp unconfirmed_within(%Route{unconfirmed: unconfirmed}, steps) do
+    unconfirmed |> Map.values |> Enum.any?(&(&1 <= steps))
+  end
+
+  defp number_confirmed(%Route{confirmed: confirmed}) do
+    confirmed |> Enum.count
   end
 end

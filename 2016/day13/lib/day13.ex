@@ -7,14 +7,15 @@ defmodule Day13 do
   alias Day13.Route
 
   def part_one(input, destination \\ @destination) do
-    input
-    |> parse_num
-    |> Route.new
-    |> Route.find(destination)
+    input |> route |> Route.find(destination)
   end
 
-  defp parse_num(input) do
-    {num, ""} = input |> Integer.parse
-    num
+  def part_two(input, destination \\ @destination) do
+    input |> route |> Route.cubicles_within(50)
+  end
+
+  defp route(input) do
+    {input, ""} = input |> Integer.parse
+    input |> Route.new
   end
 end

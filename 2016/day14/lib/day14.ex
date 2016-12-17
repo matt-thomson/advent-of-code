@@ -5,9 +5,12 @@ defmodule Day14 do
   alias Day14.Hash
   alias Day14.Integers
 
-  def part_one(input) do
+  def part_one(input), do: input |> solve(1)
+  def part_two(input), do: input |> solve(2017)
+
+  defp solve(input, iterations) do
     input
-    |> hashes
+    |> hashes(iterations)
     |> Stream.chunk(1001, 1)
     |> Stream.filter(&key?/1)
     |> Enum.at(63)
@@ -15,8 +18,8 @@ defmodule Day14 do
     |> Hash.index
   end
 
-  defp hashes(input) do
-    Integers.stream |> Stream.map(&Hash.new(&1, input))
+  defp hashes(input, iterations) do
+    Integers.stream |> Stream.map(&Hash.new(&1, input, iterations))
   end
 
   defp key?([hash | next_hashes]) do

@@ -6,8 +6,8 @@ defmodule Day14.Hash do
 
   defstruct [:index, :triple, :fives]
 
-  def new(index, salt) do
-    hash = :md5 |> :crypto.hash("#{salt}#{index}") |> Base.encode16
+  def new(index, salt, iterations) do
+    hash = "#{salt}#{index}" |> hash(iterations)
     triple = hash |> find_groups(3) |> Enum.at(0)
     fives = hash |> find_groups(5) |> Enum.uniq
 
@@ -26,5 +26,14 @@ defmodule Day14.Hash do
     |> Enum.chunk_by(&(&1))
     |> Enum.filter(&(Enum.count(&1) >= length))
     |> Enum.map(&(Enum.at(&1, 0)))
+  end
+
+  defp hash(string, 0), do: string
+  defp hash(string, iterations) do
+    :md5
+    |> :crypto.hash(string)
+    |> Base.encode16
+    |> String.downcase
+    |> hash(iterations - 1)
   end
 end

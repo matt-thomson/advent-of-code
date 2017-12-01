@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Day01
   def self.solve(input)
     digits = input.split(//).map(&:to_i)

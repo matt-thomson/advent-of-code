@@ -2,4 +2,7 @@
 
 require_relative './lib/day01'
 
-puts Day01.solve(ARGV[0])
+input = ARGV[0]
+
+puts Day01.solve_part_one(input)
+puts Day01.solve_part_two(input)

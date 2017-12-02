@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'day01'
+require 'advent_of_code2017/day01'
 
-RSpec.describe Day01 do
+RSpec.describe AdventOfCode2017::Day01 do
   describe '.solve_part_one' do
     subject { described_class.solve_part_one(input) }
 

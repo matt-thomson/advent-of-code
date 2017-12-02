@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'advent_of_code2017'
+
+input = ARGV[0]
+
+puts AdventOfCode2017::Day01.solve_part_one(input)
+puts AdventOfCode2017::Day01.solve_part_two(input)

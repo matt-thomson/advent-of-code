@@ -3,10 +3,19 @@
 module AdventOfCode2017
   module Day04
     def self.solve_part_one(input)
+      solve(input) { |word| word }
+    end
+
+    def self.solve_part_two(input)
+      solve(input) { |word| word.chars.sort.join }
+    end
+
+    def self.solve(input)
       input.split("\n")
-           .map(&:split)
+           .map { |line| line.split.map { |word| yield word } }
            .select { |words| words.uniq == words }
            .count
     end
+    private_class_method :solve
   end
 end

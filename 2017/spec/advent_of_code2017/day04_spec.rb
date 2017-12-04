@@ -16,4 +16,20 @@ RSpec.describe AdventOfCode2017::Day04 do
 
     it { is_expected.to eq(2) }
   end
+
+  describe '.solve_part_two' do
+    subject { described_class.solve_part_two(input) }
+
+    let(:input) do
+      <<~INPUT
+        abcde fghij
+        abcde xyz ecdab
+        a ab abc abd abf abj
+        iiii oiii ooii oooi oooo
+        oiii ioii iioi iiio
+      INPUT
+    end
+
+    it { is_expected.to eq(3) }
+  end
 end

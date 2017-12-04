@@ -7,3 +7,4 @@ require 'advent_of_code2017'
 input = File.read(ARGV[0])
 
 puts AdventOfCode2017::Day04.solve_part_one(input)
+puts AdventOfCode2017::Day04.solve_part_two(input)

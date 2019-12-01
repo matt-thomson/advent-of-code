@@ -1,3 +1,10 @@
+mod day01;
+
+use std::env;
+use std::path::Path;
+
 fn main() {
-    println!("Hello, world!");
+    let filename = env::args().nth(1).unwrap();
+    let path = Path::new(&filename);
+    println!("{}", day01::part_one(&path));
 }

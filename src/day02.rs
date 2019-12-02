@@ -123,7 +123,7 @@ mod tests {
 
     #[test]
     fn test_part_one() {
-        let input = PathBuf::from("fixtures/day02/input.txt");
+        let input = PathBuf::from("fixtures/day02.txt");
         let target = 3100;
 
         let command = Day02 { input, target };
@@ -133,7 +133,7 @@ mod tests {
 
     #[test]
     fn test_part_two() {
-        let input = PathBuf::from("fixtures/day02/input.txt");
+        let input = PathBuf::from("fixtures/day02.txt");
         let target = 3100;
 
         let command = Day02 { input, target };

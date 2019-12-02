@@ -74,7 +74,7 @@ mod tests {
 
     #[test]
     fn test_part_one() {
-        let input = PathBuf::from("fixtures/day01/input.txt");
+        let input = PathBuf::from("fixtures/day01.txt");
         let command = Day01 { input };
 
         assert_eq!(command.part_one(), 34241);
@@ -82,7 +82,7 @@ mod tests {
 
     #[test]
     fn test_part_two() {
-        let input = PathBuf::from("fixtures/day01/input.txt");
+        let input = PathBuf::from("fixtures/day01.txt");
         let command = Day01 { input };
 
         assert_eq!(command.part_two(), 51316);

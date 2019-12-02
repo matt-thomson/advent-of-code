@@ -1,5 +1,6 @@
 mod command;
 mod day01;
+mod day02;
 
 use command::Command;
 

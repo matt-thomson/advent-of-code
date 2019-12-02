@@ -9,27 +9,38 @@ use crate::command;
 pub struct Day02 {
     #[structopt(parse(from_os_str))]
     input: PathBuf,
+    target: u32,
 }
 
 impl command::Command for Day02 {
     fn part_one(&self) -> u32 {
-        let input = fs::read_to_string(&self.input).unwrap();
-        let mut program: Vec<u32> = input
-            .trim()
-            .split(",")
-            .map(|x| x.parse().unwrap())
-            .collect();
-
-        program[1] = 12;
-        program[2] = 2;
-
-        run(&mut program);
-
-        program[0]
+        output(&self.read_program(), 12, 2)
     }
 
     fn part_two(&self) -> u32 {
-        unimplemented!()
+        let program = self.read_program();
+        let max = program.len().min(100) as u32;
+
+        for noun in 0..max {
+            for verb in 0..max {
+                if output(&program, noun, verb) == self.target {
+                    return noun * 100 + verb;
+                }
+            }
+        }
+
+        unreachable!();
+    }
+}
+
+impl Day02 {
+    fn read_program(&self) -> Vec<u32> {
+        let input = fs::read_to_string(&self.input).unwrap();
+        input
+            .trim()
+            .split(',')
+            .map(|x| x.parse().unwrap())
+            .collect()
     }
 }
 
@@ -52,6 +63,16 @@ fn run(program: &mut [u32]) {
             _ => unreachable!(),
         }
     }
+}
+
+fn output(program: &[u32], noun: u32, verb: u32) -> u32 {
+    let mut program = program.to_vec();
+    program[1] = noun;
+    program[2] = verb;
+
+    run(&mut program);
+
+    program[0]
 }
 
 #[cfg(test)]
@@ -103,8 +124,20 @@ mod tests {
     #[test]
     fn test_part_one() {
         let input = PathBuf::from("fixtures/day02/input.txt");
-        let command = Day02 { input };
+        let target = 3100;
+
+        let command = Day02 { input, target };
 
         assert_eq!(command.part_one(), 3100);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let input = PathBuf::from("fixtures/day02/input.txt");
+        let target = 3100;
+
+        let command = Day02 { input, target };
+
+        assert_eq!(command.part_two(), 412);
     }
 }

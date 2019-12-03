@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 
@@ -27,19 +27,16 @@ impl command::Command for Day03 {
 }
 
 impl Day03 {
-    fn intersections(&self) -> BTreeMap<(i32, i32), usize> {
+    fn intersections(&self) -> HashMap<(i32, i32), usize> {
         let input = fs::read_to_string(&self.input).unwrap();
-        let mut first_path = BTreeMap::new();
+        let first_path = path(input.lines().nth(0).unwrap());
+        let second_path = path(input.lines().nth(1).unwrap());
 
-        for (i, position) in path(input.lines().nth(0).unwrap()).into_iter().enumerate() {
-            first_path.entry(position).or_insert(i);
-        }
+        let mut result = HashMap::new();
 
-        let mut result = BTreeMap::new();
-
-        for (j, position) in path(input.lines().nth(1).unwrap()).into_iter().enumerate() {
-            if let Some(i) = first_path.get(&position) {
-                result.entry(position).or_insert(i + j + 2);
+        for (position, first_time) in first_path.into_iter() {
+            if let Some(second_time) = second_path.get(&position) {
+                result.insert(position, first_time + second_time);
             }
         }
 
@@ -47,16 +44,18 @@ impl Day03 {
     }
 }
 
-fn path(instructions: &str) -> Vec<(i32, i32)> {
+fn path(instructions: &str) -> HashMap<(i32, i32), usize> {
     let mut position = (0, 0);
-    let mut result = vec![];
+    let mut result = HashMap::new();
+    let mut time = 1;
 
     for instruction in instructions.split(',') {
         let visited = step(position, instruction);
         position = visited[visited.len() - 1];
 
         for point in visited {
-            result.push(point);
+            result.entry(point).or_insert(time);
+            time += 1;
         }
     }
 
@@ -150,7 +149,7 @@ mod tests {
 
         let result = path(instructions);
 
-        assert!(result.contains(&(3, -1)));
+        assert_eq!(*result.get(&(3, -1)).unwrap(), 24);
     }
 
     #[test]

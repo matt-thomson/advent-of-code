@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
 
@@ -14,32 +14,49 @@ pub struct Day03 {
 
 impl command::Command for Day03 {
     fn part_one(&self) -> u32 {
-        let input = fs::read_to_string(&self.input).unwrap();
-        let first = path(input.lines().nth(0).unwrap());
-        let second = path(input.lines().nth(1).unwrap());
-
-        first
-            .intersection(&second)
+        self.intersections()
+            .keys()
             .map(|(x, y)| x.abs() + y.abs())
             .min()
             .unwrap() as u32
     }
 
     fn part_two(&self) -> u32 {
-        unimplemented!()
+        *self.intersections().values().min().unwrap() as u32
     }
 }
 
-fn path(instructions: &str) -> HashSet<(i32, i32)> {
+impl Day03 {
+    fn intersections(&self) -> BTreeMap<(i32, i32), usize> {
+        let input = fs::read_to_string(&self.input).unwrap();
+        let mut first_path = BTreeMap::new();
+
+        for (i, position) in path(input.lines().nth(0).unwrap()).into_iter().enumerate() {
+            first_path.entry(position).or_insert(i);
+        }
+
+        let mut result = BTreeMap::new();
+
+        for (j, position) in path(input.lines().nth(1).unwrap()).into_iter().enumerate() {
+            if let Some(i) = first_path.get(&position) {
+                result.entry(position).or_insert(i + j + 2);
+            }
+        }
+
+        result
+    }
+}
+
+fn path(instructions: &str) -> Vec<(i32, i32)> {
     let mut position = (0, 0);
-    let mut result = HashSet::new();
+    let mut result = vec![];
 
     for instruction in instructions.split(',') {
         let visited = step(position, instruction);
         position = visited[visited.len() - 1];
 
         for point in visited {
-            result.insert(point);
+            result.push(point);
         }
     }
 
@@ -158,5 +175,29 @@ mod tests {
         let command = Day03 { input };
 
         assert_eq!(command.part_one(), 135);
+    }
+
+    #[test]
+    fn test_part_two_a() {
+        let input = PathBuf::from("fixtures/day03a.txt");
+        let command = Day03 { input };
+
+        assert_eq!(command.part_two(), 30);
+    }
+
+    #[test]
+    fn test_part_two_b() {
+        let input = PathBuf::from("fixtures/day03b.txt");
+        let command = Day03 { input };
+
+        assert_eq!(command.part_two(), 610);
+    }
+
+    #[test]
+    fn test_part_two_c() {
+        let input = PathBuf::from("fixtures/day03c.txt");
+        let command = Day03 { input };
+
+        assert_eq!(command.part_two(), 410);
     }
 }

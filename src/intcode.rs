@@ -1,86 +1,96 @@
-use std::fs;
-use std::path::Path;
-
-pub fn parse(path: &Path) -> Vec<u32> {
-    fs::read_to_string(&path)
-        .unwrap()
-        .trim()
-        .split(',')
-        .map(|x| x.parse().unwrap())
-        .collect()
+pub struct Intcode {
+    memory: Vec<u32>,
+    instruction_pointer: usize,
 }
 
-pub fn run(program: &mut [u32]) {
-    for counter in (0..).step_by(4) {
-        match program[counter] {
-            1 => {
-                let first = program[counter + 1] as usize;
-                let second = program[counter + 2] as usize;
-                let location = program[counter + 3] as usize;
-                program[location] = program[first] + program[second];
-            }
-            2 => {
-                let first = program[counter + 1] as usize;
-                let second = program[counter + 2] as usize;
-                let location = program[counter + 3] as usize;
-                program[location] = program[first] * program[second];
-            }
-            99 => break,
-            _ => unreachable!(),
+impl Intcode {
+    pub fn new(memory: Vec<u32>) -> Intcode {
+        Intcode {
+            memory,
+            instruction_pointer: 0,
         }
+    }
+
+    pub fn run(&mut self) {
+        loop {
+            match self.read() {
+                1 => {
+                    let first = self.read() as usize;
+                    let second = self.read() as usize;
+                    let location = self.read() as usize;
+                    self.poke(location, self.peek(first) + self.peek(second));
+                }
+                2 => {
+                    let first = self.read() as usize;
+                    let second = self.read() as usize;
+                    let location = self.read() as usize;
+                    self.poke(location, self.peek(first) * self.peek(second));
+                }
+                99 => break,
+                _ => unreachable!(),
+            }
+        }
+    }
+
+    pub fn peek(&self, address: usize) -> u32 {
+        self.memory[address]
+    }
+
+    pub fn poke(&mut self, address: usize, value: u32) {
+        self.memory[address] = value;
+    }
+
+    fn read(&mut self) -> u32 {
+        let value = self.memory[self.instruction_pointer];
+        self.instruction_pointer += 1;
+
+        value
     }
 }
 
 mod tests {
     use super::*;
 
-    use std::path::PathBuf;
-
-    #[test]
-    fn test_parse() {
-        let path = PathBuf::from("fixtures/day02.txt");
-        let program = parse(&path);
-
-        assert_eq!(program, vec![1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50, 60]);
-    }
-
     #[test]
     fn test_run_example_one() {
-        let mut program = vec![1, 0, 0, 0, 99];
-        run(&mut program);
+        let mut intcode = Intcode::new(vec![1, 0, 0, 0, 99]);
+        intcode.run();
 
-        assert_eq!(program, vec![2, 0, 0, 0, 99]);
+        assert_eq!(intcode.memory, vec![2, 0, 0, 0, 99]);
     }
 
     #[test]
     fn test_run_example_two() {
-        let mut program = vec![2, 3, 0, 3, 99];
-        run(&mut program);
+        let mut intcode = Intcode::new(vec![2, 3, 0, 3, 99]);
+        intcode.run();
 
-        assert_eq!(program, vec![2, 3, 0, 6, 99]);
+        assert_eq!(intcode.memory, vec![2, 3, 0, 6, 99]);
     }
 
     #[test]
     fn test_run_example_three() {
-        let mut program = vec![2, 4, 4, 5, 99, 0];
-        run(&mut program);
+        let mut intcode = Intcode::new(vec![2, 4, 4, 5, 99, 0]);
+        intcode.run();
 
-        assert_eq!(program, vec![2, 4, 4, 5, 99, 9801]);
+        assert_eq!(intcode.memory, vec![2, 4, 4, 5, 99, 9801]);
     }
 
     #[test]
     fn test_run_example_four() {
-        let mut program = vec![1, 1, 1, 4, 99, 5, 6, 0, 99];
-        run(&mut program);
+        let mut intcode = Intcode::new(vec![1, 1, 1, 4, 99, 5, 6, 0, 99]);
+        intcode.run();
 
-        assert_eq!(program, vec![30, 1, 1, 4, 2, 5, 6, 0, 99]);
+        assert_eq!(intcode.memory, vec![30, 1, 1, 4, 2, 5, 6, 0, 99]);
     }
 
     #[test]
     fn test_run_example_five() {
-        let mut program = vec![1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50];
-        run(&mut program);
+        let mut intcode = Intcode::new(vec![1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50]);
+        intcode.run();
 
-        assert_eq!(program, vec![3500, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50]);
+        assert_eq!(
+            intcode.memory,
+            vec![3500, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50]
+        );
     }
 }

@@ -1,9 +1,10 @@
+use std::fs;
 use std::path::PathBuf;
 
 use structopt::StructOpt;
 
 use crate::command;
-use crate::intcode;
+use crate::intcode::Intcode;
 
 #[derive(Debug, StructOpt)]
 pub struct Day02 {
@@ -14,11 +15,11 @@ pub struct Day02 {
 
 impl command::Command for Day02 {
     fn part_one(&self) -> u32 {
-        output(&intcode::parse(&self.input), 12, 2)
+        output(&self.read_program(), 12, 2)
     }
 
     fn part_two(&self) -> u32 {
-        let program = intcode::parse(&self.input);
+        let program = self.read_program();
         let max = program.len().min(100) as u32;
 
         for noun in 0..max {
@@ -33,14 +34,26 @@ impl command::Command for Day02 {
     }
 }
 
+impl Day02 {
+    fn read_program(&self) -> Vec<u32> {
+        fs::read_to_string(&self.input)
+            .unwrap()
+            .trim()
+            .split(',')
+            .map(|x| x.parse().unwrap())
+            .collect()
+    }
+}
+
 fn output(program: &[u32], noun: u32, verb: u32) -> u32 {
     let mut program = program.to_vec();
     program[1] = noun;
     program[2] = verb;
 
-    intcode::run(&mut program);
+    let mut intcode = Intcode::new(program);
+    intcode.run();
 
-    program[0]
+    intcode.peek(0)
 }
 
 #[cfg(test)]

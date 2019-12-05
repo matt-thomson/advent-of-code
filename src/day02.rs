@@ -51,7 +51,7 @@ fn output(program: &[u32], noun: u32, verb: u32) -> u32 {
     program[2] = verb;
 
     let mut intcode = Intcode::new(program);
-    intcode.run();
+    intcode.run(&[]);
 
     intcode.peek(0)
 }

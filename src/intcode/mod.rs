@@ -15,7 +15,9 @@ impl Intcode {
         }
     }
 
-    pub fn run(&mut self) {
+    pub fn run(&mut self, input: &[u32]) {
+        let mut input_pointer = 0;
+
         loop {
             match Opcode::from(self.read()) {
                 Opcode::Add => {
@@ -29,6 +31,11 @@ impl Intcode {
                     let second = self.read() as usize;
                     let location = self.read() as usize;
                     self.poke(location, self.peek(first) * self.peek(second));
+                }
+                Opcode::Input => {
+                    let location = self.read() as usize;
+                    self.poke(location, input[input_pointer]);
+                    input_pointer += 1;
                 }
                 Opcode::Halt => break,
             }
@@ -57,7 +64,7 @@ mod tests {
     #[test]
     fn test_run_example_one() {
         let mut intcode = Intcode::new(vec![1, 0, 0, 0, 99]);
-        intcode.run();
+        intcode.run(&[]);
 
         assert_eq!(intcode.memory, vec![2, 0, 0, 0, 99]);
     }
@@ -65,7 +72,7 @@ mod tests {
     #[test]
     fn test_run_example_two() {
         let mut intcode = Intcode::new(vec![2, 3, 0, 3, 99]);
-        intcode.run();
+        intcode.run(&[]);
 
         assert_eq!(intcode.memory, vec![2, 3, 0, 6, 99]);
     }
@@ -73,7 +80,7 @@ mod tests {
     #[test]
     fn test_run_example_three() {
         let mut intcode = Intcode::new(vec![2, 4, 4, 5, 99, 0]);
-        intcode.run();
+        intcode.run(&[]);
 
         assert_eq!(intcode.memory, vec![2, 4, 4, 5, 99, 9801]);
     }
@@ -81,7 +88,7 @@ mod tests {
     #[test]
     fn test_run_example_four() {
         let mut intcode = Intcode::new(vec![1, 1, 1, 4, 99, 5, 6, 0, 99]);
-        intcode.run();
+        intcode.run(&[]);
 
         assert_eq!(intcode.memory, vec![30, 1, 1, 4, 2, 5, 6, 0, 99]);
     }
@@ -89,11 +96,19 @@ mod tests {
     #[test]
     fn test_run_example_five() {
         let mut intcode = Intcode::new(vec![1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50]);
-        intcode.run();
+        intcode.run(&[]);
 
         assert_eq!(
             intcode.memory,
             vec![3500, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50]
         );
+    }
+
+    #[test]
+    fn test_run_input() {
+        let mut intcode = Intcode::new(vec![3, 0, 99]);
+        intcode.run(&[42]);
+
+        assert_eq!(intcode.memory, vec![42, 0, 99]);
     }
 }

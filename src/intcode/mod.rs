@@ -1,6 +1,6 @@
 mod opcode;
 
-use opcode::Opcode;
+use opcode::{Opcode, ParameterMode};
 
 pub struct Intcode {
     memory: Vec<i32>,
@@ -21,26 +21,32 @@ impl Intcode {
 
         loop {
             match Opcode::from(self.read()) {
-                Opcode::Add => {
-                    let first = self.read() as usize;
-                    let second = self.read() as usize;
+                Opcode::Add {
+                    first_mode,
+                    second_mode,
+                } => {
+                    let first = self.read_with_mode(&first_mode);
+                    let second = self.read_with_mode(&second_mode);
                     let location = self.read() as usize;
-                    self.poke(location, self.peek(first) + self.peek(second));
+                    self.poke(location, first + second);
                 }
-                Opcode::Multiply => {
-                    let first = self.read() as usize;
-                    let second = self.read() as usize;
+                Opcode::Multiply {
+                    first_mode,
+                    second_mode,
+                } => {
+                    let first = self.read_with_mode(&first_mode);
+                    let second = self.read_with_mode(&second_mode);
                     let location = self.read() as usize;
-                    self.poke(location, self.peek(first) * self.peek(second));
+                    self.poke(location, first * second);
                 }
                 Opcode::Input => {
                     let location = self.read() as usize;
                     self.poke(location, input[input_pointer]);
                     input_pointer += 1;
                 }
-                Opcode::Output => {
-                    let location = self.read() as usize;
-                    output.push(self.peek(location));
+                Opcode::Output { mode } => {
+                    let value = self.read_with_mode(&mode);
+                    output.push(value);
                 }
                 Opcode::Halt => break,
             }
@@ -62,6 +68,14 @@ impl Intcode {
         self.instruction_pointer += 1;
 
         value
+    }
+
+    fn read_with_mode(&mut self, mode: &ParameterMode) -> i32 {
+        let value = self.read();
+        match mode {
+            ParameterMode::Position => self.peek(value as usize),
+            ParameterMode::Immediate => value,
+        }
     }
 }
 
@@ -125,5 +139,13 @@ mod tests {
         let output = intcode.run(&[]);
 
         assert_eq!(output, vec![4]);
+    }
+
+    #[test]
+    fn test_run_immediate_mode() {
+        let mut intcode = Intcode::new(vec![1101, 100, -1, 4, 0]);
+        let output = intcode.run(&[]);
+
+        assert_eq!(intcode.memory, vec![1101, 100, -1, 4, 99]);
     }
 }

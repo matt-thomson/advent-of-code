@@ -15,8 +15,9 @@ impl Intcode {
         }
     }
 
-    pub fn run(&mut self, input: &[u32]) {
+    pub fn run(&mut self, input: &[u32]) -> Vec<u32> {
         let mut input_pointer = 0;
+        let mut output = vec![];
 
         loop {
             match Opcode::from(self.read()) {
@@ -37,9 +38,15 @@ impl Intcode {
                     self.poke(location, input[input_pointer]);
                     input_pointer += 1;
                 }
+                Opcode::Output => {
+                    let location = self.read() as usize;
+                    output.push(self.peek(location));
+                }
                 Opcode::Halt => break,
             }
         }
+
+        output
     }
 
     pub fn peek(&self, address: usize) -> u32 {
@@ -110,5 +117,13 @@ mod tests {
         intcode.run(&[42]);
 
         assert_eq!(intcode.memory, vec![42, 0, 99]);
+    }
+
+    #[test]
+    fn test_run_output() {
+        let mut intcode = Intcode::new(vec![4, 0, 99]);
+        let output = intcode.run(&[]);
+
+        assert_eq!(output, vec![4]);
     }
 }

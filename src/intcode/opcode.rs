@@ -27,6 +27,22 @@ pub enum Opcode {
         mode: ParameterMode,
     },
     Halt,
+    JumpIfTrue {
+        first_mode: ParameterMode,
+        second_mode: ParameterMode,
+    },
+    JumpIfFalse {
+        first_mode: ParameterMode,
+        second_mode: ParameterMode,
+    },
+    LessThan {
+        first_mode: ParameterMode,
+        second_mode: ParameterMode,
+    },
+    Equals {
+        first_mode: ParameterMode,
+        second_mode: ParameterMode,
+    },
 }
 
 impl Opcode {
@@ -43,6 +59,22 @@ impl Opcode {
             3 => Self::Input,
             4 => Self::Output {
                 mode: ParameterMode::from(input / 100 % 10),
+            },
+            5 => Self::JumpIfTrue {
+                first_mode: ParameterMode::from(input / 100 % 10),
+                second_mode: ParameterMode::from(input / 1000 % 10),
+            },
+            6 => Self::JumpIfFalse {
+                first_mode: ParameterMode::from(input / 100 % 10),
+                second_mode: ParameterMode::from(input / 1000 % 10),
+            },
+            7 => Self::LessThan {
+                first_mode: ParameterMode::from(input / 100 % 10),
+                second_mode: ParameterMode::from(input / 1000 % 10),
+            },
+            8 => Self::Equals {
+                first_mode: ParameterMode::from(input / 100 % 10),
+                second_mode: ParameterMode::from(input / 1000 % 10),
             },
             99 => Self::Halt,
             _ => panic!("invalid opcode {}", input),

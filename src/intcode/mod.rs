@@ -48,6 +48,50 @@ impl Intcode {
                     let value = self.read_with_mode(&mode);
                     output.push(value);
                 }
+                Opcode::JumpIfTrue {
+                    first_mode,
+                    second_mode,
+                } => {
+                    let first = self.read_with_mode(&first_mode);
+                    let second = self.read_with_mode(&second_mode);
+
+                    if first != 0 {
+                        self.instruction_pointer = second as usize;
+                    }
+                }
+                Opcode::JumpIfFalse {
+                    first_mode,
+                    second_mode,
+                } => {
+                    let first = self.read_with_mode(&first_mode);
+                    let second = self.read_with_mode(&second_mode);
+
+                    if first == 0 {
+                        self.instruction_pointer = second as usize;
+                    }
+                }
+                Opcode::LessThan {
+                    first_mode,
+                    second_mode,
+                } => {
+                    let first = self.read_with_mode(&first_mode);
+                    let second = self.read_with_mode(&second_mode);
+                    let location = self.read() as usize;
+
+                    let value = if first < second { 1 } else { 0 };
+                    self.poke(location, value);
+                }
+                Opcode::Equals {
+                    first_mode,
+                    second_mode,
+                } => {
+                    let first = self.read_with_mode(&first_mode);
+                    let second = self.read_with_mode(&second_mode);
+                    let location = self.read() as usize;
+
+                    let value = if first == second { 1 } else { 0 };
+                    self.poke(location, value);
+                }
                 Opcode::Halt => break,
             }
         }
@@ -144,8 +188,40 @@ mod tests {
     #[test]
     fn test_run_immediate_mode() {
         let mut intcode = Intcode::new(vec![1101, 100, -1, 4, 0]);
-        let output = intcode.run(&[]);
+        intcode.run(&[]);
 
         assert_eq!(intcode.memory, vec![1101, 100, -1, 4, 99]);
+    }
+
+    #[test]
+    fn test_run_less_than_true() {
+        let mut intcode = Intcode::new(vec![3, 3, 1107, -1, 8, 3, 4, 3, 99]);
+        let output = intcode.run(&[7]);
+
+        assert_eq!(output, vec![1]);
+    }
+
+    #[test]
+    fn test_run_less_than_false() {
+        let mut intcode = Intcode::new(vec![3, 3, 1107, -1, 8, 3, 4, 3, 99]);
+        let output = intcode.run(&[9]);
+
+        assert_eq!(output, vec![0]);
+    }
+
+    #[test]
+    fn test_run_equals_true() {
+        let mut intcode = Intcode::new(vec![3, 3, 1108, -1, 8, 3, 4, 3, 99]);
+        let output = intcode.run(&[8]);
+
+        assert_eq!(output, vec![1]);
+    }
+
+    #[test]
+    fn test_run_equals_false() {
+        let mut intcode = Intcode::new(vec![3, 3, 1108, -1, 8, 3, 4, 3, 99]);
+        let output = intcode.run(&[9]);
+
+        assert_eq!(output, vec![0]);
     }
 }

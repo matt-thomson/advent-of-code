@@ -10,22 +10,22 @@ use crate::intcode::Intcode;
 pub struct Day02 {
     #[structopt(parse(from_os_str))]
     input: PathBuf,
-    target: u32,
+    target: i32,
 }
 
 impl command::Command for Day02 {
     fn part_one(&self) -> u32 {
-        output(&self.read_program(), 12, 2)
+        output(&self.read_program(), 12, 2) as u32
     }
 
     fn part_two(&self) -> u32 {
         let program = self.read_program();
-        let max = program.len().min(100) as u32;
+        let max = program.len().min(100) as i32;
 
         for noun in 0..max {
             for verb in 0..max {
                 if output(&program, noun, verb) == self.target {
-                    return noun * 100 + verb;
+                    return (noun * 100 + verb) as u32;
                 }
             }
         }
@@ -35,7 +35,7 @@ impl command::Command for Day02 {
 }
 
 impl Day02 {
-    fn read_program(&self) -> Vec<u32> {
+    fn read_program(&self) -> Vec<i32> {
         fs::read_to_string(&self.input)
             .unwrap()
             .trim()
@@ -45,7 +45,7 @@ impl Day02 {
     }
 }
 
-fn output(program: &[u32], noun: u32, verb: u32) -> u32 {
+fn output(program: &[i32], noun: i32, verb: i32) -> i32 {
     let mut program = program.to_vec();
     program[1] = noun;
     program[2] = verb;

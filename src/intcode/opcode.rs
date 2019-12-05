@@ -7,7 +7,7 @@ pub enum Opcode {
 }
 
 impl Opcode {
-    pub fn from(input: u32) -> Opcode {
+    pub fn from(input: i32) -> Opcode {
         match input {
             1 => Self::Add,
             2 => Self::Multiply,

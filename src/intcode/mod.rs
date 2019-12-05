@@ -3,19 +3,19 @@ mod opcode;
 use opcode::Opcode;
 
 pub struct Intcode {
-    memory: Vec<u32>,
+    memory: Vec<i32>,
     instruction_pointer: usize,
 }
 
 impl Intcode {
-    pub fn new(memory: Vec<u32>) -> Self {
+    pub fn new(memory: Vec<i32>) -> Self {
         Intcode {
             memory,
             instruction_pointer: 0,
         }
     }
 
-    pub fn run(&mut self, input: &[u32]) -> Vec<u32> {
+    pub fn run(&mut self, input: &[i32]) -> Vec<i32> {
         let mut input_pointer = 0;
         let mut output = vec![];
 
@@ -49,15 +49,15 @@ impl Intcode {
         output
     }
 
-    pub fn peek(&self, address: usize) -> u32 {
+    pub fn peek(&self, address: usize) -> i32 {
         self.memory[address]
     }
 
-    pub fn poke(&mut self, address: usize, value: u32) {
+    pub fn poke(&mut self, address: usize, value: i32) {
         self.memory[address] = value;
     }
 
-    fn read(&mut self) -> u32 {
+    fn read(&mut self) -> i32 {
         let value = self.memory[self.instruction_pointer];
         self.instruction_pointer += 1;
 

@@ -1,10 +1,14 @@
+mod opcode;
+
+use opcode::Opcode;
+
 pub struct Intcode {
     memory: Vec<u32>,
     instruction_pointer: usize,
 }
 
 impl Intcode {
-    pub fn new(memory: Vec<u32>) -> Intcode {
+    pub fn new(memory: Vec<u32>) -> Self {
         Intcode {
             memory,
             instruction_pointer: 0,
@@ -13,21 +17,20 @@ impl Intcode {
 
     pub fn run(&mut self) {
         loop {
-            match self.read() {
-                1 => {
+            match Opcode::from(self.read()) {
+                Opcode::Add => {
                     let first = self.read() as usize;
                     let second = self.read() as usize;
                     let location = self.read() as usize;
                     self.poke(location, self.peek(first) + self.peek(second));
                 }
-                2 => {
+                Opcode::Multiply => {
                     let first = self.read() as usize;
                     let second = self.read() as usize;
                     let location = self.read() as usize;
                     self.poke(location, self.peek(first) * self.peek(second));
                 }
-                99 => break,
-                _ => unreachable!(),
+                Opcode::Halt => break,
             }
         }
     }

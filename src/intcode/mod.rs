@@ -5,6 +5,7 @@ use opcode::{Opcode, ParameterMode};
 pub struct Intcode {
     memory: Vec<i32>,
     instruction_pointer: usize,
+    is_halted: bool,
 }
 
 impl Intcode {
@@ -12,10 +13,13 @@ impl Intcode {
         Intcode {
             memory,
             instruction_pointer: 0,
+            is_halted: false,
         }
     }
 
     pub fn run(&mut self, input: &[i32]) -> Vec<i32> {
+        assert!(!self.is_halted);
+
         let mut input_pointer = 0;
         let mut output = vec![];
 
@@ -34,6 +38,11 @@ impl Intcode {
                     self.poke(location, first * second);
                 }
                 Opcode::Input => {
+                    if input_pointer >= input.len() {
+                        self.instruction_pointer -= 1;
+                        break;
+                    }
+
                     let location = self.read() as usize;
                     self.poke(location, input[input_pointer]);
                     input_pointer += 1;
@@ -74,7 +83,10 @@ impl Intcode {
                     let value = if first == second { 1 } else { 0 };
                     self.poke(location, value);
                 }
-                Opcode::Halt => break,
+                Opcode::Halt => {
+                    self.is_halted = true;
+                    break;
+                }
             }
         }
 
@@ -87,6 +99,10 @@ impl Intcode {
 
     pub fn poke(&mut self, address: usize, value: i32) {
         self.memory[address] = value;
+    }
+
+    pub fn is_halted(&self) -> bool {
+        self.is_halted
     }
 
     fn read(&mut self) -> i32 {

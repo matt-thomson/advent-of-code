@@ -5,6 +5,7 @@ use crate::day02;
 use crate::day03;
 use crate::day04;
 use crate::day05;
+use crate::day06;
 
 #[derive(Debug, StructOpt)]
 enum Opts {
@@ -13,6 +14,7 @@ enum Opts {
     Day03(day03::Day03),
     Day04(day04::Day04),
     Day05(day05::Day05),
+    Day06(day06::Day06),
 }
 
 pub trait Command {
@@ -28,6 +30,7 @@ impl dyn Command {
             Opts::Day03(command) => Box::new(command),
             Opts::Day04(command) => Box::new(command),
             Opts::Day05(command) => Box::new(command),
+            Opts::Day06(command) => Box::new(command),
         }
     }
 }

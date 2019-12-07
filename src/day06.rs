@@ -1,4 +1,4 @@
-use std::collections::BTreeMap;
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
@@ -37,10 +37,10 @@ impl command::Command for Day06 {
     }
 }
 
-fn read_orbits(path: &Path) -> BTreeMap<String, String> {
+fn read_orbits(path: &Path) -> HashMap<String, String> {
     let file = File::open(&path).unwrap();
     let reader = BufReader::new(file);
-    let mut result = BTreeMap::new();
+    let mut result = HashMap::new();
 
     for line_opt in reader.lines() {
         let line = line_opt.unwrap();
@@ -54,7 +54,7 @@ fn read_orbits(path: &Path) -> BTreeMap<String, String> {
     result
 }
 
-fn indirect_orbits<'a>(orbits: &'a BTreeMap<String, String>, object: &str) -> Vec<&'a String> {
+fn indirect_orbits<'a>(orbits: &'a HashMap<String, String>, object: &str) -> Vec<&'a String> {
     let mut result = vec![];
     let mut current = object;
 

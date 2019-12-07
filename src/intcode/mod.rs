@@ -21,19 +21,13 @@ impl Intcode {
 
         loop {
             match Opcode::from(self.read()) {
-                Opcode::Add {
-                    first_mode,
-                    second_mode,
-                } => {
+                Opcode::Add(first_mode, second_mode) => {
                     let first = self.read_with_mode(&first_mode);
                     let second = self.read_with_mode(&second_mode);
                     let location = self.read() as usize;
                     self.poke(location, first + second);
                 }
-                Opcode::Multiply {
-                    first_mode,
-                    second_mode,
-                } => {
+                Opcode::Multiply(first_mode, second_mode) => {
                     let first = self.read_with_mode(&first_mode);
                     let second = self.read_with_mode(&second_mode);
                     let location = self.read() as usize;
@@ -44,14 +38,11 @@ impl Intcode {
                     self.poke(location, input[input_pointer]);
                     input_pointer += 1;
                 }
-                Opcode::Output { mode } => {
+                Opcode::Output(mode) => {
                     let value = self.read_with_mode(&mode);
                     output.push(value);
                 }
-                Opcode::JumpIfTrue {
-                    first_mode,
-                    second_mode,
-                } => {
+                Opcode::JumpIfTrue(first_mode, second_mode) => {
                     let first = self.read_with_mode(&first_mode);
                     let second = self.read_with_mode(&second_mode);
 
@@ -59,10 +50,7 @@ impl Intcode {
                         self.instruction_pointer = second as usize;
                     }
                 }
-                Opcode::JumpIfFalse {
-                    first_mode,
-                    second_mode,
-                } => {
+                Opcode::JumpIfFalse(first_mode, second_mode) => {
                     let first = self.read_with_mode(&first_mode);
                     let second = self.read_with_mode(&second_mode);
 
@@ -70,10 +58,7 @@ impl Intcode {
                         self.instruction_pointer = second as usize;
                     }
                 }
-                Opcode::LessThan {
-                    first_mode,
-                    second_mode,
-                } => {
+                Opcode::LessThan(first_mode, second_mode) => {
                     let first = self.read_with_mode(&first_mode);
                     let second = self.read_with_mode(&second_mode);
                     let location = self.read() as usize;
@@ -81,10 +66,7 @@ impl Intcode {
                     let value = if first < second { 1 } else { 0 };
                     self.poke(location, value);
                 }
-                Opcode::Equals {
-                    first_mode,
-                    second_mode,
-                } => {
+                Opcode::Equals(first_mode, second_mode) => {
                     let first = self.read_with_mode(&first_mode);
                     let second = self.read_with_mode(&second_mode);
                     let location = self.read() as usize;
@@ -124,7 +106,7 @@ impl Intcode {
 }
 
 mod tests {
-    use super::*;
+    use super::Intcode;
 
     #[test]
     fn test_run_example_one() {

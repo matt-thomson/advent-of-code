@@ -7,4 +7,5 @@ build = "build.rs"
 
 [dependencies]
 itertools = "0.8"
+permutohedron = "0.2"
 structopt = "0.3"

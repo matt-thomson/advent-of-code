@@ -13,6 +13,7 @@ name = "aoc2019"
 version = "0.1.0"
 dependencies = [
  "itertools 0.8.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "permutohedron 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "structopt 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -68,6 +69,11 @@ dependencies = [
 [[package]]
 name = "libc"
 version = "0.2.66"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "permutohedron"
+version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -188,6 +194,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum heck 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)" = "20564e78d53d2bb135c343b3f47714a56af2061f1c928fdb541dc7b9fdd94205"
 "checksum itertools 0.8.2 (registry+https://github.com/rust-lang/crates.io-index)" = "f56a2d0bc861f9165be4eb3442afd3c236d8a98afd426f65d92324ae1091a484"
 "checksum libc 0.2.66 (registry+https://github.com/rust-lang/crates.io-index)" = "d515b1f41455adea1313a4a2ac8a8a477634fbae63cc6100e3aebb207ce61558"
+"checksum permutohedron 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)" = "b687ff7b5da449d39e418ad391e5e08da53ec334903ddbb921db208908fc372c"
 "checksum proc-macro-error 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)" = "aeccfe4d5d8ea175d5f0e4a2ad0637e0f4121d63bd99d356fb1f39ab2e7c6097"
 "checksum proc-macro2 1.0.6 (registry+https://github.com/rust-lang/crates.io-index)" = "9c9e470a8dc4aeae2dee2f335e8f533e2d4b347e1434e5671afc49b054592f27"
 "checksum quote 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)" = "053a8c8bcc71fcce321828dc897a98ab9760bef03a4fc36693c231e5b3216cfe"

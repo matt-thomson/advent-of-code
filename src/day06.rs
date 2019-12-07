@@ -18,12 +18,22 @@ impl command::Command for Day06 {
         let orbits = read_orbits(&self.input);
         orbits
             .keys()
-            .map(|object| orbit_length(&orbits, object))
+            .map(|object| indirect_orbits(&orbits, object).len() as u32)
             .sum()
     }
 
     fn part_two(&self) -> u32 {
-        unimplemented!();
+        let orbits = read_orbits(&self.input);
+        let first = indirect_orbits(&orbits, "YOU");
+        let second = indirect_orbits(&orbits, "SAN");
+
+        for offset in 0.. {
+            if first[first.len() - offset - 1] != second[second.len() - offset - 1] {
+                return (first.len() + second.len() - (2 * offset)) as u32;
+            }
+        }
+
+        unreachable!();
     }
 }
 
@@ -44,13 +54,13 @@ fn read_orbits(path: &Path) -> BTreeMap<String, String> {
     result
 }
 
-fn orbit_length(orbits: &BTreeMap<String, String>, object: &str) -> u32 {
-    let mut result = 0;
+fn indirect_orbits<'a>(orbits: &'a BTreeMap<String, String>, object: &str) -> Vec<&'a String> {
+    let mut result = vec![];
     let mut current = object;
 
     while let Some(inner) = orbits.get(current) {
         current = inner;
-        result += 1;
+        result.push(inner);
     }
 
     result
@@ -64,7 +74,7 @@ mod tests {
 
     #[test]
     fn test_read_orbits() {
-        let path = PathBuf::from("fixtures/day06.txt");
+        let path = PathBuf::from("fixtures/day06a.txt");
         let orbits = read_orbits(&path);
 
         assert_eq!(orbits.get("B").unwrap(), "COM");
@@ -72,20 +82,31 @@ mod tests {
     }
 
     #[test]
-    fn test_orbit_length() {
-        let path = PathBuf::from("fixtures/day06.txt");
+    fn test_indirect_orbits() {
+        let path = PathBuf::from("fixtures/day06a.txt");
         let orbits = read_orbits(&path);
 
-        assert_eq!(orbit_length(&orbits, "D"), 3);
-        assert_eq!(orbit_length(&orbits, "L"), 7);
-        assert_eq!(orbit_length(&orbits, "COM"), 0);
+        assert_eq!(indirect_orbits(&orbits, "D"), vec!["C", "B", "COM"]);
+        assert_eq!(
+            indirect_orbits(&orbits, "L"),
+            vec!["K", "J", "E", "D", "C", "B", "COM"]
+        );
+        assert!(indirect_orbits(&orbits, "COM").is_empty());
     }
 
     #[test]
     fn test_part_one() {
-        let input = PathBuf::from("fixtures/day06.txt");
+        let input = PathBuf::from("fixtures/day06a.txt");
         let command = Day06 { input };
 
         assert_eq!(command.part_one(), 42);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let input = PathBuf::from("fixtures/day06b.txt");
+        let command = Day06 { input };
+
+        assert_eq!(command.part_two(), 4);
     }
 }

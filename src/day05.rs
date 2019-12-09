@@ -13,20 +13,22 @@ pub struct Day05 {
 }
 
 impl command::Command for Day05 {
-    fn part_one(&self) -> u32 {
+    type Output = i32;
+
+    fn part_one(&self) -> i32 {
         let output = self.run(1);
 
         let tests_passed = output[0..output.len() - 1].iter().all(|x| *x == 0);
         assert!(tests_passed);
 
-        output[output.len() - 1] as u32
+        output[output.len() - 1]
     }
 
-    fn part_two(&self) -> u32 {
+    fn part_two(&self) -> i32 {
         let output = self.run(5);
         assert!(output.len() == 1);
 
-        output[0] as u32
+        output[0]
     }
 }
 

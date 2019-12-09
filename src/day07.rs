@@ -14,17 +14,19 @@ pub struct Day07 {
 }
 
 impl command::Command for Day07 {
-    fn part_one(&self) -> u32 {
+    type Output = i32;
+
+    fn part_one(&self) -> i32 {
         self.solve(&mut [0, 1, 2, 3, 4])
     }
 
-    fn part_two(&self) -> u32 {
+    fn part_two(&self) -> i32 {
         self.solve(&mut [5, 6, 7, 8, 9])
     }
 }
 
 impl Day07 {
-    fn solve(&self, phases: &mut [u32; 5]) -> u32 {
+    fn solve(&self, phases: &mut [i32; 5]) -> i32 {
         let program: Vec<i32> = fs::read_to_string(&self.input)
             .unwrap()
             .trim()
@@ -41,11 +43,11 @@ impl Day07 {
             }
         });
 
-        max as u32
+        max
     }
 }
 
-fn run(program: &[i32], phases: &[u32]) -> i32 {
+fn run(program: &[i32], phases: &[i32]) -> i32 {
     let mut intcodes: Vec<_> = phases.iter().map(|phase| init(&program, *phase)).collect();
 
     let mut signal = 0;
@@ -62,9 +64,9 @@ fn run(program: &[i32], phases: &[u32]) -> i32 {
     signal
 }
 
-fn init(program: &[i32], phase: u32) -> Intcode {
+fn init(program: &[i32], phase: i32) -> Intcode {
     let mut intcode = Intcode::new(program.to_vec());
-    let output = intcode.run(&[phase as i32]);
+    let output = intcode.run(&[phase]);
 
     assert!(output.is_empty());
 

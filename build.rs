@@ -21,15 +21,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     writeln!(f, "}}")?;
     writeln!(f, "")?;
 
-    writeln!(f, "pub fn parse_args() -> Box<dyn Command> {{")?;
+    writeln!(f, "pub fn main() {{")?;
     writeln!(f, "    match Opts::from_args() {{")?;
 
     for i in 1..=NUM_DAYS {
-        writeln!(
-            f,
-            "        Opts::Day{:02}(command) => Box::new(command),",
-            i
-        )?;
+        writeln!(f, "        Opts::Day{:02}(command) => command.run(),", i)?;
     }
 
     writeln!(f, "    }}")?;

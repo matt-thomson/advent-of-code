@@ -14,22 +14,24 @@ pub struct Day06 {
 }
 
 impl command::Command for Day06 {
-    fn part_one(&self) -> u32 {
+    type Output = usize;
+
+    fn part_one(&self) -> usize {
         let orbits = read_orbits(&self.input);
         orbits
             .keys()
-            .map(|object| indirect_orbits(&orbits, object).len() as u32)
+            .map(|object| indirect_orbits(&orbits, object).len())
             .sum()
     }
 
-    fn part_two(&self) -> u32 {
+    fn part_two(&self) -> usize {
         let orbits = read_orbits(&self.input);
         let first = indirect_orbits(&orbits, "YOU");
         let second = indirect_orbits(&orbits, "SAN");
 
         for offset in 0.. {
             if first[first.len() - offset - 1] != second[second.len() - offset - 1] {
-                return (first.len() + second.len() - (2 * offset)) as u32;
+                return first.len() + second.len() - (2 * offset);
             }
         }
 

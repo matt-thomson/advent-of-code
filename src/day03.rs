@@ -13,16 +13,18 @@ pub struct Day03 {
 }
 
 impl command::Command for Day03 {
-    fn part_one(&self) -> u32 {
+    type Output = i32;
+
+    fn part_one(&self) -> i32 {
         self.intersections()
             .keys()
             .map(|(x, y)| x.abs() + y.abs())
             .min()
-            .unwrap() as u32
+            .unwrap()
     }
 
-    fn part_two(&self) -> u32 {
-        *self.intersections().values().min().unwrap() as u32
+    fn part_two(&self) -> i32 {
+        *self.intersections().values().min().unwrap() as i32
     }
 }
 

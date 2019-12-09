@@ -18,7 +18,9 @@ pub struct Day08 {
 }
 
 impl command::Command for Day08 {
-    fn part_one(&self) -> u32 {
+    type Output = usize;
+
+    fn part_one(&self) -> usize {
         let input = fs::read_to_string(&self.input).unwrap();
         let layer = input
             .trim()
@@ -27,10 +29,10 @@ impl command::Command for Day08 {
             .min_by_key(|l| count(l, 0))
             .unwrap();
 
-        (count(layer, 1) * count(layer, 2)) as u32
+        count(layer, 1) * count(layer, 2)
     }
 
-    fn part_two(&self) -> u32 {
+    fn part_two(&self) -> usize {
         for row in self.image() {
             println!("{}", format_row(&row));
         }

@@ -10,18 +10,20 @@ pub struct Day04 {
 }
 
 impl command::Command for Day04 {
-    fn part_one(&self) -> u32 {
+    type Output = usize;
+
+    fn part_one(&self) -> usize {
         self.solve(valid_password_part_one)
     }
 
-    fn part_two(&self) -> u32 {
+    fn part_two(&self) -> usize {
         self.solve(valid_password_part_two)
     }
 }
 
 impl Day04 {
-    fn solve(&self, predicate: fn(u32) -> bool) -> u32 {
-        (self.start..=self.end).filter(|x| predicate(*x)).count() as u32
+    fn solve(&self, predicate: fn(u32) -> bool) -> usize {
+        (self.start..=self.end).filter(|x| predicate(*x)).count()
     }
 }
 

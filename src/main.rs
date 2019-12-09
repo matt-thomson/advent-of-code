@@ -15,9 +15,3 @@ use structopt::StructOpt;
 use command::Command;
 
 include!(concat!(env!("OUT_DIR"), "/commands.rs"));
-
-fn main() {
-    let command = parse_args();
-    println!("{}", command.part_one());
-    println!("{}", command.part_two());
-}

@@ -14,18 +14,20 @@ pub struct Day02 {
 }
 
 impl command::Command for Day02 {
-    fn part_one(&self) -> u32 {
-        output(&self.read_program(), 12, 2) as u32
+    type Output = i32;
+
+    fn part_one(&self) -> i32 {
+        output(&self.read_program(), 12, 2)
     }
 
-    fn part_two(&self) -> u32 {
+    fn part_two(&self) -> i32 {
         let program = self.read_program();
         let max = program.len().min(100) as i32;
 
         for noun in 0..max {
             for verb in 0..max {
                 if output(&program, noun, verb) == self.target {
-                    return (noun * 100 + verb) as u32;
+                    return noun * 100 + verb;
                 }
             }
         }

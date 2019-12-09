@@ -13,6 +13,8 @@ pub struct Day01 {
 }
 
 impl command::Command for Day01 {
+    type Output = u32;
+
     fn part_one(&self) -> u32 {
         self.solve(basic_fuel_required)
     }

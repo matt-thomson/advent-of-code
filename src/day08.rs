@@ -58,7 +58,7 @@ impl Day08 {
                     let pixel = bytes[position];
 
                     if pixel != 50 {
-                        row.push(pixel == 48);
+                        row.push(pixel == 49);
                         break;
                     }
 
@@ -79,7 +79,7 @@ fn count(bytes: &[u8], digit: u8) -> usize {
 }
 
 fn format_row(row: &[bool]) -> String {
-    row.iter().map(|x| if *x { ' ' } else { '█' }).join("")
+    row.iter().map(|x| if *x { '█' } else { ' ' }).join("")
 }
 
 #[cfg(test)]
@@ -104,13 +104,13 @@ mod tests {
             height: 2,
         };
 
-        assert_eq!(problem.image(), vec![vec![true, false], vec![false, true]]);
+        assert_eq!(problem.image(), vec![vec![false, true], vec![true, false]]);
     }
 
     #[test]
     fn test_format_row() {
         let row = vec![true, false, true, false, true];
-        assert_eq!(format_row(&row), " █ █ ");
+        assert_eq!(format_row(&row), "█ █ █");
     }
 
     #[test]

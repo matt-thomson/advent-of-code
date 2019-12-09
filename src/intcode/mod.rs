@@ -37,12 +37,14 @@ impl Intcode {
                     let first = self.read_with_mode(&opcode.mode(0));
                     let second = self.read_with_mode(&opcode.mode(1));
                     let location = self.read() as usize;
+
                     self.poke(location, first + second);
                 }
                 Instruction::Multiply => {
                     let first = self.read_with_mode(&opcode.mode(0));
                     let second = self.read_with_mode(&opcode.mode(1));
                     let location = self.read() as usize;
+
                     self.poke(location, first * second);
                 }
                 Instruction::Input => {
@@ -52,11 +54,13 @@ impl Intcode {
                     }
 
                     let location = self.read() as usize;
+
                     self.poke(location, input[input_pointer]);
                     input_pointer += 1;
                 }
                 Instruction::Output => {
                     let value = self.read_with_mode(&opcode.mode(0));
+
                     output.push(value);
                 }
                 Instruction::JumpIfTrue => {

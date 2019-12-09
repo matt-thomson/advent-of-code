@@ -16,6 +16,16 @@ impl Problem for Day09 {
     type Output = i64;
 
     fn part_one(&self) -> i64 {
+        self.run(1)
+    }
+
+    fn part_two(&self) -> i64 {
+        self.run(2)
+    }
+}
+
+impl Day09 {
+    fn run(&self, input: i64) -> i64 {
         let program: Vec<i64> = fs::read_to_string(&self.input)
             .unwrap()
             .trim()
@@ -25,13 +35,9 @@ impl Problem for Day09 {
 
         let mut intcode = Intcode::new(program);
 
-        let output = intcode.run(&[1]);
+        let output = intcode.run(&[input]);
         assert!(output.len() == 1);
 
         output[0]
-    }
-
-    fn part_two(&self) -> i64 {
-        unimplemented!()
     }
 }

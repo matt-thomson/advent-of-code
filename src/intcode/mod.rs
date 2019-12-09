@@ -1,6 +1,8 @@
+mod mode;
 mod opcode;
 
-use opcode::{Opcode, ParameterMode};
+use mode::Mode;
+use opcode::Opcode;
 
 pub struct Intcode {
     memory: Vec<i32>,
@@ -112,11 +114,11 @@ impl Intcode {
         value
     }
 
-    fn read_with_mode(&mut self, mode: &ParameterMode) -> i32 {
+    fn read_with_mode(&mut self, mode: &Mode) -> i32 {
         let value = self.read();
         match mode {
-            ParameterMode::Position => self.peek(value as usize),
-            ParameterMode::Immediate => value,
+            Mode::Position => self.peek(value as usize),
+            Mode::Immediate => value,
         }
     }
 }

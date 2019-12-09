@@ -1,6 +1,8 @@
+mod instruction;
 mod mode;
 mod opcode;
 
+use instruction::Instruction;
 use mode::Mode;
 use opcode::Opcode;
 
@@ -26,20 +28,22 @@ impl Intcode {
         let mut output = vec![];
 
         loop {
-            match Opcode::from(self.read()) {
-                Opcode::Add(first_mode, second_mode) => {
-                    let first = self.read_with_mode(&first_mode);
-                    let second = self.read_with_mode(&second_mode);
+            let opcode = Opcode::from(self.read());
+
+            match opcode.instruction() {
+                Instruction::Add => {
+                    let first = self.read_with_mode(&opcode.mode(0));
+                    let second = self.read_with_mode(&opcode.mode(1));
                     let location = self.read() as usize;
                     self.poke(location, first + second);
                 }
-                Opcode::Multiply(first_mode, second_mode) => {
-                    let first = self.read_with_mode(&first_mode);
-                    let second = self.read_with_mode(&second_mode);
+                Instruction::Multiply => {
+                    let first = self.read_with_mode(&opcode.mode(0));
+                    let second = self.read_with_mode(&opcode.mode(1));
                     let location = self.read() as usize;
                     self.poke(location, first * second);
                 }
-                Opcode::Input => {
+                Instruction::Input => {
                     if input_pointer >= input.len() {
                         self.instruction_pointer -= 1;
                         break;
@@ -49,43 +53,43 @@ impl Intcode {
                     self.poke(location, input[input_pointer]);
                     input_pointer += 1;
                 }
-                Opcode::Output(mode) => {
-                    let value = self.read_with_mode(&mode);
+                Instruction::Output => {
+                    let value = self.read_with_mode(&opcode.mode(0));
                     output.push(value);
                 }
-                Opcode::JumpIfTrue(first_mode, second_mode) => {
-                    let first = self.read_with_mode(&first_mode);
-                    let second = self.read_with_mode(&second_mode);
+                Instruction::JumpIfTrue => {
+                    let first = self.read_with_mode(&opcode.mode(0));
+                    let second = self.read_with_mode(&opcode.mode(1));
 
                     if first != 0 {
                         self.instruction_pointer = second as usize;
                     }
                 }
-                Opcode::JumpIfFalse(first_mode, second_mode) => {
-                    let first = self.read_with_mode(&first_mode);
-                    let second = self.read_with_mode(&second_mode);
+                Instruction::JumpIfFalse => {
+                    let first = self.read_with_mode(&opcode.mode(0));
+                    let second = self.read_with_mode(&opcode.mode(1));
 
                     if first == 0 {
                         self.instruction_pointer = second as usize;
                     }
                 }
-                Opcode::LessThan(first_mode, second_mode) => {
-                    let first = self.read_with_mode(&first_mode);
-                    let second = self.read_with_mode(&second_mode);
+                Instruction::LessThan => {
+                    let first = self.read_with_mode(&opcode.mode(0));
+                    let second = self.read_with_mode(&opcode.mode(1));
                     let location = self.read() as usize;
 
                     let value = if first < second { 1 } else { 0 };
                     self.poke(location, value);
                 }
-                Opcode::Equals(first_mode, second_mode) => {
-                    let first = self.read_with_mode(&first_mode);
-                    let second = self.read_with_mode(&second_mode);
+                Instruction::Equals => {
+                    let first = self.read_with_mode(&opcode.mode(0));
+                    let second = self.read_with_mode(&opcode.mode(1));
                     let location = self.read() as usize;
 
                     let value = if first == second { 1 } else { 0 };
                     self.poke(location, value);
                 }
-                Opcode::Halt => {
+                Instruction::Halt => {
                     self.is_halted = true;
                     break;
                 }

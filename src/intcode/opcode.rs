@@ -1,30 +1,18 @@
+use super::instruction::Instruction;
 use super::mode::Mode;
 
-pub enum Opcode {
-    Add(Mode, Mode),
-    Multiply(Mode, Mode),
-    Input,
-    Output(Mode),
-    Halt,
-    JumpIfTrue(Mode, Mode),
-    JumpIfFalse(Mode, Mode),
-    LessThan(Mode, Mode),
-    Equals(Mode, Mode),
-}
+pub struct Opcode(i32);
 
 impl Opcode {
-    pub fn from(input: i32) -> Self {
-        match input % 100 {
-            1 => Self::Add(Mode::from(input / 100 % 10), Mode::from(input / 1000 % 10)),
-            2 => Self::Multiply(Mode::from(input / 100 % 10), Mode::from(input / 1000 % 10)),
-            3 => Self::Input,
-            4 => Self::Output(Mode::from(input / 100 % 10)),
-            5 => Self::JumpIfTrue(Mode::from(input / 100 % 10), Mode::from(input / 1000 % 10)),
-            6 => Self::JumpIfFalse(Mode::from(input / 100 % 10), Mode::from(input / 1000 % 10)),
-            7 => Self::LessThan(Mode::from(input / 100 % 10), Mode::from(input / 1000 % 10)),
-            8 => Self::Equals(Mode::from(input / 100 % 10), Mode::from(input / 1000 % 10)),
-            99 => Self::Halt,
-            _ => panic!("invalid opcode {}", input),
-        }
+    pub fn from(value: i32) -> Opcode {
+        Opcode(value)
+    }
+
+    pub fn instruction(&self) -> Instruction {
+        Instruction::from(self.0 % 100)
+    }
+
+    pub fn mode(&self, index: u32) -> Mode {
+        Mode::from(self.0 / 10_i32.pow(index + 2) % 10)
     }
 }

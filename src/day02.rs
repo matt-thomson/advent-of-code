@@ -10,19 +10,19 @@ use crate::problem::Problem;
 pub struct Day02 {
     #[structopt(parse(from_os_str))]
     input: PathBuf,
-    target: i32,
+    target: i64,
 }
 
 impl Problem for Day02 {
-    type Output = i32;
+    type Output = i64;
 
-    fn part_one(&self) -> i32 {
+    fn part_one(&self) -> i64 {
         output(&self.read_program(), 12, 2)
     }
 
-    fn part_two(&self) -> i32 {
+    fn part_two(&self) -> i64 {
         let program = self.read_program();
-        let max = program.len().min(100) as i32;
+        let max = program.len().min(100) as i64;
 
         for noun in 0..max {
             for verb in 0..max {
@@ -37,7 +37,7 @@ impl Problem for Day02 {
 }
 
 impl Day02 {
-    fn read_program(&self) -> Vec<i32> {
+    fn read_program(&self) -> Vec<i64> {
         fs::read_to_string(&self.input)
             .unwrap()
             .trim()
@@ -47,7 +47,7 @@ impl Day02 {
     }
 }
 
-fn output(program: &[i32], noun: i32, verb: i32) -> i32 {
+fn output(program: &[i64], noun: i64, verb: i64) -> i64 {
     let mut program = program.to_vec();
     program[1] = noun;
     program[2] = verb;

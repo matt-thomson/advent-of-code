@@ -7,14 +7,14 @@ use mode::Mode;
 use opcode::Opcode;
 
 pub struct Intcode {
-    memory: Vec<i32>,
+    memory: Vec<i64>,
     instruction_pointer: usize,
     relative_base: isize,
     is_halted: bool,
 }
 
 impl Intcode {
-    pub fn new(memory: Vec<i32>) -> Self {
+    pub fn new(memory: Vec<i64>) -> Self {
         Intcode {
             memory,
             instruction_pointer: 0,
@@ -23,7 +23,7 @@ impl Intcode {
         }
     }
 
-    pub fn run(&mut self, input: &[i32]) -> Vec<i32> {
+    pub fn run(&mut self, input: &[i64]) -> Vec<i64> {
         assert!(!self.is_halted);
 
         let mut input_pointer = 0;
@@ -108,12 +108,12 @@ impl Intcode {
         output
     }
 
-    pub fn peek(&mut self, address: usize) -> i32 {
+    pub fn peek(&mut self, address: usize) -> i64 {
         self.resize(address);
         self.memory[address]
     }
 
-    pub fn poke(&mut self, address: usize, value: i32) {
+    pub fn poke(&mut self, address: usize, value: i64) {
         self.resize(address);
         self.memory[address] = value;
     }
@@ -122,14 +122,14 @@ impl Intcode {
         self.is_halted
     }
 
-    fn read(&mut self) -> i32 {
+    fn read(&mut self) -> i64 {
         let value = self.peek(self.instruction_pointer);
         self.instruction_pointer += 1;
 
         value
     }
 
-    fn read_with_mode(&mut self, mode: &Mode) -> i32 {
+    fn read_with_mode(&mut self, mode: &Mode) -> i64 {
         let value = self.read();
         match mode {
             Mode::Position => self.peek(value as usize),
@@ -259,5 +259,21 @@ mod tests {
         let output = intcode.run(&[]);
 
         assert_eq!(output, code);
+    }
+
+    #[test]
+    fn test_large_multiplication() {
+        let mut intcode = Intcode::new(vec![1102, 34_915_192, 34_915_192, 7, 4, 7, 99, 0]);
+        let output = intcode.run(&[]);
+
+        assert_eq!(output, vec![1_219_070_632_396_864]);
+    }
+
+    #[test]
+    fn test_large_number() {
+        let mut intcode = Intcode::new(vec![104, 1_125_899_906_842_624, 99]);
+        let output = intcode.run(&[]);
+
+        assert_eq!(output, vec![1_125_899_906_842_624]);
     }
 }

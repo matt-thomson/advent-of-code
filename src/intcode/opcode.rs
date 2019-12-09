@@ -1,10 +1,10 @@
 use super::instruction::Instruction;
 use super::mode::Mode;
 
-pub struct Opcode(i32);
+pub struct Opcode(i64);
 
 impl Opcode {
-    pub fn from(value: i32) -> Opcode {
+    pub fn from(value: i64) -> Opcode {
         Opcode(value)
     }
 
@@ -13,6 +13,6 @@ impl Opcode {
     }
 
     pub fn mode(&self, index: u32) -> Mode {
-        Mode::from(self.0 / 10_i32.pow(index + 2) % 10)
+        Mode::from(self.0 / 10_i64.pow(index + 2) % 10)
     }
 }

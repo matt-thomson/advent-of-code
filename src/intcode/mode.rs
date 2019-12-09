@@ -5,7 +5,7 @@ pub enum Mode {
 }
 
 impl Mode {
-    pub fn from(input: i32) -> Self {
+    pub fn from(input: i64) -> Self {
         match input {
             0 => Self::Position,
             1 => Self::Immediate,

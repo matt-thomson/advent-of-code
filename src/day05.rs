@@ -13,9 +13,9 @@ pub struct Day05 {
 }
 
 impl Problem for Day05 {
-    type Output = i32;
+    type Output = i64;
 
-    fn part_one(&self) -> i32 {
+    fn part_one(&self) -> i64 {
         let output = self.run(1);
 
         let tests_passed = output[0..output.len() - 1].iter().all(|x| *x == 0);
@@ -24,7 +24,7 @@ impl Problem for Day05 {
         output[output.len() - 1]
     }
 
-    fn part_two(&self) -> i32 {
+    fn part_two(&self) -> i64 {
         let output = self.run(5);
         assert!(output.len() == 1);
 
@@ -33,8 +33,8 @@ impl Problem for Day05 {
 }
 
 impl Day05 {
-    fn run(&self, input: i32) -> Vec<i32> {
-        let program: Vec<i32> = fs::read_to_string(&self.input)
+    fn run(&self, input: i64) -> Vec<i64> {
+        let program: Vec<i64> = fs::read_to_string(&self.input)
             .unwrap()
             .trim()
             .split(',')

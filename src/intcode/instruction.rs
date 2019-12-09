@@ -12,7 +12,7 @@ pub enum Instruction {
 }
 
 impl Instruction {
-    pub fn from(value: i32) -> Instruction {
+    pub fn from(value: i64) -> Instruction {
         match value {
             1 => Instruction::Add,
             2 => Instruction::Multiply,

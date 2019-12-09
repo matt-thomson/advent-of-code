@@ -36,14 +36,14 @@ impl Intcode {
                 Instruction::Add => {
                     let first = self.read_with_mode(&opcode.mode(0));
                     let second = self.read_with_mode(&opcode.mode(1));
-                    let location = self.read() as usize;
+                    let location = self.address(&opcode.mode(2));
 
                     self.poke(location, first + second);
                 }
                 Instruction::Multiply => {
                     let first = self.read_with_mode(&opcode.mode(0));
                     let second = self.read_with_mode(&opcode.mode(1));
-                    let location = self.read() as usize;
+                    let location = self.address(&opcode.mode(2));
 
                     self.poke(location, first * second);
                 }
@@ -53,7 +53,7 @@ impl Intcode {
                         break;
                     }
 
-                    let location = self.read() as usize;
+                    let location = self.address(&opcode.mode(0));
 
                     self.poke(location, input[input_pointer]);
                     input_pointer += 1;
@@ -82,7 +82,7 @@ impl Intcode {
                 Instruction::LessThan => {
                     let first = self.read_with_mode(&opcode.mode(0));
                     let second = self.read_with_mode(&opcode.mode(1));
-                    let location = self.read() as usize;
+                    let location = self.address(&opcode.mode(2));
 
                     let value = if first < second { 1 } else { 0 };
                     self.poke(location, value);
@@ -90,7 +90,7 @@ impl Intcode {
                 Instruction::Equals => {
                     let first = self.read_with_mode(&opcode.mode(0));
                     let second = self.read_with_mode(&opcode.mode(1));
-                    let location = self.read() as usize;
+                    let location = self.address(&opcode.mode(2));
 
                     let value = if first == second { 1 } else { 0 };
                     self.poke(location, value);
@@ -138,6 +138,15 @@ impl Intcode {
                 let location = self.relative_base + (value as isize);
                 self.peek(location as usize)
             }
+        }
+    }
+
+    fn address(&mut self, mode: &Mode) -> usize {
+        let value = self.read() as usize;
+        match mode {
+            Mode::Position => value as usize,
+            Mode::Immediate => panic!("can't get address in immediate mode"),
+            Mode::Relative => (self.relative_base + value as isize) as usize,
         }
     }
 
@@ -275,5 +284,13 @@ mod tests {
         let output = intcode.run(&[]);
 
         assert_eq!(output, vec![1_125_899_906_842_624]);
+    }
+
+    #[test]
+    fn test_run_relative_write() {
+        let mut intcode = Intcode::new(vec![109, 100, 21101, 2, 3, 200, 4, 300, 99]);
+        let output = intcode.run(&[]);
+
+        assert_eq!(output, vec![5]);
     }
 }

@@ -30,19 +30,19 @@ impl Intcode {
         let mut output = vec![];
 
         loop {
-            let opcode = Opcode::from(self.read());
+            let opcode = Opcode::from(self.read(&Mode::Immediate));
 
             match opcode.instruction() {
                 Instruction::Add => {
-                    let first = self.read_with_mode(&opcode.mode(0));
-                    let second = self.read_with_mode(&opcode.mode(1));
+                    let first = self.read(&opcode.mode(0));
+                    let second = self.read(&opcode.mode(1));
                     let location = self.address(&opcode.mode(2));
 
                     self.poke(location, first + second);
                 }
                 Instruction::Multiply => {
-                    let first = self.read_with_mode(&opcode.mode(0));
-                    let second = self.read_with_mode(&opcode.mode(1));
+                    let first = self.read(&opcode.mode(0));
+                    let second = self.read(&opcode.mode(1));
                     let location = self.address(&opcode.mode(2));
 
                     self.poke(location, first * second);
@@ -59,44 +59,44 @@ impl Intcode {
                     input_pointer += 1;
                 }
                 Instruction::Output => {
-                    let value = self.read_with_mode(&opcode.mode(0));
+                    let value = self.read(&opcode.mode(0));
 
                     output.push(value);
                 }
                 Instruction::JumpIfTrue => {
-                    let first = self.read_with_mode(&opcode.mode(0));
-                    let second = self.read_with_mode(&opcode.mode(1));
+                    let first = self.read(&opcode.mode(0));
+                    let second = self.read(&opcode.mode(1));
 
                     if first != 0 {
                         self.instruction_pointer = second as usize;
                     }
                 }
                 Instruction::JumpIfFalse => {
-                    let first = self.read_with_mode(&opcode.mode(0));
-                    let second = self.read_with_mode(&opcode.mode(1));
+                    let first = self.read(&opcode.mode(0));
+                    let second = self.read(&opcode.mode(1));
 
                     if first == 0 {
                         self.instruction_pointer = second as usize;
                     }
                 }
                 Instruction::LessThan => {
-                    let first = self.read_with_mode(&opcode.mode(0));
-                    let second = self.read_with_mode(&opcode.mode(1));
+                    let first = self.read(&opcode.mode(0));
+                    let second = self.read(&opcode.mode(1));
                     let location = self.address(&opcode.mode(2));
 
                     let value = if first < second { 1 } else { 0 };
                     self.poke(location, value);
                 }
                 Instruction::Equals => {
-                    let first = self.read_with_mode(&opcode.mode(0));
-                    let second = self.read_with_mode(&opcode.mode(1));
+                    let first = self.read(&opcode.mode(0));
+                    let second = self.read(&opcode.mode(1));
                     let location = self.address(&opcode.mode(2));
 
                     let value = if first == second { 1 } else { 0 };
                     self.poke(location, value);
                 }
                 Instruction::SetRelativeBase => {
-                    self.relative_base += self.read_with_mode(&opcode.mode(0)) as isize;
+                    self.relative_base += self.read(&opcode.mode(0)) as isize;
                 }
                 Instruction::Halt => {
                     self.is_halted = true;
@@ -122,27 +122,22 @@ impl Intcode {
         self.is_halted
     }
 
-    fn read(&mut self) -> i64 {
-        let value = self.peek(self.instruction_pointer);
-        self.instruction_pointer += 1;
+    fn read(&mut self, mode: &Mode) -> i64 {
+        if *mode == Mode::Immediate {
+            let value = self.peek(self.instruction_pointer);
+            self.instruction_pointer += 1;
 
-        value
-    }
-
-    fn read_with_mode(&mut self, mode: &Mode) -> i64 {
-        let value = self.read();
-        match mode {
-            Mode::Position => self.peek(value as usize),
-            Mode::Immediate => value,
-            Mode::Relative => {
-                let location = self.relative_base + (value as isize);
-                self.peek(location as usize)
-            }
+            value
+        } else {
+            let address = self.address(&mode);
+            self.peek(address)
         }
     }
 
     fn address(&mut self, mode: &Mode) -> usize {
-        let value = self.read() as usize;
+        let value = self.peek(self.instruction_pointer);
+        self.instruction_pointer += 1;
+
         match mode {
             Mode::Position => value as usize,
             Mode::Immediate => panic!("can't get address in immediate mode"),

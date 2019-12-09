@@ -4,8 +4,8 @@ use std::path::PathBuf;
 use permutohedron::heap_recursive;
 use structopt::StructOpt;
 
-use crate::command;
 use crate::intcode::Intcode;
+use crate::problem::Problem;
 
 #[derive(Debug, StructOpt)]
 pub struct Day07 {
@@ -13,7 +13,7 @@ pub struct Day07 {
     input: PathBuf,
 }
 
-impl command::Command for Day07 {
+impl Problem for Day07 {
     type Output = i32;
 
     fn part_one(&self) -> i32 {
@@ -77,45 +77,45 @@ fn init(program: &[i32], phase: i32) -> Intcode {
 mod tests {
     use super::*;
 
-    use crate::command::Command;
+    use crate::problem::Problem;
 
     #[test]
     fn test_part_one_a() {
         let input = PathBuf::from("fixtures/day07a.txt");
-        let command = Day07 { input };
+        let problem = Day07 { input };
 
-        assert_eq!(command.part_one(), 43210);
+        assert_eq!(problem.part_one(), 43210);
     }
 
     #[test]
     fn test_part_one_b() {
         let input = PathBuf::from("fixtures/day07b.txt");
-        let command = Day07 { input };
+        let problem = Day07 { input };
 
-        assert_eq!(command.part_one(), 54321);
+        assert_eq!(problem.part_one(), 54321);
     }
 
     #[test]
     fn test_part_one_c() {
         let input = PathBuf::from("fixtures/day07c.txt");
-        let command = Day07 { input };
+        let problem = Day07 { input };
 
-        assert_eq!(command.part_one(), 65210);
+        assert_eq!(problem.part_one(), 65210);
     }
 
     #[test]
     fn test_part_two_d() {
         let input = PathBuf::from("fixtures/day07d.txt");
-        let command = Day07 { input };
+        let problem = Day07 { input };
 
-        assert_eq!(command.part_two(), 139_629_729);
+        assert_eq!(problem.part_two(), 139_629_729);
     }
 
     #[test]
     fn test_part_two_e() {
         let input = PathBuf::from("fixtures/day07e.txt");
-        let command = Day07 { input };
+        let problem = Day07 { input };
 
-        assert_eq!(command.part_two(), 18216);
+        assert_eq!(problem.part_two(), 18216);
     }
 }

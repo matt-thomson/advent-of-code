@@ -8,7 +8,7 @@ const NUM_DAYS: usize = 8;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let out_dir = env::var("OUT_DIR").unwrap();
-    let dest_path = Path::new(&out_dir).join("commands.rs");
+    let dest_path = Path::new(&out_dir).join("problems.rs");
     let mut f = File::create(&dest_path).unwrap();
 
     writeln!(f, "#[derive(Debug, StructOpt)]")?;
@@ -25,7 +25,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     writeln!(f, "    match Opts::from_args() {{")?;
 
     for i in 1..=NUM_DAYS {
-        writeln!(f, "        Opts::Day{:02}(command) => command.run(),", i)?;
+        writeln!(f, "        Opts::Day{:02}(problem) => problem.run(),", i)?;
     }
 
     writeln!(f, "    }}")?;

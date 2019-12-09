@@ -4,7 +4,7 @@ use std::path::PathBuf;
 
 use structopt::StructOpt;
 
-use crate::command;
+use crate::problem::Problem;
 
 #[derive(Debug, StructOpt)]
 pub struct Day03 {
@@ -12,7 +12,7 @@ pub struct Day03 {
     input: PathBuf,
 }
 
-impl command::Command for Day03 {
+impl Problem for Day03 {
     type Output = i32;
 
     fn part_one(&self) -> i32 {
@@ -90,7 +90,7 @@ fn step(start: (i32, i32), instruction: &str) -> Vec<(i32, i32)> {
 mod tests {
     use super::*;
 
-    use crate::command::Command;
+    use crate::problem::Problem;
 
     #[test]
     fn test_step_right() {
@@ -157,48 +157,48 @@ mod tests {
     #[test]
     fn test_part_one_a() {
         let input = PathBuf::from("fixtures/day03a.txt");
-        let command = Day03 { input };
+        let problem = Day03 { input };
 
-        assert_eq!(command.part_one(), 6);
+        assert_eq!(problem.part_one(), 6);
     }
 
     #[test]
     fn test_part_one_b() {
         let input = PathBuf::from("fixtures/day03b.txt");
-        let command = Day03 { input };
+        let problem = Day03 { input };
 
-        assert_eq!(command.part_one(), 159);
+        assert_eq!(problem.part_one(), 159);
     }
 
     #[test]
     fn test_part_one_c() {
         let input = PathBuf::from("fixtures/day03c.txt");
-        let command = Day03 { input };
+        let problem = Day03 { input };
 
-        assert_eq!(command.part_one(), 135);
+        assert_eq!(problem.part_one(), 135);
     }
 
     #[test]
     fn test_part_two_a() {
         let input = PathBuf::from("fixtures/day03a.txt");
-        let command = Day03 { input };
+        let problem = Day03 { input };
 
-        assert_eq!(command.part_two(), 30);
+        assert_eq!(problem.part_two(), 30);
     }
 
     #[test]
     fn test_part_two_b() {
         let input = PathBuf::from("fixtures/day03b.txt");
-        let command = Day03 { input };
+        let problem = Day03 { input };
 
-        assert_eq!(command.part_two(), 610);
+        assert_eq!(problem.part_two(), 610);
     }
 
     #[test]
     fn test_part_two_c() {
         let input = PathBuf::from("fixtures/day03c.txt");
-        let command = Day03 { input };
+        let problem = Day03 { input };
 
-        assert_eq!(command.part_two(), 410);
+        assert_eq!(problem.part_two(), 410);
     }
 }

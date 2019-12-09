@@ -1,7 +1,7 @@
 use itertools::Itertools;
 use structopt::StructOpt;
 
-use crate::command;
+use crate::problem::Problem;
 
 #[derive(Debug, StructOpt)]
 pub struct Day04 {
@@ -9,7 +9,7 @@ pub struct Day04 {
     end: u32,
 }
 
-impl command::Command for Day04 {
+impl Problem for Day04 {
     type Output = usize;
 
     fn part_one(&self) -> usize {
@@ -70,7 +70,7 @@ fn never_decrease(digits: &[u32]) -> bool {
 mod tests {
     use super::*;
 
-    use crate::command::Command;
+    use crate::problem::Problem;
 
     #[test]
     fn test_digits() {
@@ -93,21 +93,21 @@ mod tests {
 
     #[test]
     fn test_part_one() {
-        let command = Day04 {
+        let problem = Day04 {
             start: 300,
             end: 400,
         };
 
-        assert_eq!(command.part_one(), 13);
+        assert_eq!(problem.part_one(), 13);
     }
 
     #[test]
     fn test_part_two() {
-        let command = Day04 {
+        let problem = Day04 {
             start: 300,
             end: 400,
         };
 
-        assert_eq!(command.part_two(), 12);
+        assert_eq!(problem.part_two(), 12);
     }
 }

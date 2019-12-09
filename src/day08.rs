@@ -5,7 +5,7 @@ use bytecount;
 use itertools::Itertools;
 use structopt::StructOpt;
 
-use crate::command;
+use crate::problem::Problem;
 
 #[derive(Debug, StructOpt)]
 pub struct Day08 {
@@ -17,7 +17,7 @@ pub struct Day08 {
     height: usize,
 }
 
-impl command::Command for Day08 {
+impl Problem for Day08 {
     type Output = usize;
 
     fn part_one(&self) -> usize {
@@ -86,7 +86,7 @@ fn format_row(row: &[bool]) -> String {
 mod tests {
     use super::*;
 
-    use crate::command::Command;
+    use crate::problem::Problem;
 
     #[test]
     fn test_count() {
@@ -98,13 +98,13 @@ mod tests {
     fn test_image() {
         let input = PathBuf::from("fixtures/day08b.txt");
 
-        let command = Day08 {
+        let problem = Day08 {
             input,
             width: 2,
             height: 2,
         };
 
-        assert_eq!(command.image(), vec![vec![true, false], vec![false, true]]);
+        assert_eq!(problem.image(), vec![vec![true, false], vec![false, true]]);
     }
 
     #[test]
@@ -117,12 +117,12 @@ mod tests {
     fn test_part_one() {
         let input = PathBuf::from("fixtures/day08a.txt");
 
-        let command = Day08 {
+        let problem = Day08 {
             input,
             width: 3,
             height: 2,
         };
 
-        assert_eq!(command.part_one(), 2);
+        assert_eq!(problem.part_one(), 2);
     }
 }

@@ -3,8 +3,8 @@ use std::path::PathBuf;
 
 use structopt::StructOpt;
 
-use crate::command;
 use crate::intcode::Intcode;
+use crate::problem::Problem;
 
 #[derive(Debug, StructOpt)]
 pub struct Day02 {
@@ -13,7 +13,7 @@ pub struct Day02 {
     target: i32,
 }
 
-impl command::Command for Day02 {
+impl Problem for Day02 {
     type Output = i32;
 
     fn part_one(&self) -> i32 {
@@ -62,16 +62,16 @@ fn output(program: &[i32], noun: i32, verb: i32) -> i32 {
 mod tests {
     use super::*;
 
-    use crate::command::Command;
+    use crate::problem::Problem;
 
     #[test]
     fn test_part_one() {
         let input = PathBuf::from("fixtures/day02.txt");
         let target = 3100;
 
-        let command = Day02 { input, target };
+        let problem = Day02 { input, target };
 
-        assert_eq!(command.part_one(), 3100);
+        assert_eq!(problem.part_one(), 3100);
     }
 
     #[test]
@@ -79,8 +79,8 @@ mod tests {
         let input = PathBuf::from("fixtures/day02.txt");
         let target = 3100;
 
-        let command = Day02 { input, target };
+        let problem = Day02 { input, target };
 
-        assert_eq!(command.part_two(), 412);
+        assert_eq!(problem.part_two(), 412);
     }
 }

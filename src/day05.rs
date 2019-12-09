@@ -3,8 +3,8 @@ use std::path::PathBuf;
 
 use structopt::StructOpt;
 
-use crate::command;
 use crate::intcode::Intcode;
+use crate::problem::Problem;
 
 #[derive(Debug, StructOpt)]
 pub struct Day05 {
@@ -12,7 +12,7 @@ pub struct Day05 {
     input: PathBuf,
 }
 
-impl command::Command for Day05 {
+impl Problem for Day05 {
     type Output = i32;
 
     fn part_one(&self) -> i32 {

@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-pub trait Command {
+pub trait Problem {
     type Output: Display;
 
     fn part_one(&self) -> Self::Output;

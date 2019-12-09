@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 
 use structopt::StructOpt;
 
-use crate::command;
+use crate::problem::Problem;
 
 #[derive(Debug, StructOpt)]
 pub struct Day06 {
@@ -13,7 +13,7 @@ pub struct Day06 {
     input: PathBuf,
 }
 
-impl command::Command for Day06 {
+impl Problem for Day06 {
     type Output = usize;
 
     fn part_one(&self) -> usize {
@@ -72,7 +72,7 @@ fn indirect_orbits<'a>(orbits: &'a HashMap<String, String>, object: &str) -> Vec
 mod tests {
     use super::*;
 
-    use crate::command::Command;
+    use crate::problem::Problem;
 
     #[test]
     fn test_read_orbits() {
@@ -99,16 +99,16 @@ mod tests {
     #[test]
     fn test_part_one() {
         let input = PathBuf::from("fixtures/day06a.txt");
-        let command = Day06 { input };
+        let problem = Day06 { input };
 
-        assert_eq!(command.part_one(), 42);
+        assert_eq!(problem.part_one(), 42);
     }
 
     #[test]
     fn test_part_two() {
         let input = PathBuf::from("fixtures/day06b.txt");
-        let command = Day06 { input };
+        let problem = Day06 { input };
 
-        assert_eq!(command.part_two(), 4);
+        assert_eq!(problem.part_two(), 4);
     }
 }

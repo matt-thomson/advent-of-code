@@ -4,7 +4,7 @@ use std::path::PathBuf;
 
 use structopt::StructOpt;
 
-use crate::command;
+use crate::problem::Problem;
 
 #[derive(Debug, StructOpt)]
 pub struct Day01 {
@@ -12,7 +12,7 @@ pub struct Day01 {
     input: PathBuf,
 }
 
-impl command::Command for Day01 {
+impl Problem for Day01 {
     type Output = u32;
 
     fn part_one(&self) -> u32 {
@@ -56,7 +56,7 @@ fn total_fuel_required(mass: u32) -> u32 {
 mod tests {
     use super::*;
 
-    use crate::command::Command;
+    use crate::problem::Problem;
 
     #[test]
     fn test_basic_fuel_required() {
@@ -77,16 +77,16 @@ mod tests {
     #[test]
     fn test_part_one() {
         let input = PathBuf::from("fixtures/day01.txt");
-        let command = Day01 { input };
+        let problem = Day01 { input };
 
-        assert_eq!(command.part_one(), 34241);
+        assert_eq!(problem.part_one(), 34241);
     }
 
     #[test]
     fn test_part_two() {
         let input = PathBuf::from("fixtures/day01.txt");
-        let command = Day01 { input };
+        let problem = Day01 { input };
 
-        assert_eq!(command.part_two(), 51316);
+        assert_eq!(problem.part_two(), 51316);
     }
 }

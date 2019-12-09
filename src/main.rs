@@ -1,5 +1,5 @@
-mod command;
 mod intcode;
+mod problem;
 
 mod day01;
 mod day02;
@@ -12,6 +12,6 @@ mod day08;
 
 use structopt::StructOpt;
 
-use command::Command;
+use problem::Problem;
 
-include!(concat!(env!("OUT_DIR"), "/commands.rs"));
+include!(concat!(env!("OUT_DIR"), "/problems.rs"));

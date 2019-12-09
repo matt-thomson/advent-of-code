@@ -9,6 +9,7 @@ use opcode::Opcode;
 pub struct Intcode {
     memory: Vec<i32>,
     instruction_pointer: usize,
+    relative_base: isize,
     is_halted: bool,
 }
 
@@ -17,6 +18,7 @@ impl Intcode {
         Intcode {
             memory,
             instruction_pointer: 0,
+            relative_base: 0,
             is_halted: false,
         }
     }
@@ -89,6 +91,9 @@ impl Intcode {
                     let value = if first == second { 1 } else { 0 };
                     self.poke(location, value);
                 }
+                Instruction::SetRelativeBase => {
+                    self.relative_base += self.read_with_mode(&opcode.mode(0)) as isize;
+                }
                 Instruction::Halt => {
                     self.is_halted = true;
                     break;
@@ -99,11 +104,13 @@ impl Intcode {
         output
     }
 
-    pub fn peek(&self, address: usize) -> i32 {
+    pub fn peek(&mut self, address: usize) -> i32 {
+        self.resize(address);
         self.memory[address]
     }
 
     pub fn poke(&mut self, address: usize, value: i32) {
+        self.resize(address);
         self.memory[address] = value;
     }
 
@@ -112,7 +119,7 @@ impl Intcode {
     }
 
     fn read(&mut self) -> i32 {
-        let value = self.memory[self.instruction_pointer];
+        let value = self.peek(self.instruction_pointer);
         self.instruction_pointer += 1;
 
         value
@@ -123,6 +130,16 @@ impl Intcode {
         match mode {
             Mode::Position => self.peek(value as usize),
             Mode::Immediate => value,
+            Mode::Relative => {
+                let location = self.relative_base + (value as isize);
+                self.peek(location as usize)
+            }
+        }
+    }
+
+    fn resize(&mut self, address: usize) {
+        if address >= self.memory.len() {
+            self.memory.resize(address + 1, 0);
         }
     }
 }
@@ -227,5 +244,16 @@ mod tests {
         let output = intcode.run(&[9]);
 
         assert_eq!(output, vec![0]);
+    }
+
+    #[test]
+    fn test_run_relative_mode() {
+        let code = vec![
+            109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99,
+        ];
+        let mut intcode = Intcode::new(code.clone());
+        let output = intcode.run(&[]);
+
+        assert_eq!(output, code);
     }
 }

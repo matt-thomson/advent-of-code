@@ -30,9 +30,9 @@ impl Direction {
         let (x, y) = *point;
 
         match self {
-            Direction::Up => (x, y + 1),
+            Direction::Up => (x, y - 1),
             Direction::Right => (x + 1, y),
-            Direction::Down => (x, y - 1),
+            Direction::Down => (x, y + 1),
             Direction::Left => (x - 1, y),
         }
     }

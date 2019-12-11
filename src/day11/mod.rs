@@ -4,7 +4,7 @@ mod rotation;
 mod state;
 
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use structopt::StructOpt;
 
@@ -25,26 +25,46 @@ impl Problem for Day11 {
     type Output = usize;
 
     fn part_one(&self) -> usize {
-        let program: Vec<i64> = fs::read_to_string(&self.input)
-            .unwrap()
-            .trim()
-            .split(',')
-            .map(|x| x.parse().unwrap())
-            .collect();
-        let mut intcode = Intcode::new(program);
-        let mut state = State::new();
-
-        while !intcode.is_halted() {
-            let (colour, rotation) = run(&mut intcode, state.current_colour());
-            state.step(colour, rotation);
-        }
-
-        state.num_painted()
+        identifier(&self.input, Colour::Black).painted().len()
     }
 
     fn part_two(&self) -> usize {
-        unimplemented!()
+        let identifier = identifier(&self.input, Colour::White);
+
+        let min_x = *identifier.painted().keys().map(|(x, _)| x).min().unwrap();
+        let max_x = *identifier.painted().keys().map(|(x, _)| x).max().unwrap();
+
+        let min_y = *identifier.painted().keys().map(|(_, y)| y).min().unwrap();
+        let max_y = *identifier.painted().keys().map(|(_, y)| y).max().unwrap();
+
+        for y in min_y..=max_y {
+            for x in min_x..=max_x {
+                print!("{}", identifier.colour(&(x, y)));
+            }
+
+            println!();
+        }
+
+        0
     }
+}
+
+fn identifier(path: &Path, initial: Colour) -> State {
+    let program: Vec<i64> = fs::read_to_string(path)
+        .unwrap()
+        .trim()
+        .split(',')
+        .map(|x| x.parse().unwrap())
+        .collect();
+    let mut intcode = Intcode::new(program);
+    let mut state = State::new(initial);
+
+    while !intcode.is_halted() {
+        let (colour, rotation) = run(&mut intcode, state.current_colour());
+        state.step(colour, rotation);
+    }
+
+    state
 }
 
 fn run(intcode: &mut Intcode, colour: &Colour) -> (Colour, Rotation) {

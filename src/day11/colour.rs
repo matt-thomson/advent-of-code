@@ -1,3 +1,5 @@
+use std::fmt::{self, Display, Formatter};
+
 #[derive(Debug, PartialEq)]
 pub enum Colour {
     Black,
@@ -20,5 +22,16 @@ impl From<i64> for Colour {
             1 => Colour::White,
             x => panic!("unknown colour {}", x),
         }
+    }
+}
+
+impl Display for Colour {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let c = match *self {
+            Colour::Black => ' ',
+            Colour::White => '█',
+        };
+
+        write!(f, "{}", c)
     }
 }

@@ -13,11 +13,16 @@ pub struct State {
 }
 
 impl State {
-    pub fn new() -> State {
+    pub fn new(initial: Colour) -> State {
+        let position = (0, 0);
+
+        let mut painted = HashMap::new();
+        painted.insert(position, initial);
+
         State {
-            position: (0, 0),
+            position,
             direction: Direction::Up,
-            painted: HashMap::new(),
+            painted,
         }
     }
 
@@ -28,11 +33,15 @@ impl State {
     }
 
     pub fn current_colour(&self) -> &Colour {
-        self.painted.get(&self.position).unwrap_or(&Colour::Black)
+        self.colour(&self.position)
     }
 
-    pub fn num_painted(&self) -> usize {
-        self.painted.len()
+    pub fn painted(&self) -> &HashMap<Point, Colour> {
+        &self.painted
+    }
+
+    pub fn colour(&self, point: &Point) -> &Colour {
+        self.painted.get(point).unwrap_or(&Colour::Black)
     }
 }
 
@@ -42,7 +51,7 @@ mod tests {
 
     #[test]
     fn test_step() {
-        let mut state = State::new();
+        let mut state = State::new(Colour::Black);
         state.step(Colour::White, Rotation::AntiClockwise);
 
         assert_eq!(state.position, (-1, 0));

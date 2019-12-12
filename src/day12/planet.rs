@@ -4,7 +4,7 @@ const DIMENSIONS: usize = 3;
 
 type Coordinates = [isize; DIMENSIONS];
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Planet {
     position: Coordinates,
     velocity: Coordinates,

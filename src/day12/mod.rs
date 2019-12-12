@@ -4,6 +4,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
 
+use num::Integer;
 use structopt::StructOpt;
 
 use crate::problem::Problem;
@@ -32,18 +33,14 @@ impl Problem for Day12 {
     }
 
     fn part_two(&self) -> usize {
-        let mut planets = read(&self.input);
-        let original: Vec<_> = planets.iter().cloned().collect();
+        let planets = read(&self.input);
+        let mut result: usize = 1;
 
-        for i in 1.. {
-            step(&mut planets);
-
-            if original == planets {
-                return i;
-            }
+        for i in 0..3 {
+            result = result.lcm(&find_cycle(&planets, i));
         }
 
-        unreachable!();
+        result
     }
 }
 
@@ -58,7 +55,7 @@ fn read(input: &Path) -> Vec<Planet> {
 }
 
 fn step(planets: &mut [Planet]) {
-    let copy: Vec<_> = planets.iter().cloned().collect();
+    let copy = planets.to_vec();
 
     for (i, first) in copy.iter().enumerate() {
         for (j, second) in planets.iter_mut().enumerate() {
@@ -71,6 +68,27 @@ fn step(planets: &mut [Planet]) {
     for planet in &mut planets.iter_mut() {
         planet.step();
     }
+}
+
+fn find_cycle(planets: &[Planet], dimension: usize) -> usize {
+    let mut current = planets.to_vec();
+
+    for i in 1.. {
+        step(&mut current);
+
+        if dimension_matches(&planets, &current, dimension) {
+            return i;
+        }
+    }
+
+    unreachable!();
+}
+
+fn dimension_matches(first: &[Planet], second: &[Planet], dimension: usize) -> bool {
+    first.iter().zip(second).all(|(first, second)| {
+        first.position(dimension) == second.position(dimension)
+            && first.velocity(dimension) == second.velocity(dimension)
+    })
 }
 
 #[cfg(test)]
@@ -99,5 +117,13 @@ mod tests {
         let problem = Day12 { input, steps: 10 };
 
         assert_eq!(problem.part_two(), 2772);
+    }
+
+    #[test]
+    fn test_part_two_b() {
+        let input = PathBuf::from("fixtures/day12b.txt");
+        let problem = Day12 { input, steps: 10 };
+
+        assert_eq!(problem.part_two(), 4_686_774_924);
     }
 }

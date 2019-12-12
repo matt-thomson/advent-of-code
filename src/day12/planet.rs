@@ -51,6 +51,14 @@ impl Planet {
         potential * kinetic
     }
 
+    pub fn position(&self, dimension: usize) -> isize {
+        self.position[dimension]
+    }
+
+    pub fn velocity(&self, dimension: usize) -> isize {
+        self.velocity[dimension]
+    }
+
     fn parse_part(input: &str) -> isize {
         let equals = input.find('=').unwrap();
         let suffix = input.len() - 1;

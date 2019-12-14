@@ -1,6 +1,7 @@
+mod screen;
 mod tile;
 
-use std::collections::HashMap;
+use std::cmp::Ordering;
 use std::path::PathBuf;
 
 use structopt::StructOpt;
@@ -8,6 +9,7 @@ use structopt::StructOpt;
 use crate::intcode::Program;
 use crate::problem::Problem;
 
+use screen::Screen;
 use tile::Tile;
 
 #[derive(Debug, StructOpt)]
@@ -21,21 +23,38 @@ impl Problem for Day13 {
 
     fn part_one(&self) -> usize {
         let mut computer = Program::read(&self.input).launch();
+        let mut screen = Screen::new();
+
         let output = computer.run(&[]);
+        screen.update(&output);
 
-        let mut screen: HashMap<(i64, i64), Tile> = HashMap::new();
-
-        for chunk in output.chunks(3) {
-            screen.insert((chunk[0], chunk[1]), Tile::from(chunk[2]));
-        }
-
-        screen
-            .iter()
-            .filter(|(_, tile)| **tile == Tile::Block)
-            .count()
+        screen.num_blocks()
     }
 
     fn part_two(&self) -> usize {
-        unimplemented!();
+        let mut computer = Program::read(&self.input).launch();
+        computer.poke(0, 2);
+
+        let mut screen = Screen::new();
+
+        let output = computer.run(&[]);
+        screen.update(&output);
+
+        while !computer.is_halted() {
+            let (paddle, _) = screen.find(Tile::Paddle);
+            let (ball, _) = screen.find(Tile::Ball);
+
+            let direction = match paddle.cmp(&ball) {
+                Ordering::Less => 1,
+                Ordering::Equal => 0,
+                Ordering::Greater => -1,
+            };
+
+            screen.update(&computer.run(&[direction]));
+        }
+
+        assert!(screen.num_blocks() == 0);
+
+        screen.score()
     }
 }

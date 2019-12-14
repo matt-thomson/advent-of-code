@@ -1,6 +1,6 @@
 #[derive(Debug)]
 pub struct Chemical {
-    amount: u32,
+    amount: u64,
     name: String,
 }
 
@@ -13,7 +13,7 @@ impl Chemical {
         Chemical { amount, name }
     }
 
-    pub fn amount(&self) -> u32 {
+    pub fn amount(&self) -> u64 {
         self.amount
     }
 

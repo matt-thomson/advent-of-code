@@ -3,12 +3,11 @@ mod direction;
 mod rotation;
 mod state;
 
-use std::fs;
 use std::path::{Path, PathBuf};
 
 use structopt::StructOpt;
 
-use crate::intcode::Intcode;
+use crate::intcode::{Computer, Program};
 use crate::problem::Problem;
 
 use colour::Colour;
@@ -50,25 +49,19 @@ impl Problem for Day11 {
 }
 
 fn identifier(path: &Path, initial: Colour) -> State {
-    let program: Vec<i64> = fs::read_to_string(path)
-        .unwrap()
-        .trim()
-        .split(',')
-        .map(|x| x.parse().unwrap())
-        .collect();
-    let mut intcode = Intcode::new(program);
+    let mut computer = Program::read(&path).launch();
     let mut state = State::new(initial);
 
-    while !intcode.is_halted() {
-        let (colour, rotation) = run(&mut intcode, state.current_colour());
+    while !computer.is_halted() {
+        let (colour, rotation) = run(&mut computer, state.current_colour());
         state.step(colour, rotation);
     }
 
     state
 }
 
-fn run(intcode: &mut Intcode, colour: &Colour) -> (Colour, Rotation) {
-    let output = intcode.run(&[colour.to_i64()]);
+fn run(computer: &mut Computer, colour: &Colour) -> (Colour, Rotation) {
+    let output = computer.run(&[colour.to_i64()]);
 
     let colour = Colour::from(output[0]);
     let rotation = Rotation::from(output[1]);
@@ -80,14 +73,14 @@ fn run(intcode: &mut Intcode, colour: &Colour) -> (Colour, Rotation) {
 mod tests {
     use super::*;
 
-    use crate::intcode::Intcode;
+    use crate::intcode::Computer;
 
     #[test]
     fn test_run() {
         let program = vec![3, 100, 4, 100, 104, 1, 99];
-        let mut intcode = Intcode::new(program);
+        let mut computer = Computer::new(program);
 
-        let (colour, rotation) = run(&mut intcode, &Colour::White);
+        let (colour, rotation) = run(&mut computer, &Colour::White);
 
         assert_eq!(colour, Colour::White);
         assert_eq!(rotation, Rotation::Clockwise);

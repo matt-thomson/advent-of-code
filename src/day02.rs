@@ -1,9 +1,8 @@
-use std::fs;
 use std::path::PathBuf;
 
 use structopt::StructOpt;
 
-use crate::intcode::Intcode;
+use crate::intcode::Program;
 use crate::problem::Problem;
 
 #[derive(Debug, StructOpt)]
@@ -17,11 +16,12 @@ impl Problem for Day02 {
     type Output = i64;
 
     fn part_one(&self) -> i64 {
-        output(&self.read_program(), 12, 2)
+        let program = Program::read(&self.input);
+        output(&program, 12, 2)
     }
 
     fn part_two(&self) -> i64 {
-        let program = self.read_program();
+        let program = Program::read(&self.input);
         let max = program.len().min(100) as i64;
 
         for noun in 0..max {
@@ -36,26 +36,14 @@ impl Problem for Day02 {
     }
 }
 
-impl Day02 {
-    fn read_program(&self) -> Vec<i64> {
-        fs::read_to_string(&self.input)
-            .unwrap()
-            .trim()
-            .split(',')
-            .map(|x| x.parse().unwrap())
-            .collect()
-    }
-}
+fn output(program: &Program, noun: i64, verb: i64) -> i64 {
+    let mut computer = program.launch();
 
-fn output(program: &[i64], noun: i64, verb: i64) -> i64 {
-    let mut program = program.to_vec();
-    program[1] = noun;
-    program[2] = verb;
+    computer.poke(1, noun);
+    computer.poke(2, verb);
+    computer.run(&[]);
 
-    let mut intcode = Intcode::new(program);
-    intcode.run(&[]);
-
-    intcode.peek(0)
+    computer.peek(0)
 }
 
 #[cfg(test)]

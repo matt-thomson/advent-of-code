@@ -1,10 +1,9 @@
-use std::fs;
 use std::path::PathBuf;
 
 use permutohedron::heap_recursive;
 use structopt::StructOpt;
 
-use crate::intcode::Intcode;
+use crate::intcode::{Computer, Program};
 use crate::problem::Problem;
 
 #[derive(Debug, StructOpt)]
@@ -27,12 +26,7 @@ impl Problem for Day07 {
 
 impl Day07 {
     fn solve(&self, phases: &mut [i64; 5]) -> i64 {
-        let program: Vec<i64> = fs::read_to_string(&self.input)
-            .unwrap()
-            .trim()
-            .split(',')
-            .map(|x| x.parse().unwrap())
-            .collect();
+        let program = Program::read(&self.input);
 
         let mut max = 0;
 
@@ -47,14 +41,14 @@ impl Day07 {
     }
 }
 
-fn run(program: &[i64], phases: &[i64]) -> i64 {
-    let mut intcodes: Vec<_> = phases.iter().map(|phase| init(&program, *phase)).collect();
+fn run(program: &Program, phases: &[i64]) -> i64 {
+    let mut computers: Vec<_> = phases.iter().map(|phase| init(&program, *phase)).collect();
 
     let mut signal = 0;
 
-    while !intcodes[4].is_halted() {
-        for intcode in &mut intcodes {
-            let output = intcode.run(&[signal]);
+    while !computers[4].is_halted() {
+        for computer in &mut computers {
+            let output = computer.run(&[signal]);
             assert!(output.len() == 1);
 
             signal = output[0];
@@ -64,13 +58,13 @@ fn run(program: &[i64], phases: &[i64]) -> i64 {
     signal
 }
 
-fn init(program: &[i64], phase: i64) -> Intcode {
-    let mut intcode = Intcode::new(program.to_vec());
-    let output = intcode.run(&[phase]);
+fn init(program: &Program, phase: i64) -> Computer {
+    let mut computer = program.launch();
+    let output = computer.run(&[phase]);
 
     assert!(output.is_empty());
 
-    intcode
+    computer
 }
 
 #[cfg(test)]

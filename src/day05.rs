@@ -1,9 +1,8 @@
-use std::fs;
 use std::path::PathBuf;
 
 use structopt::StructOpt;
 
-use crate::intcode::Intcode;
+use crate::intcode::Program;
 use crate::problem::Problem;
 
 #[derive(Debug, StructOpt)]
@@ -34,15 +33,7 @@ impl Problem for Day05 {
 
 impl Day05 {
     fn run(&self, input: i64) -> Vec<i64> {
-        let program: Vec<i64> = fs::read_to_string(&self.input)
-            .unwrap()
-            .trim()
-            .split(',')
-            .map(|x| x.parse().unwrap())
-            .collect();
-
-        let mut intcode = Intcode::new(program);
-
-        intcode.run(&[input])
+        let mut computer = Program::read(&self.input).launch();
+        computer.run(&[input])
     }
 }

@@ -4,7 +4,7 @@ use std::fs::File;
 use std::io::Write;
 use std::path::Path;
 
-const NUM_DAYS: usize = 12;
+const NUM_DAYS: usize = 13;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let out_dir = env::var("OUT_DIR").unwrap();

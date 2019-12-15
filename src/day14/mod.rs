@@ -76,21 +76,21 @@ fn ore_required(
         return amount;
     }
 
-    let existing = products.entry(name.to_string()).or_insert(0);
+    let product = products.entry(name.to_string()).or_insert(0);
 
-    if *existing >= amount {
-        *existing -= amount;
+    if *product >= amount {
+        *product -= amount;
         return 0;
     } else {
-        amount -= *existing;
-        *existing = 0;
+        amount -= *product;
+        *product = 0;
     }
 
     let reaction = reactions.get(name).unwrap();
     let num_reactions = ((amount - 1) / reaction.output().amount()) + 1;
 
     let surplus = (num_reactions * reaction.output().amount()) - amount;
-    *products.entry(name.to_string()).or_insert(0) += surplus;
+    *product += surplus;
 
     let mut ore = 0;
 

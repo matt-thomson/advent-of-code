@@ -10,7 +10,6 @@ use crate::intcode::Program;
 use crate::problem::Problem;
 
 use screen::Screen;
-use tile::Tile;
 
 #[derive(Debug, StructOpt)]
 pub struct Day13 {
@@ -23,10 +22,9 @@ impl Problem for Day13 {
 
     fn part_one(&self) -> usize {
         let mut computer = Program::read(&self.input).launch();
-        let mut screen = Screen::new();
 
         let output = computer.run(&[]);
-        screen.update(&output);
+        let screen = Screen::new(&output);
 
         screen.num_blocks()
     }
@@ -35,14 +33,12 @@ impl Problem for Day13 {
         let mut computer = Program::read(&self.input).launch();
         computer.poke(0, 2);
 
-        let mut screen = Screen::new();
-
         let output = computer.run(&[]);
-        screen.update(&output);
+        let mut screen = Screen::new(&output);
 
         while !computer.is_halted() {
-            let (paddle, _) = screen.find(Tile::Paddle);
-            let (ball, _) = screen.find(Tile::Ball);
+            let (paddle, _) = screen.paddle();
+            let (ball, _) = screen.ball();
 
             let direction = match paddle.cmp(&ball) {
                 Ordering::Less => 1,

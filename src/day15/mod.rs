@@ -27,7 +27,10 @@ impl Problem for Day15 {
     }
 
     fn part_two(&self) -> usize {
-        unimplemented!();
+        let mut computer = Program::read(&self.input).launch();
+        find_oxygen(&mut computer, None);
+
+        fill_oxygen(&mut computer, None, 0)
     }
 }
 
@@ -58,4 +61,25 @@ fn find_oxygen(computer: &mut Computer, last: Option<&Direction>) -> Option<usiz
     }
 
     None
+}
+
+fn fill_oxygen(computer: &mut Computer, last: Option<&Direction>, time: usize) -> usize {
+    let mut maximum = time;
+
+    for direction in Direction::all() {
+        if last == Some(direction.opposite()) {
+            continue;
+        }
+
+        match step(computer, direction) {
+            Status::HitWall => (),
+            Status::Moved => {
+                maximum = maximum.max(fill_oxygen(computer, Some(direction), time + 1));
+                step(computer, direction.opposite());
+            }
+            Status::FoundOxygen => unreachable!(),
+        }
+    }
+
+    maximum
 }

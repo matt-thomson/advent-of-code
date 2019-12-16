@@ -13,7 +13,7 @@ impl Pattern {
         Pattern {
             index: 0,
             emitted: 0,
-            position: position,
+            position,
         }
     }
 }

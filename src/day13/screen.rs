@@ -31,7 +31,6 @@ impl Screen {
                     Tile::Wall => (),
                     Tile::Block => {
                         blocks.insert(position);
-                        ()
                     }
                     Tile::Ball => ball = Some(position),
                     Tile::Paddle => paddle = Some(position),
@@ -59,7 +58,6 @@ impl Screen {
                 match tile {
                     Tile::Empty => {
                         self.blocks.remove(&position);
-                        ()
                     }
                     Tile::Wall => unreachable!(),
                     Tile::Block => unreachable!(),

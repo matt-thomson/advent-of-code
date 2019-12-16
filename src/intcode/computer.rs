@@ -148,6 +148,7 @@ impl Computer {
     }
 }
 
+#[cfg(test)]
 mod tests {
     use super::Computer;
 

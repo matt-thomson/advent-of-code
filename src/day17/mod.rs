@@ -1,3 +1,4 @@
+mod direction;
 mod image;
 mod pixel;
 

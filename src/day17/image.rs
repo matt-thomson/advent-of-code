@@ -1,5 +1,6 @@
 use std::collections::HashSet;
 
+use super::direction::Direction;
 use super::pixel::Pixel;
 
 pub type Position = (usize, usize);
@@ -49,10 +50,9 @@ impl Image {
             return false;
         }
 
-        let neighbours = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)];
-
-        neighbours
+        Direction::all()
             .iter()
-            .all(|neighbour| self.scaffolds.contains(neighbour))
+            .flat_map(|direction| direction.step(&position))
+            .all(|neighbour| self.scaffolds.contains(&neighbour))
     }
 }

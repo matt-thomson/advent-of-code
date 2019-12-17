@@ -1,8 +1,10 @@
+use super::direction::Direction;
+
 #[derive(Debug)]
 pub enum Pixel {
     OpenSpace,
     Scaffold,
-    Robot,
+    Robot(Direction),
 }
 
 impl Pixel {
@@ -10,7 +12,10 @@ impl Pixel {
         match input {
             '#' => Self::Scaffold,
             '.' => Self::OpenSpace,
-            '^' => Self::Robot,
+            '^' => Self::Robot(Direction::Up),
+            'v' => Self::Robot(Direction::Down),
+            '<' => Self::Robot(Direction::Left),
+            '>' => Self::Robot(Direction::Right),
             _ => panic!("unknown pixel {}", input),
         }
     }

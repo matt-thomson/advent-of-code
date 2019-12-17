@@ -1,10 +1,17 @@
 use super::image::Position;
 
+#[derive(Clone, Copy, Debug)]
 pub enum Direction {
     Up,
     Down,
     Left,
     Right,
+}
+
+#[derive(Debug)]
+pub enum Rotation {
+    AntiClockwise,
+    Clockwise,
 }
 
 const DIRECTIONS: [Direction; 4] = [
@@ -35,6 +42,22 @@ impl Direction {
                 }
             }
             Self::Right => Some((x + 1, y)),
+        }
+    }
+
+    pub fn turn(&self, rotation: Rotation) -> Direction {
+        match (self, rotation) {
+            (Direction::Up, Rotation::AntiClockwise) => Direction::Left,
+            (Direction::Up, Rotation::Clockwise) => Direction::Right,
+
+            (Direction::Right, Rotation::AntiClockwise) => Direction::Up,
+            (Direction::Right, Rotation::Clockwise) => Direction::Down,
+
+            (Direction::Down, Rotation::AntiClockwise) => Direction::Right,
+            (Direction::Down, Rotation::Clockwise) => Direction::Left,
+
+            (Direction::Left, Rotation::AntiClockwise) => Direction::Down,
+            (Direction::Left, Rotation::Clockwise) => Direction::Up,
         }
     }
 

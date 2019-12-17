@@ -1,5 +1,6 @@
 mod direction;
 mod image;
+mod instruction;
 mod pixel;
 
 use std::path::PathBuf;
@@ -29,6 +30,14 @@ impl Problem for Day17 {
     }
 
     fn part_two(&self) -> usize {
+        let mut computer = Program::read(&self.input).launch();
+        computer.poke(0, 2);
+
+        let output = computer.run(&[]);
+        let image = Image::new(&output);
+
+        dbg!(image.path());
+
         unimplemented!();
     }
 }

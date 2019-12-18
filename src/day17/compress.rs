@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 use super::instruction::Instruction;
 
 #[derive(Debug)]
@@ -8,11 +10,37 @@ pub struct CompressedPath {
     c: Vec<Instruction>,
 }
 
+impl CompressedPath {
+    pub fn to_string(&self) -> String {
+        let mut result = String::new();
+
+        result.push_str(&self.main.iter().map(|f| f.to_str()).join(","));
+        result.push('\n');
+
+        for f in &[&self.a, &self.b, &self.c] {
+            result.push_str(&f.iter().map(|i| i.to_string()).join(","));
+            result.push('\n');
+        }
+
+        result
+    }
+}
+
 #[derive(Debug, PartialEq)]
 enum FunctionCall {
     A,
     B,
     C,
+}
+
+impl FunctionCall {
+    fn to_str(&self) -> &'static str {
+        match self {
+            Self::A => "A",
+            Self::B => "B",
+            Self::C => "C",
+        }
+    }
 }
 
 pub fn compress(path: &[Instruction]) -> CompressedPath {

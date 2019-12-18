@@ -41,8 +41,15 @@ impl Problem for Day17 {
         let path = image.path();
         let compressed_path = compress(&path);
 
-        dbg!(compressed_path);
+        let input: Vec<_> = compressed_path
+            .to_string()
+            .bytes()
+            .map(|b| b as i64)
+            .collect();
 
-        unimplemented!();
+        computer.run(&input);
+
+        let output = computer.run(&[110, 10]);
+        output[output.len() - 1] as usize
     }
 }

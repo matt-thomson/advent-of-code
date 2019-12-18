@@ -1,3 +1,5 @@
+use std::fmt::{self, Display, Formatter};
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum Instruction {
     Move(usize),
@@ -5,12 +7,12 @@ pub enum Instruction {
     TurnRight,
 }
 
-impl Instruction {
-    pub fn to_string(&self) -> String {
+impl Display for Instruction {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Move(steps) => steps.to_string(),
-            Self::TurnLeft => "L".to_string(),
-            Self::TurnRight => "R".to_string(),
+            Self::Move(steps) => write!(f, "{}", steps),
+            Self::TurnLeft => write!(f, "L"),
+            Self::TurnRight => write!(f, "R"),
         }
     }
 }

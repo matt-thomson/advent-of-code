@@ -1,3 +1,5 @@
+use std::fmt::{self, Display, Formatter};
+
 use itertools::Itertools;
 
 use super::instruction::Instruction;
@@ -10,19 +12,15 @@ pub struct CompressedPath {
     c: Vec<Instruction>,
 }
 
-impl CompressedPath {
-    pub fn to_string(&self) -> String {
-        let mut result = String::new();
+impl Display for CompressedPath {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        writeln!(f, "{}", &self.main.iter().format(","))?;
 
-        result.push_str(&self.main.iter().map(|f| f.to_str()).join(","));
-        result.push('\n');
-
-        for f in &[&self.a, &self.b, &self.c] {
-            result.push_str(&f.iter().map(|i| i.to_string()).join(","));
-            result.push('\n');
+        for func in &[&self.a, &self.b, &self.c] {
+            writeln!(f, "{}", &func.iter().format(","))?;
         }
 
-        result
+        Ok(())
     }
 }
 
@@ -33,12 +31,12 @@ enum FunctionCall {
     C,
 }
 
-impl FunctionCall {
-    fn to_str(&self) -> &'static str {
+impl Display for FunctionCall {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
-            Self::A => "A",
-            Self::B => "B",
-            Self::C => "C",
+            Self::A => write!(f, "A"),
+            Self::B => write!(f, "B"),
+            Self::C => write!(f, "C"),
         }
     }
 }

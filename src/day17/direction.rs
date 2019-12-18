@@ -22,7 +22,7 @@ const DIRECTIONS: [Direction; 4] = [
 ];
 
 impl Direction {
-    pub fn step(&self, position: &Position) -> Option<Position> {
+    pub fn step(self, position: &Position) -> Option<Position> {
         let (x, y) = *position;
 
         match self {
@@ -45,7 +45,7 @@ impl Direction {
         }
     }
 
-    pub fn turn(&self, rotation: Rotation) -> Direction {
+    pub fn turn(self, rotation: Rotation) -> Direction {
         match (self, rotation) {
             (Direction::Up, Rotation::AntiClockwise) => Direction::Left,
             (Direction::Up, Rotation::Clockwise) => Direction::Right,

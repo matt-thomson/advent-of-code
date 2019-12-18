@@ -1,3 +1,4 @@
+mod compress;
 mod direction;
 mod image;
 mod instruction;
@@ -10,6 +11,7 @@ use structopt::StructOpt;
 use crate::intcode::Program;
 use crate::problem::Problem;
 
+use compress::compress;
 use image::Image;
 
 #[derive(Debug, StructOpt)]
@@ -36,7 +38,10 @@ impl Problem for Day17 {
         let output = computer.run(&[]);
         let image = Image::new(&output);
 
-        dbg!(image.path());
+        let path = image.path();
+        let compressed_path = compress(&path);
+
+        dbg!(compressed_path);
 
         unimplemented!();
     }

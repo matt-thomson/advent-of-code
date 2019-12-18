@@ -8,7 +8,7 @@ pub type Position = (usize, usize);
 #[derive(Debug)]
 pub struct Maze {
     entrance: Position,
-    keys: HashMap<char, Position>,
+    keys: HashMap<Position, char>,
     doors: HashMap<Position, char>,
     walls: HashSet<Position>,
 }
@@ -37,7 +37,7 @@ impl Maze {
                         doors.insert((x, y), i);
                     }
                     i if i.is_ascii_lowercase() => {
-                        keys.insert(i.to_ascii_uppercase(), (x, y));
+                        keys.insert((x, y), i.to_ascii_uppercase());
                     }
                     _ => panic!("unknown pixel {}", position),
                 }
@@ -56,8 +56,12 @@ impl Maze {
         &self.entrance
     }
 
-    pub fn key(&self, key: char) -> Option<&Position> {
-        self.keys.get(&key)
+    pub fn keys(&self) -> Vec<&Position> {
+        self.keys.keys().collect()
+    }
+
+    pub fn key(&self, position: &Position) -> Option<&char> {
+        self.keys.get(position)
     }
 
     pub fn door(&self, position: &Position) -> Option<&char> {
@@ -82,8 +86,8 @@ mod tests {
 
         assert_eq!(*maze.entrance(), (5, 1));
 
-        assert_eq!(*maze.key('A').unwrap(), (7, 1));
-        assert_eq!(*maze.key('B').unwrap(), (1, 1));
+        assert_eq!(*maze.key(&(7, 1)).unwrap(), 'A');
+        assert_eq!(*maze.key(&(1, 1)).unwrap(), 'B');
 
         assert_eq!(*maze.door(&(3, 1)).unwrap(), 'A');
 

@@ -1,4 +1,5 @@
 mod maze;
+mod route;
 
 use std::path::PathBuf;
 
@@ -19,7 +20,9 @@ impl Problem for Day18 {
 
     fn part_one(&self) -> usize {
         let maze = Maze::read(&self.input);
-        dbg!(maze);
+        let routes = route::all(&maze);
+
+        dbg!(routes);
 
         unimplemented!();
     }

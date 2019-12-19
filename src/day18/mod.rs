@@ -74,7 +74,7 @@ fn find_shortest(
 ) -> (char, BTreeSet<char>, usize) {
     let ((position, keys), distance) = current
         .iter()
-        .min_by_key(|(_, distance)| *distance)
+        .min_by_key(|((_, keys), distance)| *distance * 100 + keys.len())
         .unwrap();
 
     (*position, keys.clone(), *distance)

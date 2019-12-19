@@ -51,15 +51,17 @@ fn solve(
         return;
     }
 
-    for (&key, route) in routes.get(&position).unwrap() {
-        if !route.reachable(&keys) {
-            continue;
-        }
+    let mut possible_routes: Vec<_> = routes
+        .get(&position)
+        .unwrap()
+        .iter()
+        .filter(|(_, route)| route.reachable(&keys))
+        .filter(|(key, _)| !keys.contains(&key))
+        .collect();
 
-        if keys.contains(&key) {
-            continue;
-        }
+    possible_routes.sort_by_key(|(_, route)| route.length());
 
+    for (&key, route) in possible_routes {
         keys.insert(key);
         solve(&routes, key, length + route.length(), keys, best);
         keys.remove(&key);
@@ -86,5 +88,29 @@ mod tests {
         let problem = Day18 { input };
 
         assert_eq!(problem.part_one(), 86);
+    }
+
+    #[test]
+    fn test_part_one_c() {
+        let input = PathBuf::from("fixtures/day18c.txt");
+        let problem = Day18 { input };
+
+        assert_eq!(problem.part_one(), 132);
+    }
+
+    #[test]
+    fn test_part_one_d() {
+        let input = PathBuf::from("fixtures/day18d.txt");
+        let problem = Day18 { input };
+
+        assert_eq!(problem.part_one(), 136);
+    }
+
+    #[test]
+    fn test_part_one_e() {
+        let input = PathBuf::from("fixtures/day18e.txt");
+        let problem = Day18 { input };
+
+        assert_eq!(problem.part_one(), 81);
     }
 }

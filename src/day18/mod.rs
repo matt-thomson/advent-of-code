@@ -1,6 +1,7 @@
 mod maze;
 mod route;
 
+use std::collections::HashSet;
 use std::path::PathBuf;
 
 use structopt::StructOpt;
@@ -24,7 +25,7 @@ impl Problem for Day18 {
         let routes = route::all(&maze);
 
         let mut best = std::usize::MAX;
-        solve(&routes, '@', 0, &mut vec![], &mut best);
+        solve(&routes, '@', 0, &mut HashSet::new(), &mut best);
 
         best
     }
@@ -34,7 +35,13 @@ impl Problem for Day18 {
     }
 }
 
-fn solve(routes: &Routes, position: char, length: usize, keys: &mut Vec<char>, best: &mut usize) {
+fn solve(
+    routes: &Routes,
+    position: char,
+    length: usize,
+    keys: &mut HashSet<char>,
+    best: &mut usize,
+) {
     if length >= *best {
         return;
     }
@@ -53,9 +60,9 @@ fn solve(routes: &Routes, position: char, length: usize, keys: &mut Vec<char>, b
             continue;
         }
 
-        keys.push(key);
+        keys.insert(key);
         solve(&routes, key, length + route.length(), keys, best);
-        keys.pop();
+        keys.remove(&key);
     }
 }
 

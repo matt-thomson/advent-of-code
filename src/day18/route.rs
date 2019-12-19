@@ -15,8 +15,8 @@ impl Route {
         self.length
     }
 
-    pub fn reachable(&self, keys: &[char]) -> bool {
-        self.doors.iter().all(|door| keys.contains(door))
+    pub fn reachable(&self, keys: &HashSet<char>) -> bool {
+        self.doors.difference(keys).count() == 0
     }
 }
 
@@ -138,7 +138,12 @@ mod tests {
 
         let route = Route { length: 0, doors };
 
-        assert!(route.reachable(&['C', 'A', 'D', 'B']));
-        assert!(!route.reachable(&['C', 'E', 'D', 'B']));
+        let mut keys = HashSet::new();
+        keys.insert('A');
+        keys.insert('C');
+        assert!(!route.reachable(&keys));
+
+        keys.insert('B');
+        assert!(route.reachable(&keys));
     }
 }

@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeSet, HashMap};
 
 use super::maze::{Maze, Position};
 
@@ -7,7 +7,7 @@ pub type Routes = HashMap<char, HashMap<char, Route>>;
 #[derive(Debug)]
 pub struct Route {
     length: usize,
-    doors: HashSet<char>,
+    doors: BTreeSet<char>,
 }
 
 impl Route {
@@ -15,7 +15,7 @@ impl Route {
         self.length
     }
 
-    pub fn reachable(&self, keys: &HashSet<char>) -> bool {
+    pub fn reachable(&self, keys: &BTreeSet<char>) -> bool {
         self.doors.difference(keys).count() == 0
     }
 }
@@ -38,7 +38,7 @@ fn all_from(maze: &Maze, start: &Position) -> HashMap<char, Route> {
         &maze,
         start,
         0,
-        &mut HashSet::new(),
+        &mut BTreeSet::new(),
         &mut vec![],
         &mut result,
     );
@@ -50,7 +50,7 @@ fn dfs(
     maze: &Maze,
     position: &Position,
     length: usize,
-    visited: &mut HashSet<Position>,
+    visited: &mut BTreeSet<Position>,
     doors: &mut Vec<char>,
     result: &mut HashMap<char, Route>,
 ) {
@@ -132,13 +132,13 @@ mod tests {
 
     #[test]
     fn test_reachable() {
-        let mut doors = HashSet::new();
+        let mut doors = BTreeSet::new();
         doors.insert('A');
         doors.insert('B');
 
         let route = Route { length: 0, doors };
 
-        let mut keys = HashSet::new();
+        let mut keys = BTreeSet::new();
         keys.insert('A');
         keys.insert('C');
         assert!(!route.reachable(&keys));

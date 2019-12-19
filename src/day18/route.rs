@@ -2,13 +2,25 @@ use std::collections::{HashMap, HashSet};
 
 use super::maze::{Maze, Position};
 
+pub type Routes = HashMap<char, HashMap<char, Route>>;
+
 #[derive(Debug)]
 pub struct Route {
     length: usize,
     doors: HashSet<char>,
 }
 
-pub fn all(maze: &Maze) -> HashMap<char, HashMap<char, Route>> {
+impl Route {
+    pub fn length(&self) -> usize {
+        self.length
+    }
+
+    pub fn reachable(&self, keys: &[char]) -> bool {
+        self.doors.iter().all(|door| keys.contains(door))
+    }
+}
+
+pub fn all(maze: &Maze) -> Routes {
     let mut result = HashMap::new();
 
     result.insert('@', all_from(&maze, maze.entrance()));
@@ -116,5 +128,17 @@ mod tests {
         let entrance_to_a_route = routes.get(&'@').unwrap().get(&'A').unwrap();
         assert_eq!(entrance_to_a_route.length, 2);
         assert_eq!(entrance_to_a_route.doors.len(), 0);
+    }
+
+    #[test]
+    fn test_reachable() {
+        let mut doors = HashSet::new();
+        doors.insert('A');
+        doors.insert('B');
+
+        let route = Route { length: 0, doors };
+
+        assert!(route.reachable(&['C', 'A', 'D', 'B']));
+        assert!(!route.reachable(&['C', 'E', 'D', 'B']));
     }
 }

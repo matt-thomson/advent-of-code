@@ -1,4 +1,4 @@
-use std::collections::{BTreeSet, HashMap};
+use std::collections::{BTreeSet, HashMap, VecDeque};
 
 use super::maze::{Maze, Position};
 
@@ -18,6 +18,26 @@ impl Route {
     pub fn reachable(&self, keys: &BTreeSet<char>) -> bool {
         self.doors.difference(keys).count() == 0
     }
+
+    fn new() -> Self {
+        Self {
+            length: 0,
+            doors: BTreeSet::new(),
+        }
+    }
+
+    fn step(&self, door: &Option<&char>) -> Self {
+        let mut doors = self.doors.clone();
+
+        if let Some(door) = door {
+            doors.insert(**door);
+        }
+
+        Self {
+            length: self.length + 1,
+            doors,
+        }
+    }
 }
 
 pub fn all(maze: &Maze) -> Routes {
@@ -34,60 +54,40 @@ pub fn all(maze: &Maze) -> Routes {
 
 fn all_from(maze: &Maze, start: &Position) -> HashMap<char, Route> {
     let mut result = HashMap::new();
-    dfs(
-        &maze,
-        start,
-        0,
-        &mut BTreeSet::new(),
-        &mut vec![],
-        &mut result,
-    );
+    let mut visited = BTreeSet::new();
+
+    let mut queue = VecDeque::new();
+    queue.push_back((*start, Route::new()));
+
+    while let Some((position, route)) = queue.pop_front() {
+        visited.insert(position);
+
+        let (x, y) = position;
+        let neighbours = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)];
+
+        for neighbour in neighbours.iter() {
+            if visited.contains(&neighbour) {
+                continue;
+            }
+
+            if maze.is_wall(&neighbour) {
+                continue;
+            }
+
+            let door = maze.door(neighbour);
+            let new_route = route.step(&door);
+
+            queue.push_back((*neighbour, new_route));
+        }
+
+        if let Some(key) = maze.key(&position) {
+            if route.length() > 0 {
+                result.insert(*key, route);
+            }
+        }
+    }
 
     result
-}
-
-fn dfs(
-    maze: &Maze,
-    position: &Position,
-    length: usize,
-    visited: &mut BTreeSet<Position>,
-    doors: &mut Vec<char>,
-    result: &mut HashMap<char, Route>,
-) {
-    let (x, y) = *position;
-    let neighbours = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)];
-
-    visited.insert(*position);
-
-    if let Some(key) = maze.key(position) {
-        if length > 0 {
-            let route = Route {
-                length,
-                doors: doors.iter().cloned().collect(),
-            };
-            result.insert(*key, route);
-        }
-    }
-
-    if let Some(door) = maze.door(position) {
-        doors.push(*door);
-    }
-
-    for neighbour in &neighbours {
-        if visited.contains(&neighbour) {
-            continue;
-        }
-
-        if maze.is_wall(&neighbour) {
-            continue;
-        }
-
-        dfs(&maze, neighbour, length + 1, visited, doors, result);
-    }
-
-    if maze.door(position).is_some() {
-        doors.pop();
-    }
 }
 
 #[cfg(test)]

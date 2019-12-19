@@ -46,18 +46,18 @@ fn solve(
         return;
     }
 
-    if keys.len() == routes.len() - 1 {
-        *best = length;
-        return;
-    }
-
     let mut possible_routes: Vec<_> = routes
         .get(&position)
         .unwrap()
         .iter()
-        .filter(|(_, route)| route.reachable(&keys))
         .filter(|(key, _)| !keys.contains(&key))
+        .filter(|(_, route)| route.reachable(&keys))
         .collect();
+
+    if possible_routes.is_empty() {
+        *best = length;
+        return;
+    }
 
     possible_routes.sort_by_key(|(_, route)| route.length());
 

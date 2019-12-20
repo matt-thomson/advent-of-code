@@ -9,6 +9,8 @@ use structopt::StructOpt;
 use crate::problem::Problem;
 
 use beam::Beam;
+use scan::Scan;
+use square::Square;
 
 pub type Position = (usize, usize);
 
@@ -31,6 +33,18 @@ impl Problem for Day19 {
     }
 
     fn part_two(&self) -> usize {
-        unimplemented!();
+        let mut beam = Beam::new(&self.input);
+        let scan = Scan::new();
+
+        for start in scan {
+            let mut square = Square::new(&start, 100);
+
+            if square.all(|position| beam.contains(&position)) {
+                let (x, y) = start;
+                return x * 10000 + y;
+            }
+        }
+
+        unreachable!();
     }
 }

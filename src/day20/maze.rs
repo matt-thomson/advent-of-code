@@ -7,7 +7,10 @@ pub type Position = (usize, usize);
 
 #[derive(Debug)]
 pub struct Maze {
+    start: Position,
+    end: Position,
     spaces: HashSet<Position>,
+    portals: HashMap<Position, Position>,
 }
 
 impl Maze {
@@ -34,26 +37,49 @@ impl Maze {
             }
         }
 
-        let mut portals: Vec<(Position, (char, char))> = vec![];
+        let mut raw_portals: Vec<(Position, (char, char))> = vec![];
 
         for (&(x, y), i) in &letters {
             if let Some(&other) = letters.get(&(x, y + 1)) {
                 if spaces.contains(&(x, y + 2)) {
-                    portals.push(((x, y + 2), (*i, other)));
+                    raw_portals.push(((x, y + 2), (*i, other)));
                 } else if spaces.contains(&(x, y - 1)) {
-                    portals.push(((x, y - 1), (*i, other)));
+                    raw_portals.push(((x, y - 1), (*i, other)));
                 }
             } else if let Some(&other) = letters.get(&(x + 1, y)) {
                 if spaces.contains(&(x + 2, y)) {
-                    portals.push(((x + 2, y), (*i, other)));
+                    raw_portals.push(((x + 2, y), (*i, other)));
                 } else if spaces.contains(&(x - 1, y)) {
-                    portals.push(((x - 1, y), (*i, other)));
+                    raw_portals.push(((x - 1, y), (*i, other)));
                 }
             }
         }
 
-        println!("{:?}", portals);
+        let mut portals = HashMap::new();
+        let mut unpaired = HashMap::new();
 
-        Self { spaces }
+        for (position, name) in raw_portals {
+            match unpaired.get(&name) {
+                Some(other) => {
+                    portals.insert(position, *other);
+                    portals.insert(*other, position);
+
+                    unpaired.remove(&name);
+                }
+                None => {
+                    unpaired.insert(name, position);
+                }
+            }
+        }
+
+        let start = *unpaired.get(&('A', 'A')).unwrap();
+        let end = *unpaired.get(&('Z', 'Z')).unwrap();
+
+        Self {
+            start,
+            end,
+            spaces,
+            portals,
+        }
     }
 }

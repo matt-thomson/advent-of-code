@@ -26,11 +26,11 @@ impl Route {
         }
     }
 
-    fn step(&self, door: &Option<&char>) -> Self {
+    fn step(&self, door: Option<&char>) -> Self {
         let mut doors = self.doors.clone();
 
         if let Some(door) = door {
-            doors.insert(**door);
+            doors.insert(*door);
         }
 
         Self {
@@ -75,7 +75,7 @@ fn all_from(maze: &Maze, start: &Position) -> HashMap<char, Route> {
             }
 
             let door = maze.door(neighbour);
-            let new_route = route.step(&door);
+            let new_route = route.step(door);
 
             queue.push_back((*neighbour, new_route));
         }

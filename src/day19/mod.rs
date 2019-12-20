@@ -1,4 +1,5 @@
 mod beam;
+mod scan;
 
 use std::path::PathBuf;
 

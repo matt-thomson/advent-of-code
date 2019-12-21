@@ -1,9 +1,10 @@
 mod maze;
 mod route;
 
-use std::collections::{BTreeSet, HashMap};
+use std::collections::BTreeSet;
 use std::path::PathBuf;
 
+use pathfinding::prelude::dijkstra;
 use structopt::StructOpt;
 
 use crate::problem::Problem;
@@ -32,52 +33,42 @@ impl Problem for Day18 {
     }
 }
 
+type State = (usize, BTreeSet<usize>);
+
 fn solve(routes: &Routes) -> usize {
-    let mut current = HashMap::new();
-    current.insert((0, BTreeSet::new()), 0);
+    let (x, shortest) = dijkstra(
+        &(0, BTreeSet::new()),
+        |state| neighbours(&state, &routes),
+        |(_, keys)| keys.len() == routes.len() - 1,
+    )
+    .unwrap();
 
-    loop {
-        let (position, keys, distance) = find_shortest(&current);
+    dbg!(x, shortest);
 
-        let possible_routes: Vec<_> = routes
-            .get(&position)
-            .unwrap()
-            .iter()
-            .filter(|(key, _)| !keys.contains(&key))
-            .filter(|(_, route)| route.reachable(&keys))
-            .collect();
-
-        if possible_routes.is_empty() {
-            return distance;
-        }
-
-        for (&destination, route) in possible_routes {
-            let mut new_keys = keys.clone();
-            new_keys.insert(destination);
-
-            let total_distance = distance + route.length();
-            let entry = current
-                .entry((destination, new_keys))
-                .or_insert(total_distance);
-
-            if *entry > total_distance {
-                *entry = total_distance;
-            }
-        }
-
-        current.remove(&(position, keys));
-    }
+    shortest
 }
 
-fn find_shortest(
-    current: &HashMap<(usize, BTreeSet<usize>), usize>,
-) -> (usize, BTreeSet<usize>, usize) {
-    let ((position, keys), distance) = current
-        .iter()
-        .min_by_key(|((_, keys), distance)| *distance * 100 + keys.len())
-        .unwrap();
+fn neighbours(state: &State, routes: &Routes) -> Vec<(State, usize)> {
+    let (position, keys) = state;
 
-    (*position, keys.clone(), *distance)
+    let possible_routes = routes
+        .get(&position)
+        .unwrap()
+        .iter()
+        .filter(|(key, _)| !keys.contains(&key))
+        .filter(|(_, route)| route.reachable(&keys));
+
+    let mut result = vec![];
+
+    for (&destination, route) in possible_routes {
+        let mut new_keys = keys.clone();
+        new_keys.insert(destination);
+
+        let new_state = (destination, new_keys);
+        result.push((new_state, route.length()));
+    }
+
+    result
 }
 
 #[cfg(test)]
@@ -111,7 +102,6 @@ mod tests {
     }
 
     #[test]
-    #[ignore]
     fn test_part_one_d() {
         let input = PathBuf::from("fixtures/day18d.txt");
         let problem = Day18 { input };

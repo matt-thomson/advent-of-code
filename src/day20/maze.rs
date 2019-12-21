@@ -82,4 +82,31 @@ impl Maze {
             portals,
         }
     }
+
+    pub fn start(&self) -> &Position {
+        &self.start
+    }
+
+    pub fn end(&self) -> &Position {
+        &self.end
+    }
+
+    pub fn neighbours(&self, position: &Position) -> Vec<Position> {
+        let (x, y) = *position;
+        let candidates = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)];
+
+        let mut result = vec![];
+
+        for candidate in &candidates {
+            if self.spaces.contains(&candidate) {
+                result.push(*candidate);
+            }
+        }
+
+        if let Some(out) = self.portals.get(&position) {
+            result.push(*out);
+        }
+
+        result
+    }
 }

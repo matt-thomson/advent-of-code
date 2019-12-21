@@ -2,6 +2,7 @@ mod maze;
 
 use std::path::PathBuf;
 
+use pathfinding::prelude::bfs;
 use structopt::StructOpt;
 
 use crate::problem::Problem;
@@ -20,10 +21,37 @@ impl Problem for Day20 {
     fn part_one(&self) -> usize {
         let maze = Maze::read(&self.input);
 
-        unimplemented!();
+        let result = bfs(
+            maze.start(),
+            |position| maze.neighbours(&position),
+            |position| position == maze.end(),
+        );
+
+        result.unwrap().len() - 1
     }
 
     fn part_two(&self) -> usize {
         unimplemented!();
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_part_one_a() {
+        let input = PathBuf::from("fixtures/day20a.txt");
+        let problem = Day20 { input };
+
+        assert_eq!(problem.part_one(), 23);
+    }
+
+    #[test]
+    fn test_part_one_b() {
+        let input = PathBuf::from("fixtures/day20b.txt");
+        let problem = Day20 { input };
+
+        assert_eq!(problem.part_one(), 58);
     }
 }

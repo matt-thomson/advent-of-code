@@ -8,8 +8,8 @@ pub type Position = (usize, usize);
 #[derive(Debug)]
 pub struct Maze {
     entrance: Position,
-    keys: HashMap<Position, char>,
-    doors: HashMap<Position, char>,
+    keys: HashMap<Position, usize>,
+    doors: HashMap<Position, usize>,
     walls: HashSet<Position>,
 }
 
@@ -34,10 +34,10 @@ impl Maze {
                         walls.insert((x, y));
                     }
                     i if i.is_ascii_uppercase() => {
-                        doors.insert((x, y), i);
+                        doors.insert((x, y), i as usize - 64);
                     }
                     i if i.is_ascii_lowercase() => {
-                        keys.insert((x, y), i.to_ascii_uppercase());
+                        keys.insert((x, y), i as usize - 96);
                     }
                     _ => panic!("unknown pixel {}", position),
                 }
@@ -60,11 +60,11 @@ impl Maze {
         self.keys.keys().collect()
     }
 
-    pub fn key(&self, position: &Position) -> Option<&char> {
+    pub fn key(&self, position: &Position) -> Option<&usize> {
         self.keys.get(position)
     }
 
-    pub fn door(&self, position: &Position) -> Option<&char> {
+    pub fn door(&self, position: &Position) -> Option<&usize> {
         self.doors.get(position)
     }
 
@@ -86,10 +86,10 @@ mod tests {
 
         assert_eq!(*maze.entrance(), (5, 1));
 
-        assert_eq!(*maze.key(&(7, 1)).unwrap(), 'A');
-        assert_eq!(*maze.key(&(1, 1)).unwrap(), 'B');
+        assert_eq!(*maze.key(&(7, 1)).unwrap(), 1);
+        assert_eq!(*maze.key(&(1, 1)).unwrap(), 2);
 
-        assert_eq!(*maze.door(&(3, 1)).unwrap(), 'A');
+        assert_eq!(*maze.door(&(3, 1)).unwrap(), 1);
 
         assert!(maze.is_wall(&(0, 1)));
         assert!(!maze.is_wall(&(2, 1)));

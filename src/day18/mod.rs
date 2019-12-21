@@ -33,8 +33,8 @@ impl Problem for Day18 {
 }
 
 fn solve(routes: &Routes) -> usize {
-    let mut current: HashMap<(char, BTreeSet<char>), usize> = HashMap::new();
-    current.insert(('@', BTreeSet::new()), 0);
+    let mut current = HashMap::new();
+    current.insert((0, BTreeSet::new()), 0);
 
     loop {
         let (position, keys, distance) = find_shortest(&current);
@@ -70,8 +70,8 @@ fn solve(routes: &Routes) -> usize {
 }
 
 fn find_shortest(
-    current: &HashMap<(char, BTreeSet<char>), usize>,
-) -> (char, BTreeSet<char>, usize) {
+    current: &HashMap<(usize, BTreeSet<usize>), usize>,
+) -> (usize, BTreeSet<usize>, usize) {
     let ((position, keys), distance) = current
         .iter()
         .min_by_key(|((_, keys), distance)| *distance * 100 + keys.len())

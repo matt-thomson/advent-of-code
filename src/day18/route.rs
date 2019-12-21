@@ -2,12 +2,12 @@ use std::collections::{BTreeSet, HashMap, VecDeque};
 
 use super::maze::{Maze, Position};
 
-pub type Routes = HashMap<char, HashMap<char, Route>>;
+pub type Routes = HashMap<usize, HashMap<usize, Route>>;
 
 #[derive(Debug)]
 pub struct Route {
     length: usize,
-    doors: BTreeSet<char>,
+    doors: BTreeSet<usize>,
 }
 
 impl Route {
@@ -15,7 +15,7 @@ impl Route {
         self.length
     }
 
-    pub fn reachable(&self, keys: &BTreeSet<char>) -> bool {
+    pub fn reachable(&self, keys: &BTreeSet<usize>) -> bool {
         self.doors.difference(keys).count() == 0
     }
 
@@ -26,7 +26,7 @@ impl Route {
         }
     }
 
-    fn step(&self, door: Option<&char>) -> Self {
+    fn step(&self, door: Option<&usize>) -> Self {
         let mut doors = self.doors.clone();
 
         if let Some(door) = door {
@@ -43,7 +43,7 @@ impl Route {
 pub fn all(maze: &Maze) -> Routes {
     let mut result = HashMap::new();
 
-    result.insert('@', all_from(&maze, maze.entrance()));
+    result.insert(0, all_from(&maze, maze.entrance()));
 
     for position in maze.keys() {
         result.insert(*maze.key(&position).unwrap(), all_from(&maze, &position));
@@ -52,7 +52,7 @@ pub fn all(maze: &Maze) -> Routes {
     result
 }
 
-fn all_from(maze: &Maze, start: &Position) -> HashMap<char, Route> {
+fn all_from(maze: &Maze, start: &Position) -> HashMap<usize, Route> {
     let mut result = HashMap::new();
     let mut visited = BTreeSet::new();
 
@@ -103,14 +103,14 @@ mod tests {
 
         let routes = all_from(&maze, &(5, 1));
 
-        let a_route = routes.get(&'A').unwrap();
+        let a_route = routes.get(&1).unwrap();
         assert_eq!(a_route.length, 2);
         assert_eq!(a_route.doors.len(), 0);
 
-        let b_route = routes.get(&'B').unwrap();
+        let b_route = routes.get(&2).unwrap();
         assert_eq!(b_route.length, 4);
         assert_eq!(b_route.doors.len(), 1);
-        assert!(b_route.doors.contains(&'A'));
+        assert!(b_route.doors.contains(&1));
     }
 
     #[test]
@@ -120,12 +120,12 @@ mod tests {
 
         let routes = all(&maze);
 
-        let a_to_b_route = routes.get(&'A').unwrap().get(&'B').unwrap();
+        let a_to_b_route = routes.get(&1).unwrap().get(&2).unwrap();
         assert_eq!(a_to_b_route.length, 6);
         assert_eq!(a_to_b_route.doors.len(), 1);
-        assert!(a_to_b_route.doors.contains(&'A'));
+        assert!(a_to_b_route.doors.contains(&1));
 
-        let entrance_to_a_route = routes.get(&'@').unwrap().get(&'A').unwrap();
+        let entrance_to_a_route = routes.get(&0).unwrap().get(&1).unwrap();
         assert_eq!(entrance_to_a_route.length, 2);
         assert_eq!(entrance_to_a_route.doors.len(), 0);
     }
@@ -133,17 +133,17 @@ mod tests {
     #[test]
     fn test_reachable() {
         let mut doors = BTreeSet::new();
-        doors.insert('A');
-        doors.insert('B');
+        doors.insert(1);
+        doors.insert(2);
 
         let route = Route { length: 0, doors };
 
         let mut keys = BTreeSet::new();
-        keys.insert('A');
-        keys.insert('C');
+        keys.insert(1);
+        keys.insert(3);
         assert!(!route.reachable(&keys));
 
-        keys.insert('B');
+        keys.insert(2);
         assert!(route.reachable(&keys));
     }
 }

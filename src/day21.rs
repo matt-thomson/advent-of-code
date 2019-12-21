@@ -15,8 +15,6 @@ impl Problem for Day21 {
     type Output = i64;
 
     fn part_one(&self) -> i64 {
-        let program = Program::read(&self.input);
-
         let springcode = "NOT A J\n\
                           NOT B T\n\
                           OR T J\n\
@@ -25,13 +23,34 @@ impl Problem for Day21 {
                           AND D J\n\
                           WALK\n";
 
+        self.run(springcode)
+    }
+
+    fn part_two(&self) -> i64 {
+        let springcode = "NOT A J\n\
+                          NOT B T\n\
+                          OR T J\n\
+                          NOT C T\n\
+                          OR T J\n\
+                          AND D J\n\
+                          NOT E T\n\
+                          NOT T T\n\
+                          OR H T\n\
+                          AND T J\n\
+                          AND T J\n\
+                          RUN\n";
+
+        self.run(springcode)
+    }
+}
+
+impl Day21 {
+    fn run(&self, springcode: &str) -> i64 {
+        let program = Program::read(&self.input);
+
         let input: Vec<i64> = springcode.bytes().map(|x| x as i64).collect();
         let output = program.launch().run(&input);
 
         output[output.len() - 1]
-    }
-
-    fn part_two(&self) -> i64 {
-        unimplemented!();
     }
 }

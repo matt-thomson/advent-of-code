@@ -1,5 +1,7 @@
 use std::collections::{BTreeSet, HashMap, VecDeque};
 
+use fixedbitset::FixedBitSet;
+
 use super::maze::{Maze, Position};
 
 pub type Routes = HashMap<usize, HashMap<usize, Route>>;
@@ -7,7 +9,7 @@ pub type Routes = HashMap<usize, HashMap<usize, Route>>;
 #[derive(Debug)]
 pub struct Route {
     length: usize,
-    doors: BTreeSet<usize>,
+    doors: FixedBitSet,
 }
 
 impl Route {
@@ -15,14 +17,14 @@ impl Route {
         self.length
     }
 
-    pub fn reachable(&self, keys: &BTreeSet<usize>) -> bool {
+    pub fn reachable(&self, keys: &FixedBitSet) -> bool {
         self.doors.difference(keys).count() == 0
     }
 
-    fn new() -> Self {
+    fn new(max_key: usize) -> Self {
         Self {
             length: 0,
-            doors: BTreeSet::new(),
+            doors: FixedBitSet::with_capacity(max_key + 1),
         }
     }
 
@@ -57,7 +59,7 @@ fn all_from(maze: &Maze, start: &Position) -> HashMap<usize, Route> {
     let mut visited = BTreeSet::new();
 
     let mut queue = VecDeque::new();
-    queue.push_back((*start, Route::new()));
+    queue.push_back((*start, Route::new(maze.keys().len())));
 
     while let Some((position, route)) = queue.pop_front() {
         visited.insert(position);
@@ -96,6 +98,8 @@ mod tests {
 
     use std::path::PathBuf;
 
+    use fixedbitset::FixedBitSet;
+
     #[test]
     fn test_all_from() {
         let path = PathBuf::from("fixtures/day18a.txt");
@@ -105,12 +109,12 @@ mod tests {
 
         let a_route = routes.get(&1).unwrap();
         assert_eq!(a_route.length, 2);
-        assert_eq!(a_route.doors.len(), 0);
+        assert_eq!(a_route.doors.count_ones(..), 0);
 
         let b_route = routes.get(&2).unwrap();
         assert_eq!(b_route.length, 4);
-        assert_eq!(b_route.doors.len(), 1);
-        assert!(b_route.doors.contains(&1));
+        assert_eq!(b_route.doors.count_ones(..), 1);
+        assert!(b_route.doors.contains(1));
     }
 
     #[test]
@@ -122,23 +126,23 @@ mod tests {
 
         let a_to_b_route = routes.get(&1).unwrap().get(&2).unwrap();
         assert_eq!(a_to_b_route.length, 6);
-        assert_eq!(a_to_b_route.doors.len(), 1);
-        assert!(a_to_b_route.doors.contains(&1));
+        assert_eq!(a_to_b_route.doors.count_ones(..), 1);
+        assert!(a_to_b_route.doors.contains(1));
 
         let entrance_to_a_route = routes.get(&0).unwrap().get(&1).unwrap();
         assert_eq!(entrance_to_a_route.length, 2);
-        assert_eq!(entrance_to_a_route.doors.len(), 0);
+        assert_eq!(entrance_to_a_route.doors.count_ones(..), 0);
     }
 
     #[test]
     fn test_reachable() {
-        let mut doors = BTreeSet::new();
+        let mut doors = FixedBitSet::with_capacity(4);
         doors.insert(1);
         doors.insert(2);
 
         let route = Route { length: 0, doors };
 
-        let mut keys = BTreeSet::new();
+        let mut keys = FixedBitSet::with_capacity(4);
         keys.insert(1);
         keys.insert(3);
         assert!(!route.reachable(&keys));

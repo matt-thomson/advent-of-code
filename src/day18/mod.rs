@@ -1,9 +1,9 @@
 mod maze;
 mod route;
 
-use std::collections::BTreeSet;
 use std::path::PathBuf;
 
+use fixedbitset::FixedBitSet;
 use pathfinding::prelude::dijkstra;
 use structopt::StructOpt;
 
@@ -33,17 +33,15 @@ impl Problem for Day18 {
     }
 }
 
-type State = (usize, BTreeSet<usize>);
+type State = (usize, FixedBitSet);
 
 fn solve(routes: &Routes) -> usize {
-    let (x, shortest) = dijkstra(
-        &(0, BTreeSet::new()),
+    let (_, shortest) = dijkstra(
+        &(0, FixedBitSet::with_capacity(routes.len())),
         |state| neighbours(&state, &routes),
-        |(_, keys)| keys.len() == routes.len() - 1,
+        |(_, keys)| keys.count_ones(..) == routes.len() - 1,
     )
     .unwrap();
-
-    dbg!(x, shortest);
 
     shortest
 }
@@ -55,7 +53,7 @@ fn neighbours(state: &State, routes: &Routes) -> Vec<(State, usize)> {
         .get(&position)
         .unwrap()
         .iter()
-        .filter(|(key, _)| !keys.contains(&key))
+        .filter(|(key, _)| !keys.contains(**key))
         .filter(|(_, route)| route.reachable(&keys));
 
     let mut result = vec![];

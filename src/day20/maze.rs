@@ -10,7 +10,8 @@ pub struct Maze {
     start: Position,
     end: Position,
     spaces: HashSet<Position>,
-    portals: HashMap<Position, Position>,
+    inner_portals: HashMap<Position, Position>,
+    outer_portals: HashMap<Position, Position>,
 }
 
 impl Maze {
@@ -37,49 +38,59 @@ impl Maze {
             }
         }
 
-        let mut raw_portals: Vec<(Position, (char, char))> = vec![];
+        let mut raw_inner = HashMap::new();
+        let mut raw_outer = HashMap::new();
+
+        let x_max = letters.keys().map(|(x, _)| *x).max().unwrap();
+        let y_max = letters.keys().map(|(_, y)| *y).max().unwrap();
 
         for (&(x, y), i) in &letters {
             if let Some(&other) = letters.get(&(x, y + 1)) {
-                if spaces.contains(&(x, y + 2)) {
-                    raw_portals.push(((x, y + 2), (*i, other)));
+                let pair = (*i, other);
+
+                if y == 0 {
+                    raw_outer.insert(pair, (x, 2));
+                } else if y == y_max - 1 {
+                    raw_outer.insert(pair, (x, y_max - 2));
+                } else if spaces.contains(&(x, y + 2)) {
+                    raw_inner.insert(pair, (x, y + 2));
                 } else if spaces.contains(&(x, y - 1)) {
-                    raw_portals.push(((x, y - 1), (*i, other)));
+                    raw_inner.insert(pair, (x, y - 1));
                 }
             } else if let Some(&other) = letters.get(&(x + 1, y)) {
-                if spaces.contains(&(x + 2, y)) {
-                    raw_portals.push(((x + 2, y), (*i, other)));
+                let pair = (*i, other);
+
+                if x == 0 {
+                    raw_outer.insert(pair, (2, y));
+                } else if x == x_max - 1 {
+                    raw_outer.insert(pair, (x_max - 2, y));
+                } else if spaces.contains(&(x + 2, y)) {
+                    raw_inner.insert(pair, (x + 2, y));
                 } else if spaces.contains(&(x - 1, y)) {
-                    raw_portals.push(((x - 1, y), (*i, other)));
+                    raw_inner.insert(pair, (x - 1, y));
                 }
             }
         }
 
-        let mut portals = HashMap::new();
-        let mut unpaired = HashMap::new();
+        let start = raw_outer.remove(&('A', 'A')).unwrap();
+        let end = raw_outer.remove(&('Z', 'Z')).unwrap();
 
-        for (position, name) in raw_portals {
-            match unpaired.get(&name) {
-                Some(other) => {
-                    portals.insert(position, *other);
-                    portals.insert(*other, position);
+        let mut inner_portals = HashMap::new();
+        let mut outer_portals = HashMap::new();
 
-                    unpaired.remove(&name);
-                }
-                None => {
-                    unpaired.insert(name, position);
-                }
-            }
+        for (pair, &inner) in raw_inner.iter() {
+            let outer = *raw_outer.get(pair).unwrap();
+
+            inner_portals.insert(inner, outer);
+            outer_portals.insert(outer, inner);
         }
-
-        let start = *unpaired.get(&('A', 'A')).unwrap();
-        let end = *unpaired.get(&('Z', 'Z')).unwrap();
 
         Self {
             start,
             end,
             spaces,
-            portals,
+            inner_portals,
+            outer_portals,
         }
     }
 
@@ -103,7 +114,11 @@ impl Maze {
             }
         }
 
-        if let Some(out) = self.portals.get(&position) {
+        if let Some(out) = self.inner_portals.get(&position) {
+            result.push(*out);
+        }
+
+        if let Some(out) = self.outer_portals.get(&position) {
             result.push(*out);
         }
 

@@ -4,6 +4,7 @@ use std::io::{BufRead, BufReader};
 use std::path::Path;
 
 pub type Position = (usize, usize);
+pub type PositionWithLevel = (Position, usize);
 
 #[derive(Debug)]
 pub struct Maze {
@@ -120,6 +121,36 @@ impl Maze {
 
         if let Some(out) = self.outer_portals.get(&position) {
             result.push(*out);
+        }
+
+        result
+    }
+
+    pub fn neighbours_with_level(
+        &self,
+        position_with_level: &PositionWithLevel,
+    ) -> Vec<PositionWithLevel> {
+        let (position, level) = *position_with_level;
+        let (x, y) = position;
+
+        let candidates = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)];
+
+        let mut result = vec![];
+
+        for candidate in &candidates {
+            if self.spaces.contains(&candidate) {
+                result.push((*candidate, level));
+            }
+        }
+
+        if let Some(out) = self.inner_portals.get(&position) {
+            result.push((*out, level + 1));
+        }
+
+        if level > 0 {
+            if let Some(out) = self.outer_portals.get(&position) {
+                result.push((*out, level - 1));
+            }
         }
 
         result

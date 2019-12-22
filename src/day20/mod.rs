@@ -31,7 +31,15 @@ impl Problem for Day20 {
     }
 
     fn part_two(&self) -> usize {
-        unimplemented!();
+        let maze = Maze::read(&self.input);
+
+        let result = bfs(
+            &(*maze.start(), 0),
+            |position| maze.neighbours_with_level(&position),
+            |position| position == &(*maze.end(), 0),
+        );
+
+        result.unwrap().len() - 1
     }
 }
 
@@ -53,5 +61,13 @@ mod tests {
         let problem = Day20 { input };
 
         assert_eq!(problem.part_one(), 58);
+    }
+
+    #[test]
+    fn test_part_two_c() {
+        let input = PathBuf::from("fixtures/day20c.txt");
+        let problem = Day20 { input };
+
+        assert_eq!(problem.part_two(), 396);
     }
 }

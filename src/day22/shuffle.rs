@@ -39,16 +39,17 @@ impl Shuffle {
                 }
                 Step::CutCards(number) => {
                     let offset = if *number < 0 {
-                        (*number + cards as isize) as usize
+                        (*number + cards as isize) as u128
                     } else {
-                        *number as usize
+                        *number as u128
                     };
 
-                    b = (b + a * offset) % cards;
+                    let extra = (((a as u128) * offset) % (cards as u128)) as usize;
+                    b = (b + extra) % cards;
                 }
                 Step::DealWithIncrement(increment) => {
-                    let inverse = modinverse(*increment as isize, cards as isize).unwrap() as usize;
-                    a = (a * inverse) % cards;
+                    let inverse = modinverse(*increment as isize, cards as isize).unwrap() as u128;
+                    a = ((a as u128 * inverse) % (cards as u128)) as usize;
                 }
             }
         }

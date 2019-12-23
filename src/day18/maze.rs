@@ -4,7 +4,7 @@ pub type Position = (usize, usize);
 
 #[derive(Debug)]
 pub struct Maze {
-    entrance: Position,
+    entrances: Vec<Position>,
     keys: HashMap<Position, usize>,
     doors: HashMap<Position, usize>,
     walls: HashSet<Position>,
@@ -12,7 +12,7 @@ pub struct Maze {
 
 impl Maze {
     pub fn parse(input: &str) -> Self {
-        let mut entrance = None;
+        let mut entrances = vec![];
         let mut keys = HashMap::new();
         let mut doors = HashMap::new();
         let mut walls = HashSet::new();
@@ -21,7 +21,7 @@ impl Maze {
             for (x, position) in row.chars().enumerate() {
                 match position {
                     '@' => {
-                        entrance = Some((x, y));
+                        entrances.push((x, y));
                     }
                     '.' => (),
                     '#' => {
@@ -39,15 +39,15 @@ impl Maze {
         }
 
         Self {
-            entrance: entrance.unwrap(),
+            entrances,
             keys,
             doors,
             walls,
         }
     }
 
-    pub fn entrance(&self) -> &Position {
-        &self.entrance
+    pub fn entrances(&self) -> &[Position] {
+        &self.entrances
     }
 
     pub fn keys(&self) -> Vec<&Position> {
@@ -80,7 +80,7 @@ mod tests {
         let input = fs::read_to_string(&path).unwrap();
         let maze = Maze::parse(&input);
 
-        assert_eq!(*maze.entrance(), (5, 1));
+        assert_eq!(maze.entrances(), &[(5, 1)]);
 
         assert_eq!(*maze.key(&(7, 1)).unwrap(), 1);
         assert_eq!(*maze.key(&(1, 1)).unwrap(), 2);

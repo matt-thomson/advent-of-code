@@ -45,11 +45,17 @@ impl Route {
 pub fn all(maze: &Maze) -> Routes {
     let mut result = HashMap::new();
 
-    result.insert(0, all_from(&maze, maze.entrance()));
+    let all_from_start = all_from(&maze, maze.entrance());
 
     for position in maze.keys() {
-        result.insert(*maze.key(&position).unwrap(), all_from(&maze, &position));
+        let key = maze.key(&position).unwrap();
+
+        if all_from_start.contains_key(key) {
+            result.insert(*key, all_from(&maze, &position));
+        }
     }
+
+    result.insert(0, all_from_start);
 
     result
 }

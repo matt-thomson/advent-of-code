@@ -1,3 +1,4 @@
+#[derive(Clone, Copy, Debug)]
 pub struct Packet {
     address: usize,
     x: i64,

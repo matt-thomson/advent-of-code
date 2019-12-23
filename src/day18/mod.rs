@@ -1,6 +1,7 @@
 mod maze;
 mod route;
 
+use std::fs;
 use std::path::PathBuf;
 
 use fixedbitset::FixedBitSet;
@@ -22,13 +23,25 @@ impl Problem for Day18 {
     type Output = usize;
 
     fn part_one(&self) -> usize {
-        let maze = Maze::read(&self.input);
+        let input = fs::read_to_string(&self.input).unwrap();
+        let maze = Maze::parse(&input);
         let routes = route::all(&maze);
 
         solve(&routes)
     }
 
     fn part_two(&self) -> usize {
+        let mut input = fs::read_to_string(&self.input).unwrap();
+
+        let start = input.find('@').unwrap();
+        let line_length = input.find('\n').unwrap();
+
+        input.replace_range((start - line_length - 2)..(start - line_length + 1), "@#@");
+        input.replace_range((start - 1)..(start + 2), "###");
+        input.replace_range((start + line_length)..(start + line_length + 3), "@#@");
+
+        println!("{}", input);
+
         unimplemented!();
     }
 }

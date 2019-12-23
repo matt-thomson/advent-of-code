@@ -96,6 +96,7 @@ fn all_from(maze: &Maze, start: &Position) -> HashMap<usize, Route> {
 mod tests {
     use super::*;
 
+    use std::fs;
     use std::path::PathBuf;
 
     use fixedbitset::FixedBitSet;
@@ -103,7 +104,8 @@ mod tests {
     #[test]
     fn test_all_from() {
         let path = PathBuf::from("fixtures/day18a.txt");
-        let maze = Maze::read(&path);
+        let input = fs::read_to_string(&path).unwrap();
+        let maze = Maze::parse(&input);
 
         let routes = all_from(&maze, &(5, 1));
 
@@ -120,7 +122,8 @@ mod tests {
     #[test]
     fn test_all() {
         let path = PathBuf::from("fixtures/day18a.txt");
-        let maze = Maze::read(&path);
+        let input = fs::read_to_string(&path).unwrap();
+        let maze = Maze::parse(&input);
 
         let routes = all(&maze);
 

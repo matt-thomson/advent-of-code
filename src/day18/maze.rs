@@ -1,7 +1,4 @@
 use std::collections::{HashMap, HashSet};
-use std::fs::File;
-use std::io::{BufRead, BufReader};
-use std::path::Path;
 
 pub type Position = (usize, usize);
 
@@ -14,17 +11,14 @@ pub struct Maze {
 }
 
 impl Maze {
-    pub fn read(path: &Path) -> Self {
-        let file = File::open(path).unwrap();
-        let reader = BufReader::new(file);
-
+    pub fn parse(input: &str) -> Self {
         let mut entrance = None;
         let mut keys = HashMap::new();
         let mut doors = HashMap::new();
         let mut walls = HashSet::new();
 
-        for (y, row) in reader.lines().enumerate() {
-            for (x, position) in row.unwrap().chars().enumerate() {
+        for (y, row) in input.lines().enumerate() {
+            for (x, position) in row.chars().enumerate() {
                 match position {
                     '@' => {
                         entrance = Some((x, y));
@@ -77,12 +71,14 @@ impl Maze {
 mod tests {
     use super::*;
 
+    use std::fs;
     use std::path::PathBuf;
 
     #[test]
-    fn test_read() {
+    fn test_parse() {
         let path = PathBuf::from("fixtures/day18a.txt");
-        let maze = Maze::read(&path);
+        let input = fs::read_to_string(&path).unwrap();
+        let maze = Maze::parse(&input);
 
         assert_eq!(*maze.entrance(), (5, 1));
 

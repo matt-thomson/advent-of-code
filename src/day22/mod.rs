@@ -28,6 +28,11 @@ impl Problem for Day22 {
     }
 
     fn part_two(&self) -> usize {
-        unimplemented!();
+        let num_cards = 119_315_717_514_047;
+        let num_repeats = 101_741_582_076_661;
+
+        let shuffle = Shuffle::read(&self.input, num_cards).repeat(num_repeats);
+
+        shuffle.card(2020)
     }
 }

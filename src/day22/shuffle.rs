@@ -3,6 +3,7 @@ use std::io::{BufRead, BufReader};
 use std::path::Path;
 
 use modinverse::modinverse;
+use num::{BigUint, One, ToPrimitive};
 
 use super::step::Step;
 
@@ -57,6 +58,26 @@ impl Shuffle {
 
     pub fn card(&self, position: usize) -> usize {
         (self.a * position + self.b) % self.cards
+    }
+
+    pub fn repeat(&self, times: usize) -> Self {
+        let a = BigUint::from(self.a);
+        let b = BigUint::from(self.b);
+        let cards = BigUint::from(self.cards);
+        let times = BigUint::from(times);
+
+        let inverse = BigUint::from(
+            modinverse((self.cards - self.a + 1) as isize, self.cards as isize).unwrap() as usize,
+        );
+
+        let new_a = a.modpow(&times, &cards);
+        let new_b = ((b * (&cards + BigUint::one() - &new_a)) * inverse) % &cards;
+
+        Self {
+            a: new_a.to_usize().unwrap(),
+            b: new_b.to_usize().unwrap(),
+            cards: self.cards,
+        }
     }
 }
 

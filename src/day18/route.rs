@@ -42,10 +42,10 @@ impl Route {
     }
 }
 
-pub fn all(maze: &Maze) -> Routes {
+pub fn all(maze: &Maze, start: &Position) -> Routes {
     let mut result = HashMap::new();
 
-    let all_from_start = all_from(&maze, maze.entrance());
+    let all_from_start = all_from(&maze, start);
 
     for position in maze.keys() {
         let key = maze.key(&position).unwrap();
@@ -131,7 +131,7 @@ mod tests {
         let input = fs::read_to_string(&path).unwrap();
         let maze = Maze::parse(&input);
 
-        let routes = all(&maze);
+        let routes = all(&maze, maze.entrance());
 
         let a_to_b_route = routes.get(&1).unwrap().get(&2).unwrap();
         assert_eq!(a_to_b_route.length, 6);

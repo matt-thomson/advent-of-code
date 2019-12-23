@@ -25,7 +25,7 @@ impl Problem for Day18 {
     fn part_one(&self) -> usize {
         let input = fs::read_to_string(&self.input).unwrap();
         let maze = Maze::parse(&input);
-        let routes = route::all(&maze);
+        let routes = route::all(&maze, maze.entrance());
 
         solve(&routes)
     }

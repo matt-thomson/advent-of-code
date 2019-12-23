@@ -43,7 +43,7 @@ impl Problem for Day18 {
         let start = input.find('@').unwrap();
         let line_length = input.find('\n').unwrap();
 
-        input.replace_range((start - line_length - 2)..(start - line_length + 1), "@#@");
+        input.replace_range((start - line_length - 2)..=start - line_length, "@#@");
         input.replace_range((start - 1)..(start + 2), "###");
         input.replace_range((start + line_length)..(start + line_length + 3), "@#@");
 
@@ -107,7 +107,7 @@ fn neighbours_quadrants(
         let routes = &all_routes[i];
 
         for ((neighbour, new_keys), distance) in neighbours(&(position, keys.clone()), routes) {
-            let mut new_positions = positions.clone();
+            let mut new_positions = *positions;
             new_positions[i] = neighbour;
 
             let new_state = (new_positions, new_keys);

@@ -1,3 +1,5 @@
+mod board;
+
 use std::path::PathBuf;
 
 use structopt::StructOpt;

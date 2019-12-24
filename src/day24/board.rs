@@ -46,6 +46,10 @@ impl Board {
         Self { bugs }
     }
 
+    pub fn biodiversity(&self) -> u32 {
+        self.bugs.iter().map(|(x, y)| 1 << (y * SIZE + x)).sum()
+    }
+
     fn neighbours(&self, position: &Position) -> usize {
         let mut count = 0;
         let (x, y) = *position;
@@ -118,5 +122,22 @@ mod tests {
         expected.insert((2, 4));
 
         assert_eq!(board.bugs, expected);
+    }
+    #[test]
+    fn test_biodiversity() {
+        let path = PathBuf::from("fixtures/day24.txt");
+        let board = Board::read(&path);
+
+        let mut expected = HashSet::new();
+        expected.insert((4, 0));
+        expected.insert((0, 1));
+        expected.insert((3, 1));
+        expected.insert((0, 2));
+        expected.insert((3, 2));
+        expected.insert((4, 2));
+        expected.insert((2, 3));
+        expected.insert((0, 4));
+
+        assert_eq!(board.biodiversity(), 1_205_552);
     }
 }

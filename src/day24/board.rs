@@ -1,26 +1,25 @@
-use std::collections::HashSet;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 
+use fixedbitset::FixedBitSet;
+
 const SIZE: usize = 5;
 
-type Position = (usize, usize);
-
 pub struct Board {
-    bugs: HashSet<Position>,
+    bugs: FixedBitSet,
 }
 
 impl Board {
     pub fn read(path: &Path) -> Self {
-        let mut bugs = HashSet::new();
+        let mut bugs = FixedBitSet::with_capacity(SIZE * SIZE);
         let file = File::open(path).unwrap();
         let reader = BufReader::new(file);
 
         for (y, row) in reader.lines().enumerate() {
             for (x, position) in row.unwrap().chars().enumerate() {
                 if position == '#' {
-                    bugs.insert((x, y));
+                    bugs.insert(y * SIZE + x);
                 }
             }
         }
@@ -29,17 +28,14 @@ impl Board {
     }
 
     pub fn step(&self) -> Self {
-        let mut bugs = HashSet::new();
+        let mut bugs = FixedBitSet::with_capacity(SIZE * SIZE);
 
-        for x in 0..SIZE {
-            for y in 0..SIZE {
-                let position = (x, y);
-                let neighbours = self.neighbours(&position);
-                let alive = self.bugs.contains(&position);
+        for position in 0..(SIZE * SIZE) {
+            let neighbours = self.neighbours(position);
+            let alive = self.bugs.contains(position);
 
-                if neighbours == 1 || (neighbours == 2 && !alive) {
-                    bugs.insert(position);
-                }
+            if neighbours == 1 || (neighbours == 2 && !alive) {
+                bugs.insert(position);
             }
         }
 
@@ -47,26 +43,25 @@ impl Board {
     }
 
     pub fn biodiversity(&self) -> u32 {
-        self.bugs.iter().map(|(x, y)| 1 << (y * SIZE + x)).sum()
+        self.bugs.as_slice()[0]
     }
 
-    fn neighbours(&self, position: &Position) -> usize {
+    fn neighbours(&self, position: usize) -> usize {
         let mut count = 0;
-        let (x, y) = *position;
 
-        if x != 0 && self.bugs.contains(&(x - 1, y)) {
+        if position % SIZE != 0 && self.bugs.contains(position - 1) {
             count += 1;
         }
 
-        if y != 0 && self.bugs.contains(&(x, y - 1)) {
+        if position >= SIZE && self.bugs.contains(position - SIZE) {
             count += 1;
         }
 
-        if x != SIZE - 1 && self.bugs.contains(&(x + 1, y)) {
+        if position % SIZE != SIZE - 1 && self.bugs.contains(position + 1) {
             count += 1;
         }
 
-        if y != SIZE - 1 && self.bugs.contains(&(x, y + 1)) {
+        if position < SIZE * SIZE - SIZE && self.bugs.contains(position + SIZE) {
             count += 1;
         }
 
@@ -85,15 +80,15 @@ mod tests {
         let path = PathBuf::from("fixtures/day24.txt");
         let board = Board::read(&path);
 
-        let mut expected = HashSet::new();
-        expected.insert((4, 0));
-        expected.insert((0, 1));
-        expected.insert((3, 1));
-        expected.insert((0, 2));
-        expected.insert((3, 2));
-        expected.insert((4, 2));
-        expected.insert((2, 3));
-        expected.insert((0, 4));
+        let mut expected = FixedBitSet::with_capacity(SIZE * SIZE);
+        expected.insert(4);
+        expected.insert(5);
+        expected.insert(8);
+        expected.insert(10);
+        expected.insert(13);
+        expected.insert(14);
+        expected.insert(17);
+        expected.insert(20);
 
         assert_eq!(board.bugs, expected);
     }
@@ -103,23 +98,23 @@ mod tests {
         let path = PathBuf::from("fixtures/day24.txt");
         let board = Board::read(&path).step();
 
-        let mut expected = HashSet::new();
-        expected.insert((0, 0));
-        expected.insert((3, 0));
-        expected.insert((0, 1));
-        expected.insert((1, 1));
-        expected.insert((2, 1));
-        expected.insert((3, 1));
-        expected.insert((0, 2));
-        expected.insert((1, 2));
-        expected.insert((2, 2));
-        expected.insert((4, 2));
-        expected.insert((0, 3));
-        expected.insert((1, 3));
-        expected.insert((3, 3));
-        expected.insert((4, 3));
-        expected.insert((1, 4));
-        expected.insert((2, 4));
+        let mut expected = FixedBitSet::with_capacity(SIZE * SIZE);
+        expected.insert(0);
+        expected.insert(3);
+        expected.insert(5);
+        expected.insert(6);
+        expected.insert(7);
+        expected.insert(8);
+        expected.insert(10);
+        expected.insert(11);
+        expected.insert(12);
+        expected.insert(14);
+        expected.insert(15);
+        expected.insert(16);
+        expected.insert(18);
+        expected.insert(19);
+        expected.insert(21);
+        expected.insert(22);
 
         assert_eq!(board.bugs, expected);
     }
@@ -127,16 +122,6 @@ mod tests {
     fn test_biodiversity() {
         let path = PathBuf::from("fixtures/day24.txt");
         let board = Board::read(&path);
-
-        let mut expected = HashSet::new();
-        expected.insert((4, 0));
-        expected.insert((0, 1));
-        expected.insert((3, 1));
-        expected.insert((0, 2));
-        expected.insert((3, 2));
-        expected.insert((4, 2));
-        expected.insert((2, 3));
-        expected.insert((0, 4));
 
         assert_eq!(board.biodiversity(), 1_205_552);
     }

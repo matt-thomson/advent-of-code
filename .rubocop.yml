@@ -6,6 +6,7 @@ AllCops:
   Exclude:
     - bin/*
   NewCops: enable
+  TargetRubyVersion: 2.6
 
 RSpec/FilePath:
   CustomTransform:

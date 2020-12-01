@@ -7,4 +7,10 @@ RSpec.describe AdventOfCode2020::Day01 do
 
     it { is_expected.to eq(514579) }
   end
+
+  describe "#part_two" do
+    subject(:part_two) { day01.part_two }
+
+    it { is_expected.to eq(241861950) }
+  end
 end

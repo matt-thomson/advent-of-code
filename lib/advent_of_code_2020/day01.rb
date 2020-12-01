@@ -5,13 +5,20 @@ module AdventOfCode2020
     end
 
     def part_one
-      entries = File.read(@path).lines.map(&:strip).map(&:to_i)
+      solve(2)
+    end
 
-      first, second = entries.
-        product(entries).
-        find { |first, second| first + second == 2020 }
+    def part_two
+      solve(3)
+    end
+
+    private
+
+    def solve(group_size)
+      entries = File.read(@path).lines.map(&:strip).map(&:to_i)
+      group = entries.combination(group_size).find { |group| group.sum == 2020 }
       
-      first * second
+      group.inject(:*)
     end
   end
 end

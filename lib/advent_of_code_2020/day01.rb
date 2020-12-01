@@ -17,7 +17,7 @@ module AdventOfCode2020
     private
 
     def solve(group_size)
-      entries = File.read(@path).lines.map(&:strip).map(&:to_i)
+      entries = File.read(@path).lines.map(&:to_i)
       match = entries.combination(group_size).find { |group| group.sum == 2020 }
 
       match.inject(:*)

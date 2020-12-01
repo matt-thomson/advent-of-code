@@ -1,7 +1,14 @@
+require:
+  - rubocop-rspec
+
 AllCops:
   Exclude:
     - bin/*
   NewCops: enable
+
+RSpec/FilePath:
+  CustomTransform:
+    AdventOfCode2020: advent_of_code_2020
 
 Style/Documentation:
   Enabled: false

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AdventOfCode2020
   class Day01
     def initialize(path)
@@ -16,9 +18,9 @@ module AdventOfCode2020
 
     def solve(group_size)
       entries = File.read(@path).lines.map(&:strip).map(&:to_i)
-      group = entries.combination(group_size).find { |group| group.sum == 2020 }
-      
-      group.inject(:*)
+      match = entries.combination(group_size).find { |group| group.sum == 2020 }
+
+      match.inject(:*)
     end
   end
 end

@@ -1,8 +1,10 @@
-require "bundler/setup"
-require "advent_of_code_2020"
+# frozen_string_literal: true
+
+require 'bundler/setup'
+require 'advent_of_code_2020'
 
 RSpec.configure do |config|
-  config.example_status_persistence_file_path = ".rspec_status"
+  config.example_status_persistence_file_path = '.rspec_status'
 
   config.disable_monkey_patching!
 

@@ -6,7 +6,7 @@ jobs:
   test:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
       - name: Read .ruby-version
         run: echo "##[set-output name=RUBY_VERSION;]$(cat .ruby-version)"
         id: ruby-version

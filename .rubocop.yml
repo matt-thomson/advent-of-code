@@ -8,6 +8,10 @@ AllCops:
   NewCops: enable
   TargetRubyVersion: 2.6
 
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*_spec.rb
+
 RSpec/FilePath:
   CustomTransform:
     AdventOfCode2020: advent_of_code_2020

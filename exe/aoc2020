@@ -6,7 +6,7 @@ require 'advent_of_code_2020'
 day = ARGV[0]
 args = ARGV[1..]
 
-clazz = Object.const_get("AdventOfCode2020::Day#{format('%02d', day)}")
+clazz = Object.const_get("AdventOfCode2020::Day#{format('%02d', day)}::Problem")
 problem = clazz.new(*args)
 
 puts problem.part_one

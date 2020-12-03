@@ -10,4 +10,10 @@ RSpec.describe AdventOfCode2020::Day03::Problem do
 
     it { is_expected.to eq(7) }
   end
+
+  describe '#part_two' do
+    subject(:part_two) { problem.part_two }
+
+    it { is_expected.to eq(336) }
+  end
 end

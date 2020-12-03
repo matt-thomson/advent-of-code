@@ -12,6 +12,11 @@ Metrics/BlockLength:
   Exclude:
     - spec/**/*_spec.rb
 
+Naming/MethodParameterName:
+  AllowedNames:
+    - x
+    - y
+
 RSpec/FilePath:
   CustomTransform:
     AdventOfCode2020: advent_of_code_2020

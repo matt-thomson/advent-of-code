@@ -3,7 +3,7 @@
 RSpec.describe AdventOfCode2020::Day04::Document do
   subject(:password) { described_class.new(input) }
 
-  describe '#valid_passport?' do
+  describe '#valid_structure?' do
     context 'with first example' do
       let(:input) do
         <<~DOCUMENT
@@ -12,7 +12,7 @@ RSpec.describe AdventOfCode2020::Day04::Document do
         DOCUMENT
       end
 
-      it { is_expected.to be_valid_passport }
+      it { is_expected.to be_valid_structure }
     end
 
     context 'with second example' do
@@ -23,7 +23,7 @@ RSpec.describe AdventOfCode2020::Day04::Document do
         DOCUMENT
       end
 
-      it { is_expected.not_to be_valid_passport }
+      it { is_expected.not_to be_valid_structure }
     end
 
     context 'with third example' do
@@ -36,7 +36,7 @@ RSpec.describe AdventOfCode2020::Day04::Document do
         DOCUMENT
       end
 
-      it { is_expected.to be_valid_passport }
+      it { is_expected.to be_valid_structure }
     end
 
     context 'with fourth example' do
@@ -47,7 +47,7 @@ RSpec.describe AdventOfCode2020::Day04::Document do
         DOCUMENT
       end
 
-      it { is_expected.not_to be_valid_passport }
+      it { is_expected.not_to be_valid_structure }
     end
   end
 end

@@ -9,7 +9,7 @@ module AdventOfCode2020
 
       def part_one
         documents = File.read(@path).split("\n\n").map { |input| Document.new(input) }
-        documents.count(&:valid_passport?)
+        documents.count(&:valid_structure?)
       end
     end
   end

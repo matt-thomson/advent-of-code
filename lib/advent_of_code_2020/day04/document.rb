@@ -9,7 +9,7 @@ module AdventOfCode2020
         @fields = input.split(/\s/).map { |field| field.split(':') }.to_h
       end
 
-      def valid_passport?
+      def valid_structure?
         REQUIRED_FIELDS.all? { |key| @fields.include?(key) }
       end
     end

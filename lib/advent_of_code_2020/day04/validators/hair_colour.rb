@@ -3,9 +3,9 @@
 module AdventOfCode2020
   module Day04
     module Validators
-      class NoOpValidator
-        def valid?(_value)
-          true
+      class HairColour
+        def valid?(value)
+          /\A#[0-9a-f]{6}\Z/.match?(value)
         end
       end
     end

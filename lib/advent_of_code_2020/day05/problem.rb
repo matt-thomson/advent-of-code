@@ -12,6 +12,14 @@ module AdventOfCode2020
       def part_one
         @boarding_passes.map(&:seat_id).max
       end
+
+      def part_two
+        seat_ids = @boarding_passes.map(&:seat_id)
+        all_seats = (seat_ids.min..seat_ids.max).to_a
+        missing_seats = all_seats - seat_ids
+
+        missing_seats.first
+      end
     end
   end
 end

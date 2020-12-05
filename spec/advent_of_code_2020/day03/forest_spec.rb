@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'advent_of_code_2020/day03/forest'
+
 RSpec.describe AdventOfCode2020::Day03::Forest do
   subject(:forest) { described_class.new(fixture_path) }
 

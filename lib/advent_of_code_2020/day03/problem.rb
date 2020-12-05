@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'forest'
+
 module AdventOfCode2020
   module Day03
     class Problem

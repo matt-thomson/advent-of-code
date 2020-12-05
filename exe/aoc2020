@@ -1,11 +1,10 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'advent_of_code_2020'
-
 day = ARGV[0]
 args = ARGV[1..]
 
+require "advent_of_code_2020/day#{format('%02d', day)}/problem"
 clazz = Object.const_get("AdventOfCode2020::Day#{format('%02d', day)}::Problem")
 problem = clazz.new(*args)
 

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'document'
+
 module AdventOfCode2020
   module Day04
     class Problem

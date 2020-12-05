@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'password'
+
 module AdventOfCode2020
   module Day02
     class Problem

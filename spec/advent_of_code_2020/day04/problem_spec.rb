@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'advent_of_code_2020/day04/problem'
+
 RSpec.describe AdventOfCode2020::Day04::Problem do
   subject(:problem) { described_class.new(fixture_path) }
 

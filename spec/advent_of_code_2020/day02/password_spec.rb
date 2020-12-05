@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'advent_of_code_2020/day02/password'
+
 RSpec.describe AdventOfCode2020::Day02::Password do
   subject(:password) { described_class.new(input) }
 

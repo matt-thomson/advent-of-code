@@ -8,9 +8,17 @@ module AdventOfCode2020
       end
 
       def part_one
-        File.read(@path).split("\n\n").sum do |group|
-          group.gsub(/\s/, '').chars.uniq.count
-        end
+        solve { |group| group.gsub(/\s/, '').chars.uniq.count }
+      end
+
+      def part_two
+        solve { |group| group.lines.map(&:strip).map(&:chars).inject(:&).count }
+      end
+
+      private
+
+      def solve(&block)
+        File.read(@path).split("\n\n").sum(&block)
       end
     end
   end

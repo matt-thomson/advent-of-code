@@ -8,5 +8,5 @@ require "advent_of_code_2020/day#{format('%02d', day)}/problem"
 clazz = Object.const_get("AdventOfCode2020::Day#{format('%02d', day)}::Problem")
 problem = clazz.new(*args)
 
-puts problem.part_one
-puts problem.part_two
+puts "Part 1: #{problem.part_one}" if problem.respond_to?(:part_one)
+puts "Part 2: #{problem.part_two}" if problem.respond_to?(:part_two)

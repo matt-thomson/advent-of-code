@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'computer'
+
 module AdventOfCode2020
   module Day08
     class Problem
@@ -11,26 +13,10 @@ module AdventOfCode2020
       end
 
       def part_one
-        counter = 0
-        accumulator = 0
-        visited = Set.new
+        computer = Computer.new(@instructions)
+        computer.run!
 
-        until visited.include?(counter)
-          visited << counter
-          operation, argument = @instructions.fetch(counter)
-
-          case operation
-          when 'acc'
-            accumulator += argument
-            counter += 1
-          when 'jmp'
-            counter += argument
-          when 'nop'
-            counter += 1
-          end
-        end
-
-        accumulator
+        computer.accumulator
       end
     end
   end

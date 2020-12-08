@@ -11,7 +11,7 @@ module AdventOfCode2020
       end
 
       def run!
-        until @visited.include?(counter)
+        while !@visited.include?(counter) && counter < @instructions.length
           @visited << counter
           operation, argument = @instructions.fetch(counter)
           step(operation, argument)

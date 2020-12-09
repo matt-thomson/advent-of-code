@@ -15,6 +15,17 @@ module AdventOfCode2020
           end
         end.last
       end
+
+      def part_two
+        target = part_one
+
+        (0..@input.length).each do |first|
+          ((first + 1)..@input.length).each do |last|
+            range = @input[first..last]
+            return range.min + range.max if range.sum == target
+          end
+        end
+      end
     end
   end
 end

@@ -20,9 +20,12 @@ module AdventOfCode2020
         target = part_one
 
         (0..@input.length).each do |first|
-          ((first + 1)..@input.length).each do |last|
-            range = @input[first..last]
-            return range.min + range.max if range.sum == target
+          total = 0
+          (first..@input.length).each do |last|
+            total += @input[last]
+            break if total > target
+
+            return @input[first..last].min + @input[first..last].max if total == target
           end
         end
       end

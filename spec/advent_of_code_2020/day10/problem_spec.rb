@@ -20,4 +20,20 @@ RSpec.describe AdventOfCode2020::Day10::Problem do
       it { is_expected.to eq(220) }
     end
   end
+
+  describe '#part_two' do
+    subject(:part_two) { problem.part_two }
+
+    context 'with first example' do
+      let(:fixture_path) { 'spec/fixtures/day10a.txt' }
+
+      it { is_expected.to eq(8) }
+    end
+
+    context 'with second example' do
+      let(:fixture_path) { 'spec/fixtures/day10b.txt' }
+
+      it { is_expected.to eq(19_208) }
+    end
+  end
 end

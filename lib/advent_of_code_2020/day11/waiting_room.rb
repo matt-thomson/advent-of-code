@@ -19,12 +19,12 @@ module AdventOfCode2020
         @seats = seats
       end
 
-      def step
+      def step(threshold, &neighbours)
         next_seats = @seats.map(&:dup)
 
         seats.each_with_index do |row, y|
           (0...row.length).each do |x|
-            next_seats[y][x] = next_state(x, y)
+            next_seats[y][x] = next_state(x, y, threshold, &neighbours)
           end
         end
 
@@ -43,10 +43,12 @@ module AdventOfCode2020
 
       private
 
-      def next_state(x, y)
-        if seats[y][x] == :empty_seat && occupied_neighbours(x, y).zero?
+      def next_state(x, y, threshold, &neighbours)
+        occupied = occupied_neighbours(x, y, &neighbours)
+
+        if seats[y][x] == :empty_seat && occupied.zero?
           :occupied_seat
-        elsif seats[y][x] == :occupied_seat && occupied_neighbours(x, y) >= 4
+        elsif seats[y][x] == :occupied_seat && occupied >= threshold
           :empty_seat
         else
           seats[y][x]
@@ -54,11 +56,9 @@ module AdventOfCode2020
       end
 
       def occupied_neighbours(x, y)
-        [x - 1, x, x + 1]
-          .product([y - 1, y, y + 1])
-          .reject { |neighbour_x, neighbour_y| neighbour_x == x && neighbour_y == y }
-          .reject { |neighbour_x, neighbour_y| neighbour_x.negative? || neighbour_y.negative? }
-          .count { |neighbour_x, neighbour_y| seats.fetch(neighbour_y, [])[neighbour_x] == :occupied_seat }
+        yield(x, y, seats).count do |neighbour_x, neighbour_y|
+          seats.fetch(neighbour_y, [])[neighbour_x] == :occupied_seat
+        end
       end
 
       def self.parse_line(line)

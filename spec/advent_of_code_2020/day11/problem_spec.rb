@@ -12,4 +12,12 @@ RSpec.describe AdventOfCode2020::Day11::Problem do
 
     it { is_expected.to eq(37) }
   end
+
+  describe '#part_two' do
+    subject(:part_two) { problem.part_two }
+
+    let(:fixture_path) { 'spec/fixtures/day11.txt' }
+
+    it { is_expected.to eq(26) }
+  end
 end

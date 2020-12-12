@@ -16,6 +16,8 @@ Naming/MethodParameterName:
   AllowedNames:
     - x
     - y
+    - dx
+    - dy
 
 RSpec/FilePath:
   CustomTransform:

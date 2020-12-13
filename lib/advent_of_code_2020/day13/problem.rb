@@ -7,15 +7,20 @@ module AdventOfCode2020
         input = File.readlines(path)
 
         @timestamp = input[0].to_i
-        @buses = input[1].strip.split(',').reject { |x| x == 'x' }.map(&:to_i)
+        @buses = input[1]
+                 .strip
+                 .split(',')
+                 .each_with_index
+                 .reject { |bus, _| bus == 'x' }
+                 .map { |bus, index| [bus.to_i, index] }
       end
 
       def part_one
-        bus = @buses.min_by { |x| minutes_until_bus(x) }
-        minutes_until_bus(bus) * bus
+        first_bus = @buses.min_by { |bus, _| minutes_until_bus(bus) }[0]
+        minutes_until_bus(first_bus) * first_bus
       end
 
-      private 
+      private
 
       def minutes_until_bus(bus)
         bus - (@timestamp % bus)

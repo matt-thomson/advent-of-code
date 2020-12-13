@@ -20,6 +20,19 @@ module AdventOfCode2020
         minutes_until_bus(first_bus) * first_bus
       end
 
+      def part_two
+        answer = 0
+        modulus = 1
+
+        @buses.each do |bus, offset|
+          answer += modulus until ((answer + offset) % bus).zero?
+
+          modulus *= bus
+        end
+
+        answer
+      end
+
       private
 
       def minutes_until_bus(bus)

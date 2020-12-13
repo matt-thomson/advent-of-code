@@ -8,30 +8,59 @@ module AdventOfCode2020
       end
 
       def part_one
-        x = 0
-        y = 0
+        position = [0, 0]
         direction = 'E'
 
-        @instructions.each { |action, value| x, y, direction = step(x, y, direction, action, value) }
+        @instructions.each { |action, value| position, direction = step_part_one(position, direction, action, value) }
 
-        x.abs + y.abs
+        position.sum(&:abs)
+      end
+
+      def part_two
+        ship = [0, 0]
+        waypoint = [10, 1]
+
+        @instructions.each { |action, value| ship, waypoint = step_part_two(ship, waypoint, action, value) }
+
+        ship.sum(&:abs)
       end
 
       private
 
       # rubocop:disable Metrics/AbcSize
-      def step(x, y, direction, action, value)
+      def step_part_one(position, direction, action, value)
+        x, y = position
+
         {
-          'N' => -> { [x, y + value, direction] },
-          'S' => -> { [x, y - value, direction] },
-          'E' => -> { [x + value, y, direction] },
-          'W' => -> { [x - value, y, direction] },
-          'L' => -> { [x, y, turn_left(direction, value / 90)] },
-          'R' => -> { [x, y, turn_right(direction, value / 90)] },
-          'F' => -> { step(x, y, direction, direction, value) }
+          'N' => -> { [[x, y + value], direction] },
+          'S' => -> { [[x, y - value], direction] },
+          'E' => -> { [[x + value, y], direction] },
+          'W' => -> { [[x - value, y], direction] },
+          'L' => -> { [position, turn_left(direction, value / 90)] },
+          'R' => -> { [position, turn_right(direction, value / 90)] },
+          'F' => -> { step_part_one(position, direction, direction, value) }
         }.fetch(action).call
       end
       # rubocop:enable Metrics/AbcSize
+
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
+      def step_part_two(ship, waypoint, action, value)
+        ship_x, ship_y = ship
+        waypoint_x, waypoint_y = waypoint
+
+        {
+          'N' => -> { [ship, [waypoint_x, waypoint_y + value]] },
+          'S' => -> { [ship, [waypoint_x, waypoint_y - value]] },
+          'E' => -> { [ship, [waypoint_x + value, waypoint_y]] },
+          'W' => -> { [ship, [waypoint_x - value, waypoint_y]] },
+          'L' => -> { [ship, rotate_left(waypoint, value / 90)] },
+          'R' => -> { [ship, rotate_right(waypoint, value / 90)] },
+          'F' => -> { [[ship_x + waypoint_x * value, ship_y + waypoint_y * value], waypoint] }
+        }.fetch(action).call
+      end
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       def turn_left(direction, times)
         return direction if times.zero?
@@ -47,6 +76,20 @@ module AdventOfCode2020
         after = { 'N' => 'E', 'E' => 'S', 'S' => 'W', 'W' => 'N' }.fetch(direction)
 
         turn_right(after, times - 1)
+      end
+
+      def rotate_left(position, times)
+        return position if times.zero?
+
+        x, y = position
+        rotate_left([-y, x], times - 1)
+      end
+
+      def rotate_right(position, times)
+        return position if times.zero?
+
+        x, y = position
+        rotate_right([y, -x], times - 1)
       end
     end
   end

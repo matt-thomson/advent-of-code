@@ -26,6 +26,21 @@ module AdventOfCode2020
         memory.values.sum
       end
 
+      def part_two
+        memory = {}
+        mask = nil
+
+        @instructions.each do |instruction|
+          case instruction[0]
+          when :mask then mask = instruction[1]
+          when :mem
+            mask.apply_v2(instruction[1]).each { |address| memory[address] = instruction[2] }
+          end
+        end
+
+        memory.values.sum
+      end
+
       private
 
       def parse_instruction(line)

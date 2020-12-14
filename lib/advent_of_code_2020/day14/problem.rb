@@ -19,7 +19,7 @@ module AdventOfCode2020
         @instructions.each do |instruction|
           case instruction[0]
           when :mask then mask = instruction[1]
-          when :mem then memory[instruction[1]] = mask.apply(instruction[2])
+          when :mem then memory[instruction[1]] = mask.apply_v1(instruction[2])
           end
         end
 

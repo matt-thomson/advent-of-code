@@ -6,12 +6,22 @@ module AdventOfCode2020
   module Day15
     class Problem
       def initialize(*input)
-        @starting_numbers = input.map(&:to_i)
+        starting_numbers = input.map(&:to_i)
+        @sequence = Sequence.new(starting_numbers)
       end
 
       def part_one
-        sequence = Sequence.new(@starting_numbers)
-        sequence.numbers.take(2020).last
+        solve(2020)
+      end
+
+      def part_two
+        solve(30_000_000)
+      end
+
+      private
+
+      def solve(index)
+        @sequence.numbers.take(index).last
       end
     end
   end

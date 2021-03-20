@@ -14,7 +14,7 @@ name = "aoc2019"
 version = "0.1.0"
 dependencies = [
  "bytecount",
- "fixedbitset",
+ "fixedbitset 0.4.0",
  "itertools 0.10.0",
  "modinverse",
  "num",
@@ -83,6 +83,12 @@ name = "fixedbitset"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "45e780567ed7abc415d12fd464571d265eb4a5710ddc97cdb1a31a4c35bb479d"
+
+[[package]]
+name = "fixedbitset"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "398ea4fabe40b9b0d885340a2a991a44c8a645624075ad966d21f88688e2b69e"
 
 [[package]]
 name = "heck"
@@ -223,7 +229,7 @@ version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "420892051ecafcc27148ffdca64491dc14f65cfd8b1283df336b04f792c7a6a3"
 dependencies = [
- "fixedbitset",
+ "fixedbitset 0.3.2",
  "indexmap",
  "itertools 0.9.0",
  "num-traits",

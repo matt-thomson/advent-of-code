@@ -10,7 +10,7 @@ jobs:
       - name: Read .ruby-version
         run: echo "##[set-output name=RUBY_VERSION;]$(cat .ruby-version)"
         id: ruby-version
-      - uses: actions/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1.70.0
         with:
           ruby-version: "${{ steps.ruby-version.outputs.RUBY_VERSION }}"
       - name: Install dependencies

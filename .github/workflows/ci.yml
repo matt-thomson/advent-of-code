@@ -10,8 +10,7 @@ jobs:
       - uses: ruby/setup-ruby@v1.70.0
         with:
           ruby-version: .ruby-version
-      - name: Install dependencies
-        run: bundle install
+          bundler-cache: true
       - name: Rubocop
         run: bin/rubocop
       - name: RSpec

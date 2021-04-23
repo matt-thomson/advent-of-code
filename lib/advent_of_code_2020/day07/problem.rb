@@ -2,6 +2,8 @@
 
 require_relative 'rule'
 
+require 'set'
+
 module AdventOfCode2020
   module Day07
     class Problem

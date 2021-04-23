@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'set'
+
 module AdventOfCode2020
   module Day08
     class Computer

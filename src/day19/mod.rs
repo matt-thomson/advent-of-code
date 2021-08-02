@@ -28,7 +28,7 @@ impl Problem for Day19 {
 
         (0..50)
             .flat_map(|x| (0..50).map(move |y| (x, y)))
-            .filter(|position| beam.contains(&position))
+            .filter(|position| beam.contains(position))
             .count()
     }
 

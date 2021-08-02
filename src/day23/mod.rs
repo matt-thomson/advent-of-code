@@ -33,7 +33,7 @@ impl Problem for Day23 {
 
         loop {
             for (address, node) in nodes.iter_mut().enumerate() {
-                let input = packets.remove(&address).unwrap_or_else(|| vec![]);
+                let input = packets.remove(&address).unwrap_or_else(Vec::new);
 
                 for packet in node.run(&input) {
                     if packet.address() == 255 {
@@ -42,7 +42,7 @@ impl Problem for Day23 {
 
                     packets
                         .entry(packet.address())
-                        .or_insert_with(|| vec![])
+                        .or_insert_with(Vec::new)
                         .push(packet);
                 }
             }
@@ -63,7 +63,7 @@ impl Problem for Day23 {
             let mut idle = true;
 
             for (address, node) in nodes.iter_mut().enumerate() {
-                let input = packets.remove(&address).unwrap_or_else(|| vec![]);
+                let input = packets.remove(&address).unwrap_or_else(Vec::new);
                 let output = node.run(&input);
 
                 if !input.is_empty() || !output.is_empty() {
@@ -77,7 +77,7 @@ impl Problem for Day23 {
 
                     packets
                         .entry(packet.address())
-                        .or_insert_with(|| vec![])
+                        .or_insert_with(Vec::new)
                         .push(packet);
                 }
             }

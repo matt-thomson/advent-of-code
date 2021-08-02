@@ -60,7 +60,7 @@ fn step(planets: &mut [Planet]) {
     for (i, first) in copy.iter().enumerate() {
         for (j, second) in planets.iter_mut().enumerate() {
             if i != j {
-                second.apply_gravity(&first);
+                second.apply_gravity(first);
             }
         }
     }
@@ -76,7 +76,7 @@ fn find_cycle(planets: &[Planet], dimension: usize) -> usize {
     for i in 1.. {
         step(&mut current);
 
-        if dimension_matches(&planets, &current, dimension) {
+        if dimension_matches(planets, &current, dimension) {
             return i;
         }
     }

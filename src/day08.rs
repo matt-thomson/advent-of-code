@@ -1,7 +1,6 @@
 use std::fs;
 use std::path::PathBuf;
 
-use bytecount;
 use itertools::Itertools;
 use structopt::StructOpt;
 

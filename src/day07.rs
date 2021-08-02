@@ -42,7 +42,7 @@ impl Day07 {
 }
 
 fn run(program: &Program, phases: &[i64]) -> i64 {
-    let mut computers: Vec<_> = phases.iter().map(|phase| init(&program, *phase)).collect();
+    let mut computers: Vec<_> = phases.iter().map(|phase| init(program, *phase)).collect();
 
     let mut signal = 0;
 

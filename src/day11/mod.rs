@@ -49,7 +49,7 @@ impl Problem for Day11 {
 }
 
 fn identifier(path: &Path, initial: Colour) -> State {
-    let mut computer = Program::read(&path).launch();
+    let mut computer = Program::read(path).launch();
     let mut state = State::new(initial);
 
     while !computer.is_halted() {

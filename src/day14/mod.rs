@@ -96,7 +96,7 @@ fn ore_required(
 
     for input in reaction.inputs() {
         ore += ore_required(
-            &reactions,
+            reactions,
             input.amount() * num_reactions,
             input.name(),
             products,

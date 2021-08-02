@@ -31,8 +31,10 @@ impl Problem for Day03 {
 impl Day03 {
     fn intersections(&self) -> HashMap<(i32, i32), usize> {
         let input = fs::read_to_string(&self.input).unwrap();
-        let first_path = path(input.lines().nth(0).unwrap());
-        let second_path = path(input.lines().nth(1).unwrap());
+        let mut input_lines = input.lines();
+
+        let first_path = path(input_lines.next().unwrap());
+        let second_path = path(input_lines.next().unwrap());
 
         let mut result = HashMap::new();
 

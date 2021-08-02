@@ -48,7 +48,7 @@ impl Image {
     pub fn intersections(&self) -> Vec<&Position> {
         self.scaffolds
             .iter()
-            .filter(|scaffold| self.is_intersection(&scaffold))
+            .filter(|scaffold| self.is_intersection(scaffold))
             .collect()
     }
 
@@ -107,7 +107,7 @@ impl Image {
 
         Direction::all()
             .iter()
-            .flat_map(|direction| direction.step(&position))
+            .flat_map(|direction| direction.step(position))
             .all(|neighbour| self.scaffolds.contains(&neighbour))
     }
 }

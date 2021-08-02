@@ -125,7 +125,7 @@ impl Computer {
 
             value
         } else {
-            let address = self.address(&mode);
+            let address = self.address(mode);
             self.peek(address)
         }
     }

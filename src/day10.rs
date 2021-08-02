@@ -90,12 +90,12 @@ fn visible(asteroids: &HashSet<Point>, point: Point) -> Vec<&Point> {
 }
 
 fn destroyed(asteroids: &HashSet<Point>, base: Point, count: usize) -> Point {
-    let mut visible = visible(&asteroids, base);
+    let mut visible = visible(asteroids, base);
 
     if count > visible.len() {
         let mut not_visible = asteroids.clone();
         for asteroid in &visible {
-            not_visible.remove(&asteroid);
+            not_visible.remove(asteroid);
         }
 
         destroyed(&not_visible, base, count - visible.len())

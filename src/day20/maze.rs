@@ -110,16 +110,16 @@ impl Maze {
         let mut result = vec![];
 
         for candidate in &candidates {
-            if self.spaces.contains(&candidate) {
+            if self.spaces.contains(candidate) {
                 result.push(*candidate);
             }
         }
 
-        if let Some(out) = self.inner_portals.get(&position) {
+        if let Some(out) = self.inner_portals.get(position) {
             result.push(*out);
         }
 
-        if let Some(out) = self.outer_portals.get(&position) {
+        if let Some(out) = self.outer_portals.get(position) {
             result.push(*out);
         }
 
@@ -138,7 +138,7 @@ impl Maze {
         let mut result = vec![];
 
         for candidate in &candidates {
-            if self.spaces.contains(&candidate) {
+            if self.spaces.contains(candidate) {
                 result.push((*candidate, level));
             }
         }

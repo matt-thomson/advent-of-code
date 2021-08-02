@@ -23,7 +23,7 @@ impl Problem for Day16 {
     type Output = i32;
 
     fn part_one(&self) -> i32 {
-        let mut input = parse(&fs::read_to_string(&self.input).unwrap().trim());
+        let mut input = parse(fs::read_to_string(&self.input).unwrap().trim());
 
         for _ in 0..NUM_PHASES {
             input = fft(&input);
@@ -33,7 +33,7 @@ impl Problem for Day16 {
     }
 
     fn part_two(&self) -> i32 {
-        let input = parse(&fs::read_to_string(&self.input).unwrap().trim());
+        let input = parse(fs::read_to_string(&self.input).unwrap().trim());
         let offset = read(&input, 7) as usize;
 
         assert!(offset > input.len() * NUM_REPEATS / 2);
@@ -57,7 +57,7 @@ fn parse(input: &str) -> Vec<i32> {
 }
 
 fn fft(input: &[i32]) -> Vec<i32> {
-    (0..input.len()).map(|i| element(&input, i)).collect()
+    (0..input.len()).map(|i| element(input, i)).collect()
 }
 
 fn fast_fft(input: &[i32]) -> Vec<i32> {

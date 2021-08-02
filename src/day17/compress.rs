@@ -44,17 +44,17 @@ impl Display for FunctionCall {
 pub fn compress(path: &[Instruction]) -> CompressedPath {
     for a_len in 1..=10.min(path.len()) {
         let a = &path[0..a_len];
-        let rest = remove_prefixes(&path, &[&a]);
+        let rest = remove_prefixes(path, &[a]);
 
         for b_len in 1..=10.min(rest.len()) {
             let b = &rest[0..b_len];
-            let rest = remove_prefixes(&path, &[&a, &b]);
+            let rest = remove_prefixes(path, &[a, b]);
 
             for c_len in 1..=10.min(rest.len()) {
                 let c = &rest[0..c_len];
 
-                if remove_prefixes(&rest, &[&a, &b, &c]).is_empty() {
-                    let main = find_calls(&path, &a, &b, &c);
+                if remove_prefixes(rest, &[a, b, c]).is_empty() {
+                    let main = find_calls(path, a, b, c);
                     if main.len() <= 10 {
                         return CompressedPath {
                             main,

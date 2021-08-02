@@ -23,7 +23,7 @@ impl Problem for Day20 {
 
         let result = bfs(
             maze.start(),
-            |position| maze.neighbours(&position),
+            |position| maze.neighbours(position),
             |position| position == maze.end(),
         );
 
@@ -35,7 +35,7 @@ impl Problem for Day20 {
 
         let result = bfs(
             &(*maze.start(), 0),
-            |position| maze.neighbours_with_level(&position),
+            |position| maze.neighbours_with_level(position),
             |position| position == &(*maze.end(), 0),
         );
 

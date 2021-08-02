@@ -24,6 +24,6 @@ impl Node {
 
         let output = self.computer.run(&input);
 
-        output.chunks(3).map(|chunk| Packet::from(&chunk)).collect()
+        output.chunks(3).map(|chunk| Packet::from(chunk)).collect()
     }
 }

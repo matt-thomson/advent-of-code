@@ -29,7 +29,7 @@ impl Problem for Day18 {
 
         let (_, shortest) = dijkstra(
             &(0, FixedBitSet::with_capacity(maze.keys().len() + 1)),
-            |state| neighbours(&state, &routes),
+            |state| neighbours(state, &routes),
             |(_, keys)| keys.count_ones(..) == routes.len() - 1,
         )
         .unwrap();
@@ -59,7 +59,7 @@ impl Problem for Day18 {
                 [0, 0, 0, 0],
                 FixedBitSet::with_capacity(maze.keys().len() + 1),
             ),
-            |state| neighbours_quadrants(&state, &routes),
+            |state| neighbours_quadrants(state, &routes),
             |(_, keys)| keys.count_ones(..) == maze.keys().len(),
         )
         .unwrap();
@@ -74,11 +74,11 @@ fn neighbours(state: &State, routes: &Routes) -> Vec<(State, usize)> {
     let (position, keys) = state;
 
     let possible_routes = routes
-        .get(&position)
+        .get(position)
         .unwrap()
         .iter()
         .filter(|(key, _)| !keys.contains(**key))
-        .filter(|(_, route)| route.reachable(&keys));
+        .filter(|(_, route)| route.reachable(keys));
 
     let mut result = vec![];
 

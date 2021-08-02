@@ -19,7 +19,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     writeln!(f, "}}")?;
-    writeln!(f, "")?;
+    writeln!(f)?;
 
     writeln!(f, "pub fn main() {{")?;
     writeln!(f, "    match Opts::from_args() {{")?;

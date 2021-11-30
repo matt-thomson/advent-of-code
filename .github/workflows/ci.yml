@@ -4,13 +4,16 @@ name: CI
 
 jobs:
   test:
-    name: Rust project
+    name: CI
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.4.0
+      - name: Checkout code
+        uses: actions/checkout@v2.4.0
       - name: Setup Rust toolchain
         run: rustup show
-      - uses: actions-rs/cargo@v1.0.3
-        with:
-          command: test
-          args: --locked
+      - name: Setup just
+        uses: extractions/setup-just@v1.4.0
+      - name: Lint
+        run: just lint
+      - name: Test
+        run: just test

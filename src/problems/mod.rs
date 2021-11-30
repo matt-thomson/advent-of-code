@@ -1,1 +1,1 @@
-pub mod day01;
+automod::dir!(pub "src/problems");

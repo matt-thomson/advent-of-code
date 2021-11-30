@@ -1,13 +1,6 @@
-mod problems;
-
-use clap::Parser;
+pub mod problems;
 
 use std::fmt::Display;
-
-#[derive(Debug, Parser)]
-enum Opts {
-    Day01(problems::day01::Day01),
-}
 
 pub trait Problem {
     type Output: Display;
@@ -18,11 +11,5 @@ pub trait Problem {
     fn run(&self) {
         println!("{}", self.part_one());
         println!("{}", self.part_two());
-    }
-}
-
-fn main() {
-    match Opts::parse() {
-        Opts::Day01(day01) => day01.run(),
     }
 }

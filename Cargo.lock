@@ -3,14 +3,6 @@
 version = 3
 
 [[package]]
-name = "aoc2021"
-version = "0.1.0"
-dependencies = [
- "automod",
- "clap",
-]
-
-[[package]]
 name = "atty"
 version = "0.2.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -26,17 +18,6 @@ name = "autocfg"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cdb031dd78e28731d87d56cc8ffef4a8f36ca26c38fe2de700543e627f8a464a"
-
-[[package]]
-name = "automod"
-version = "1.0.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "27989085bc1962f5d8ad5c2ab819a603b5096590c38a03162443d8a8bc307d0c"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
 
 [[package]]
 name = "bitflags"
@@ -73,6 +54,13 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "day01"
+version = "0.1.0"
+dependencies = [
+ "clap",
 ]
 
 [[package]]

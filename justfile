@@ -10,4 +10,4 @@ test:
 	cargo test --locked
 
 run day input:
-  cargo run --locked {{day}} {{input}}
+  cargo run --locked --bin {{day}} {{input}}

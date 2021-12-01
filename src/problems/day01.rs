@@ -36,7 +36,7 @@ impl Day01 {
 
         depths
             .windows(window_size)
-            .filter(|pair| pair[pair.len() - 1] > pair[0])
+            .filter(|pair| pair.last() > pair.first())
             .count()
     }
 }

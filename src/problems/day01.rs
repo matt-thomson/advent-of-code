@@ -16,34 +16,29 @@ impl Problem for Day01 {
     type Output = usize;
 
     fn part_one(&self) -> usize {
-        count_increases(&self.depths())
+        self.count_increases(2)
     }
 
     fn part_two(&self) -> usize {
-        let windows: Vec<u32> = self
-            .depths()
-            .windows(3)
-            .map(|window| window.iter().sum())
-            .collect();
-
-        count_increases(&windows)
+        self.count_increases(4)
     }
 }
 
 impl Day01 {
-    fn depths(&self) -> Vec<u32> {
+    fn count_increases(&self, window_size: usize) -> usize {
         let file = File::open(&self.input).unwrap();
         let reader = BufReader::new(file);
 
-        reader
+        let depths: Vec<u32> = reader
             .lines()
             .map(|line| line.unwrap().parse().unwrap())
-            .collect()
-    }
-}
+            .collect();
 
-fn count_increases(input: &[u32]) -> usize {
-    input.windows(2).filter(|pair| pair[1] > pair[0]).count()
+        depths
+            .windows(window_size)
+            .filter(|pair| pair[pair.len() - 1] > pair[0])
+            .count()
+    }
 }
 
 #[cfg(test)]

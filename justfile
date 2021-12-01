@@ -1,7 +1,7 @@
 # just manual: https://github.com/casey/just/#readme
 
 _default:
-    @just --list
+  @just --list
 
 lint:
 	cargo clippy --locked -- -D warnings

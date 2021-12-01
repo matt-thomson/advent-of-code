@@ -4,17 +4,20 @@ use std::path::PathBuf;
 
 use clap::Parser;
 
-use crate::Problem;
-
 #[derive(Debug, Parser)]
 pub struct Day01 {
     #[clap(parse(from_os_str))]
     input: PathBuf,
 }
 
-impl Problem for Day01 {
-    type Output = usize;
+fn main() {
+    let problem = Day01::parse();
 
+    println!("Part 1: {}", problem.part_one());
+    println!("Part 2: {}", problem.part_two());
+}
+
+impl Day01 {
     fn part_one(&self) -> usize {
         self.count_increases(2)
     }
@@ -22,9 +25,7 @@ impl Problem for Day01 {
     fn part_two(&self) -> usize {
         self.count_increases(4)
     }
-}
 
-impl Day01 {
     fn count_increases(&self, window_size: usize) -> usize {
         let file = File::open(&self.input).unwrap();
         let reader = BufReader::new(file);
@@ -44,8 +45,6 @@ impl Day01 {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    use crate::Problem;
 
     #[test]
     fn test_part_one() {

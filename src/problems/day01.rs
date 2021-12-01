@@ -1,21 +1,34 @@
+use std::fs::File;
+use std::io::{BufRead, BufReader};
+use std::path::PathBuf;
+
 use clap::Parser;
 
 use crate::Problem;
 
 #[derive(Debug, Parser)]
 pub struct Day01 {
-    maximum: u32,
+    #[clap(parse(from_os_str))]
+    input: PathBuf,
 }
 
 impl Problem for Day01 {
-    type Output = u32;
+    type Output = usize;
 
-    fn part_one(&self) -> u32 {
-        (1..=self.maximum).sum()
+    fn part_one(&self) -> usize {
+        let file = File::open(&self.input).unwrap();
+        let reader = BufReader::new(file);
+
+        let depths: Vec<u32> = reader
+            .lines()
+            .map(|line| line.unwrap().parse().unwrap())
+            .collect();
+
+        depths.windows(2).filter(|pair| pair[1] > pair[0]).count()
     }
 
-    fn part_two(&self) -> u32 {
-        (1..=self.maximum).map(|x| x * x).sum()
+    fn part_two(&self) -> usize {
+        unimplemented!()
     }
 }
 
@@ -27,15 +40,9 @@ mod tests {
 
     #[test]
     fn test_part_one() {
-        let problem = Day01 { maximum: 100 };
+        let input = PathBuf::from("fixtures/day01.txt");
+        let problem = Day01 { input };
 
-        assert_eq!(problem.part_one(), 5050);
-    }
-
-    #[test]
-    fn test_part_two() {
-        let problem = Day01 { maximum: 100 };
-
-        assert_eq!(problem.part_two(), 338350);
+        assert_eq!(problem.part_one(), 7);
     }
 }

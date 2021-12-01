@@ -16,10 +16,7 @@ impl Problem for Day01 {
     type Output = usize;
 
     fn part_one(&self) -> usize {
-        self.depths()
-            .windows(2)
-            .filter(|pair| pair[1] > pair[0])
-            .count()
+        count_increases(&self.depths())
     }
 
     fn part_two(&self) -> usize {
@@ -29,7 +26,7 @@ impl Problem for Day01 {
             .map(|window| window.iter().sum())
             .collect();
 
-        windows.windows(2).filter(|pair| pair[1] > pair[0]).count()
+        count_increases(&windows)
     }
 }
 
@@ -43,6 +40,10 @@ impl Day01 {
             .map(|line| line.unwrap().parse().unwrap())
             .collect()
     }
+}
+
+fn count_increases(input: &[u32]) -> usize {
+    input.windows(2).filter(|pair| pair[1] > pair[0]).count()
 }
 
 #[cfg(test)]

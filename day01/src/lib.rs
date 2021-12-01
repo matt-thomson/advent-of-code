@@ -10,19 +10,12 @@ pub struct Day01 {
     input: PathBuf,
 }
 
-fn main() {
-    let problem = Day01::parse();
-
-    println!("Part 1: {}", problem.part_one());
-    println!("Part 2: {}", problem.part_two());
-}
-
 impl Day01 {
-    fn part_one(&self) -> usize {
+    pub fn part_one(&self) -> usize {
         self.count_increases(2)
     }
 
-    fn part_two(&self) -> usize {
+    pub fn part_two(&self) -> usize {
         self.count_increases(4)
     }
 

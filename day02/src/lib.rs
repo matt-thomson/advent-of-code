@@ -25,25 +25,25 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> u32 {
-        let (position, depth) = self
-            .instructions
-            .iter()
-            .fold((0, 0), |position, instruction| {
-                instruction.step_part_one(position)
-            });
+        let (position, depth) =
+            self.run(|position, instruction| instruction.step_part_one(position));
 
         position * depth
     }
 
     pub fn part_two(&self) -> u32 {
-        let (position, depth, _) = self
-            .instructions
-            .iter()
-            .fold((0, 0, 0), |position, instruction| {
-                instruction.step_part_two(position)
-            });
+        let (position, depth, _aim) =
+            self.run(|position, instruction| instruction.step_part_two(position));
 
         position * depth
+    }
+
+    fn run<T, F>(&self, reducer: F) -> T
+    where
+        T: Default,
+        F: FnMut(T, &Instruction) -> T,
+    {
+        self.instructions.iter().fold(T::default(), reducer)
     }
 }
 

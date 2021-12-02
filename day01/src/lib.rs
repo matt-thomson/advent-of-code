@@ -1,16 +1,25 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
-use std::path::PathBuf;
+use std::path::Path;
 
-use clap::Parser;
-
-#[derive(Debug, Parser)]
-pub struct Day01 {
-    #[clap(parse(from_os_str))]
-    input: PathBuf,
+#[derive(Debug)]
+pub struct Problem {
+    depths: Vec<u32>,
 }
 
-impl Day01 {
+impl Problem {
+    pub fn new<P: AsRef<Path>>(path: P) -> Self {
+        let file = File::open(&path).unwrap();
+        let reader = BufReader::new(file);
+
+        let depths: Vec<u32> = reader
+            .lines()
+            .map(|line| line.unwrap().parse().unwrap())
+            .collect();
+
+        Self { depths }
+    }
+
     pub fn part_one(&self) -> usize {
         self.count_increases(2)
     }
@@ -20,15 +29,7 @@ impl Day01 {
     }
 
     fn count_increases(&self, window_size: usize) -> usize {
-        let file = File::open(&self.input).unwrap();
-        let reader = BufReader::new(file);
-
-        let depths: Vec<u32> = reader
-            .lines()
-            .map(|line| line.unwrap().parse().unwrap())
-            .collect();
-
-        depths
+        self.depths
             .windows(window_size)
             .filter(|pair| pair.last() > pair.first())
             .count()
@@ -41,16 +42,14 @@ mod tests {
 
     #[test]
     fn test_part_one() {
-        let input = PathBuf::from("fixtures/day01.txt");
-        let problem = Day01 { input };
+        let problem = Problem::new("example.txt");
 
         assert_eq!(problem.part_one(), 7);
     }
 
     #[test]
     fn test_part_two() {
-        let input = PathBuf::from("fixtures/day01.txt");
-        let problem = Day01 { input };
+        let problem = Problem::new("example.txt");
 
         assert_eq!(problem.part_two(), 5);
     }

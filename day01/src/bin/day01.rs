@@ -1,9 +1,10 @@
-use day01::Day01;
+use std::env;
 
-use clap::Parser;
+use day01::Problem;
 
 fn main() {
-    let problem = Day01::parse();
+    let path = env::args().nth(1).unwrap();
+    let problem = Problem::new(path);
 
     println!("Part 1: {}", problem.part_one());
     println!("Part 2: {}", problem.part_two());

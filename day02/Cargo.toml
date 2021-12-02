@@ -5,6 +5,5 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.51"
-clap = "3.0.0-beta.5"
 strum = { version = "0.23.0", features = ["derive"] }
 strum_macros = "0.23.1"

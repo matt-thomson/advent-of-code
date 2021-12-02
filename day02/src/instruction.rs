@@ -30,11 +30,19 @@ impl FromStr for Instruction {
 }
 
 impl Instruction {
-    pub fn step(&self, (position, depth): (u32, u32)) -> (u32, u32) {
+    pub fn step_part_one(&self, (position, depth): (u32, u32)) -> (u32, u32) {
         match self.direction {
             Direction::Forward => (position + self.length, depth),
             Direction::Down => (position, depth + self.length),
             Direction::Up => (position, depth - self.length),
+        }
+    }
+
+    pub fn step_part_two(&self, (position, depth, aim): (u32, u32, u32)) -> (u32, u32, u32) {
+        match self.direction {
+            Direction::Forward => (position + self.length, depth + aim * self.length, aim),
+            Direction::Down => (position, depth, aim + self.length),
+            Direction::Up => (position, depth, aim - self.length),
         }
     }
 }

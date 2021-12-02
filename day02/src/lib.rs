@@ -28,7 +28,20 @@ impl Problem {
         let (position, depth) = self
             .instructions
             .iter()
-            .fold((0, 0), |position, instruction| instruction.step(position));
+            .fold((0, 0), |position, instruction| {
+                instruction.step_part_one(position)
+            });
+
+        position * depth
+    }
+
+    pub fn part_two(&self) -> u32 {
+        let (position, depth, _) = self
+            .instructions
+            .iter()
+            .fold((0, 0, 0), |position, instruction| {
+                instruction.step_part_two(position)
+            });
 
         position * depth
     }
@@ -43,5 +56,12 @@ mod tests {
         let problem = Problem::new("example.txt");
 
         assert_eq!(problem.part_one(), 150);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt");
+
+        assert_eq!(problem.part_two(), 900);
     }
 }

@@ -26,8 +26,8 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> u32 {
-        let gamma = (0..self.numbers[0].len())
-            .fold(0, |acc, position| acc * 2 + self.most_common(position));
+        let gamma =
+            from_binary((0..self.numbers[0].len()).map(|position| self.most_common(position)));
 
         let epsilon = 2_u32.pow(self.numbers[0].len() as u32) - 1 - gamma;
 
@@ -38,6 +38,13 @@ impl Problem {
         let count_ones: u32 = self.numbers.iter().map(|row| row[position]).sum();
         (count_ones * 2) / (self.numbers.len() as u32)
     }
+}
+
+fn from_binary<I>(numbers: I) -> u32
+where
+    I: Iterator<Item = u32>,
+{
+    numbers.fold(0, |acc, number| acc * 2 + number)
 }
 
 #[cfg(test)]

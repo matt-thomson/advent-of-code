@@ -6,7 +6,7 @@ use std::io::{BufRead, BufReader};
 use std::path::Path;
 
 use board::Board;
-use game::Game;
+use game::play;
 
 #[derive(Debug)]
 pub struct Problem {
@@ -34,19 +34,27 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> u32 {
-        let mut games: Vec<_> = self.boards.iter().map(Game::new).collect();
+        let results: Vec<_> = self
+            .boards
+            .iter()
+            .map(|board| play(board, &self.numbers))
+            .collect();
 
-        for number in &self.numbers {
-            for game in &mut games {
-                game.mark(*number);
+        let result = results.iter().min_by_key(|result| result.steps).unwrap();
 
-                if game.is_winner() {
-                    return game.score() * number;
-                }
-            }
-        }
+        result.score * self.numbers[result.steps]
+    }
 
-        panic!("Couldn't find winning board")
+    pub fn part_two(&self) -> u32 {
+        let results: Vec<_> = self
+            .boards
+            .iter()
+            .map(|board| play(board, &self.numbers))
+            .collect();
+
+        let result = results.iter().max_by_key(|result| result.steps).unwrap();
+
+        result.score * self.numbers[result.steps]
     }
 }
 
@@ -59,5 +67,12 @@ mod tests {
         let problem = Problem::new("example.txt");
 
         assert_eq!(problem.part_one(), 4512);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt");
+
+        assert_eq!(problem.part_two(), 1924);
     }
 }

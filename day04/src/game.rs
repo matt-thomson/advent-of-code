@@ -6,25 +6,43 @@ pub struct Game<'a> {
     marked: [[bool; 5]; 5],
 }
 
-impl<'a> Game<'a> {
-    pub fn new(board: &'a Board) -> Self {
-        Self {
-            board,
-            marked: Default::default(),
+pub struct Result {
+    pub steps: usize,
+    pub score: u32,
+}
+
+pub fn play(board: &Board, numbers: &[u32]) -> Result {
+    let mut game = Game {
+        board,
+        marked: Default::default(),
+    };
+
+    for (index, number) in numbers.iter().enumerate() {
+        game.mark(*number);
+
+        if game.is_winner() {
+            return Result {
+                steps: index,
+                score: game.score(),
+            };
         }
     }
 
-    pub fn mark(&mut self, number: u32) {
+    panic!("Board did not win");
+}
+
+impl<'a> Game<'a> {
+    fn mark(&mut self, number: u32) {
         if let Some((x, y)) = self.board.position(number) {
             self.marked[y][x] = true;
         }
     }
 
-    pub fn is_winner(&self) -> bool {
+    fn is_winner(&self) -> bool {
         self.row_marked() || self.column_marked()
     }
 
-    pub fn score(&self) -> u32 {
+    fn score(&self) -> u32 {
         (0..5)
             .flat_map(|x| (0..5).map(move |y| (x, y)))
             .filter(|(x, y)| !self.marked[*y][*x])

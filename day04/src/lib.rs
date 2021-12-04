@@ -6,7 +6,7 @@ use std::io::{BufRead, BufReader};
 use std::path::Path;
 
 use board::Board;
-use game::play;
+use game::{play, Result};
 
 #[derive(Debug)]
 pub struct Problem {
@@ -34,25 +34,24 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> u32 {
-        let results: Vec<_> = self
-            .boards
-            .iter()
-            .map(|board| play(board, &self.numbers))
-            .collect();
-
-        let result = results.iter().min_by_key(|result| result.steps).unwrap();
-
-        result.score * self.numbers[result.steps]
+        self.run(|results| results.into_iter().min_by_key(|result| result.steps))
     }
 
     pub fn part_two(&self) -> u32 {
-        let results: Vec<_> = self
+        self.run(|results| results.into_iter().max_by_key(|result| result.steps))
+    }
+
+    fn run<F>(&self, selector: F) -> u32
+    where
+        F: Fn(Vec<Result>) -> Option<Result>,
+    {
+        let results: Vec<Result> = self
             .boards
             .iter()
             .map(|board| play(board, &self.numbers))
             .collect();
 
-        let result = results.iter().max_by_key(|result| result.steps).unwrap();
+        let result = selector(results).unwrap();
 
         result.score * self.numbers[result.steps]
     }

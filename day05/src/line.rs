@@ -24,8 +24,24 @@ impl Line {
 
             (start..=end).map(|x| (x, self.y1)).collect()
         } else {
-            vec![]
+            let x_range: Vec<u32> = if self.x1 < self.x2 {
+                (self.x1..=self.x2).collect()
+            } else {
+                (self.x2..=self.x1).rev().collect()
+            };
+
+            let y_range: Vec<u32> = if self.y1 < self.y2 {
+                (self.y1..=self.y2).collect()
+            } else {
+                (self.y2..=self.y1).rev().collect()
+            };
+
+            x_range.into_iter().zip(y_range.into_iter()).collect()
         }
+    }
+
+    pub fn is_diagonal(&self) -> bool {
+        self.x1 != self.x2 && self.y1 != self.y2
     }
 }
 

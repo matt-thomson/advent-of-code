@@ -26,15 +26,25 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> usize {
-        let mut vents = HashMap::new();
-
-        self.lines
-            .iter()
-            .flat_map(|line| line.points())
-            .for_each(|point| *vents.entry(point).or_insert(0) += 1);
-
-        vents.iter().filter(|(_, count)| **count >= 2).count()
+        solve(self.lines.iter().filter(|line| !line.is_diagonal()))
     }
+
+    pub fn part_two(&self) -> usize {
+        solve(self.lines.iter())
+    }
+}
+
+fn solve<'a, T>(lines: T) -> usize
+where
+    T: Iterator<Item = &'a Line>,
+{
+    let mut vents = HashMap::new();
+
+    lines
+        .flat_map(|line| line.points())
+        .for_each(|point| *vents.entry(point).or_insert(0) += 1);
+
+    vents.iter().filter(|(_, count)| **count >= 2).count()
 }
 
 #[cfg(test)]
@@ -46,5 +56,12 @@ mod tests {
         let problem = Problem::new("example.txt");
 
         assert_eq!(problem.part_one(), 5);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt");
+
+        assert_eq!(problem.part_two(), 12);
     }
 }

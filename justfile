@@ -4,10 +4,10 @@ _default:
   @just --list
 
 lint:
-	cargo clippy --locked -- -D warnings
+  cargo clippy --locked -- -D warnings
 
 test:
-	cargo test --locked
+  cargo test --locked
 
 run day input:
   cargo run --locked --bin day$(printf "%02d" {{day}}) {{input}}

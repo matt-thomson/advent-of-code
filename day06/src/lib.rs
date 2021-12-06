@@ -29,18 +29,15 @@ impl Problem {
     }
 
     fn solve(&self, days: usize) -> u64 {
-        let fish = (0..days).fold(self.fish, |current, _| next_day(&current));
+        let mut fish = self.fish;
+
+        (0..days).for_each(|_| {
+            fish.rotate_left(1);
+            fish[6] += fish[8];
+        });
+
         fish.iter().sum()
     }
-}
-
-fn next_day(current: &[u64; 9]) -> [u64; 9] {
-    let mut result = *current;
-
-    result.rotate_left(1);
-    result[6] += current[0];
-
-    result
 }
 
 #[cfg(test)]

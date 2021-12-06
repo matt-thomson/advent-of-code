@@ -35,12 +35,10 @@ impl Problem {
 }
 
 fn next_day(current: &[u64; 9]) -> [u64; 9] {
-    let mut result = [0u64; 9];
+    let mut result = *current;
 
-    result[..8].clone_from_slice(&current[1..]);
-
+    result.rotate_left(1);
     result[6] += current[0];
-    result[8] = current[0];
 
     result
 }

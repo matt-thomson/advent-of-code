@@ -21,7 +21,15 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> u64 {
-        let fish = (0..80).fold(self.fish, |current, _| next_day(&current));
+        self.solve(80)
+    }
+
+    pub fn part_two(&self) -> u64 {
+        self.solve(256)
+    }
+
+    fn solve(&self, days: usize) -> u64 {
+        let fish = (0..days).fold(self.fish, |current, _| next_day(&current));
         fish.iter().sum()
     }
 }
@@ -46,5 +54,12 @@ mod tests {
         let problem = Problem::new("example.txt");
 
         assert_eq!(problem.part_one(), 5934);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt");
+
+        assert_eq!(problem.part_two(), 26984457539);
     }
 }

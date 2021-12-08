@@ -10,11 +10,26 @@ pub struct Display {
 }
 
 impl Display {
-    pub fn output(&self) -> &Vec<Digit> {
-        &self.output
+    pub fn output(&self) -> Vec<usize> {
+        let mapping = self.build_mapping();
+        self.output
+            .iter()
+            .map(|digit| digit.apply_mapping(mapping).value())
+            .collect()
     }
 
-    pub fn build_mapping(&self) -> [usize; 7] {
+    pub fn total(&self) -> usize {
+        let mut result = 0;
+
+        for digit in self.output() {
+            result *= 10;
+            result += digit;
+        }
+
+        result
+    }
+
+    fn build_mapping(&self) -> [usize; 7] {
         let mut counts: [usize; 7] = Default::default();
         self.digits.iter().for_each(|digit| {
             digit

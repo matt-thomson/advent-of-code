@@ -26,14 +26,12 @@ impl Problem {
         self.displays
             .iter()
             .flat_map(|display| display.output())
-            .filter(|digit| [2, 3, 4, 7].contains(&digit.segments().len()))
+            .filter(|digit| [1, 4, 7, 8].contains(digit))
             .count()
     }
 
     pub fn part_two(&self) -> usize {
-        dbg!(self.displays[0].build_mapping());
-
-        unimplemented!()
+        self.displays.iter().map(|display| display.total()).sum()
     }
 }
 

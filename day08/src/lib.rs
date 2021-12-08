@@ -1,9 +1,14 @@
+mod digit;
+mod display;
+
 use std::fs;
 use std::path::Path;
 
+use display::Display;
+
 #[derive(Debug)]
 pub struct Problem {
-    displays: Vec<Vec<String>>,
+    displays: Vec<Display>,
 }
 
 impl Problem {
@@ -11,7 +16,7 @@ impl Problem {
         let displays = fs::read_to_string(&path)
             .unwrap()
             .lines()
-            .map(parse_display)
+            .map(|line| line.parse().unwrap())
             .collect();
 
         Self { displays }
@@ -20,20 +25,16 @@ impl Problem {
     pub fn part_one(&self) -> usize {
         self.displays
             .iter()
-            .flatten()
-            .map(|digit| digit.len())
-            .filter(|length| [2, 3, 4, 7].contains(length))
+            .flat_map(|display| display.output())
+            .filter(|digit| [2, 3, 4, 7].contains(&digit.segments().len()))
             .count()
     }
-}
 
-fn parse_display(line: &str) -> Vec<String> {
-    let (_, output) = line.split_once('|').unwrap();
-    output
-        .trim()
-        .split_whitespace()
-        .map(|digit| digit.to_string())
-        .collect()
+    pub fn part_two(&self) -> usize {
+        dbg!(self.displays[0].build_mapping());
+
+        unimplemented!()
+    }
 }
 
 #[cfg(test)]
@@ -45,5 +46,12 @@ mod tests {
         let problem = Problem::new("example.txt");
 
         assert_eq!(problem.part_one(), 26);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt");
+
+        assert_eq!(problem.part_two(), 61229);
     }
 }

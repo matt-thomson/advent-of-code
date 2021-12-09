@@ -18,17 +18,6 @@ impl Display {
             .collect()
     }
 
-    pub fn total(&self) -> usize {
-        let mut result = 0;
-
-        for digit in self.output() {
-            result *= 10;
-            result += digit;
-        }
-
-        result
-    }
-
     fn build_mapping(&self) -> [usize; 7] {
         let mut counts: [usize; 7] = Default::default();
         self.digits.iter().for_each(|digit| {

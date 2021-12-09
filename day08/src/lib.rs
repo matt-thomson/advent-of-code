@@ -31,7 +31,15 @@ impl Problem {
     }
 
     pub fn part_two(&self) -> usize {
-        self.displays.iter().map(|display| display.total()).sum()
+        self.displays
+            .iter()
+            .map(|display| {
+                display
+                    .output()
+                    .iter()
+                    .fold(0, |sum, digit| sum * 10 + digit)
+            })
+            .sum()
     }
 }
 

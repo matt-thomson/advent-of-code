@@ -1,3 +1,4 @@
+use std::collections::{HashSet, VecDeque};
 use std::convert::Infallible;
 use std::str::FromStr;
 
@@ -20,12 +21,34 @@ impl FromStr for Grid {
 }
 
 impl Grid {
-    pub fn low_points(&self) -> Vec<u32> {
+    pub fn low_points(&self) -> Vec<(usize, usize)> {
         (0..self.heights[0].len())
             .flat_map(|x| (0..self.heights.len()).map(move |y| (x, y)))
             .filter(|&position| self.is_low_point(position))
-            .map(|position| self.height(position))
             .collect()
+    }
+
+    pub fn basin_size(&self, low_point: (usize, usize)) -> usize {
+        let mut seen = HashSet::new();
+        let mut queue = VecDeque::new();
+
+        queue.push_back(low_point);
+
+        while let Some(position) = queue.pop_front() {
+            seen.insert(position);
+
+            self.neighbours(position)
+                .into_iter()
+                .filter(|&neighbour| self.height(neighbour) < 9)
+                .filter(|neighbour| !seen.contains(neighbour))
+                .for_each(|neighbour| queue.push_back(neighbour));
+        }
+
+        seen.len()
+    }
+
+    pub fn height(&self, (x, y): (usize, usize)) -> u32 {
+        self.heights[y][x]
     }
 
     fn is_low_point(&self, position: (usize, usize)) -> bool {
@@ -54,9 +77,5 @@ impl Grid {
         }
 
         result
-    }
-
-    fn height(&self, (x, y): (usize, usize)) -> u32 {
-        self.heights[y][x]
     }
 }

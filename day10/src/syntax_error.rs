@@ -14,10 +14,12 @@ impl SyntaxError {
         }
     }
 
-    pub fn score(&self) -> u32 {
+    pub fn score(&self) -> u64 {
         match self {
-            SyntaxError::Corrupted(kind) => kind.syntax_error_score(),
-            SyntaxError::Incomplete(_) => todo!(),
+            SyntaxError::Corrupted(kind) => kind.corrupted_score(),
+            SyntaxError::Incomplete(kinds) => kinds
+                .iter()
+                .fold(0, |acc, kind| acc * 5 + kind.incomplete_score()),
         }
     }
 }

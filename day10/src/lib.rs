@@ -25,13 +25,26 @@ impl Problem {
         Self { lines }
     }
 
-    pub fn part_one(&self) -> u32 {
+    pub fn part_one(&self) -> u64 {
         self.lines
             .iter()
             .map(|line| line.syntax_error())
             .filter(|syntax_error| syntax_error.is_corrupted())
             .map(|syntax_error| syntax_error.score())
             .sum()
+    }
+
+    pub fn part_two(&self) -> u64 {
+        let mut scores: Vec<_> = self
+            .lines
+            .iter()
+            .map(|line| line.syntax_error())
+            .filter(|syntax_error| !syntax_error.is_corrupted())
+            .map(|syntax_error| syntax_error.score())
+            .collect();
+
+        scores.sort_unstable();
+        scores[scores.len() / 2]
     }
 }
 
@@ -44,5 +57,12 @@ mod tests {
         let problem = Problem::new("example.txt");
 
         assert_eq!(problem.part_one(), 26397);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt");
+
+        assert_eq!(problem.part_two(), 288957);
     }
 }

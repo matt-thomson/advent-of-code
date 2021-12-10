@@ -33,6 +33,7 @@ impl Line {
             }
         }
 
+        chunks.reverse();
         SyntaxError::Incomplete(chunks)
     }
 }

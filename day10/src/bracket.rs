@@ -7,12 +7,21 @@ pub enum BracketKind {
 }
 
 impl BracketKind {
-    pub fn syntax_error_score(&self) -> u32 {
+    pub fn corrupted_score(&self) -> u64 {
         match self {
             BracketKind::Round => 3,
             BracketKind::Square => 57,
             BracketKind::Curly => 1197,
             BracketKind::Angle => 25137,
+        }
+    }
+
+    pub fn incomplete_score(&self) -> u64 {
+        match self {
+            BracketKind::Round => 1,
+            BracketKind::Square => 2,
+            BracketKind::Curly => 3,
+            BracketKind::Angle => 4,
         }
     }
 }

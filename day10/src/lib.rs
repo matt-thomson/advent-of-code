@@ -1,5 +1,6 @@
 mod bracket;
 mod line;
+mod syntax_error;
 
 use std::fs::File;
 use std::io::{BufRead, BufReader};
@@ -27,8 +28,9 @@ impl Problem {
     pub fn part_one(&self) -> u32 {
         self.lines
             .iter()
-            .filter_map(|line| line.illegal_bracket())
-            .map(|kind| kind.syntax_error_score())
+            .map(|line| line.syntax_error())
+            .filter(|syntax_error| syntax_error.is_corrupted())
+            .map(|syntax_error| syntax_error.score())
             .sum()
     }
 }

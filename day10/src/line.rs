@@ -1,6 +1,7 @@
 use std::{convert::Infallible, str::FromStr};
 
-use crate::bracket::{Bracket, BracketKind, BracketRole};
+use crate::bracket::{Bracket, BracketRole};
+use crate::syntax_error::SyntaxError;
 
 #[derive(Debug)]
 pub struct Line {
@@ -18,20 +19,20 @@ impl FromStr for Line {
 }
 
 impl Line {
-    pub fn illegal_bracket(&self) -> Option<&BracketKind> {
+    pub fn syntax_error(&self) -> SyntaxError {
         let mut chunks = vec![];
 
         for bracket in &self.brackets {
             if bracket.role == BracketRole::Open {
-                chunks.push(&bracket.kind);
+                chunks.push(bracket.kind);
             } else {
                 let expected = chunks.pop().unwrap();
-                if expected != &bracket.kind {
-                    return Some(&bracket.kind);
+                if expected != bracket.kind {
+                    return SyntaxError::Corrupted(bracket.kind);
                 }
             }
         }
 
-        None
+        SyntaxError::Incomplete(chunks)
     }
 }

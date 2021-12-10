@@ -23,12 +23,15 @@ impl Line {
         let mut chunks = vec![];
 
         for bracket in &self.brackets {
-            if bracket.role == BracketRole::Open {
-                chunks.push(&bracket.kind);
-            } else {
-                let expected = chunks.pop().unwrap();
-                if expected != &bracket.kind {
-                    return SyntaxError::Corrupted(&bracket.kind);
+            match bracket.role {
+                BracketRole::Open => {
+                    chunks.push(&bracket.kind);
+                }
+                BracketRole::Close => {
+                    let expected = chunks.pop().unwrap();
+                    if expected != &bracket.kind {
+                        return SyntaxError::Corrupted(&bracket.kind);
+                    }
                 }
             }
         }

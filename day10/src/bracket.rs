@@ -26,7 +26,7 @@ impl BracketKind {
     }
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug)]
 pub enum BracketRole {
     Open,
     Close,

@@ -24,11 +24,11 @@ impl Line {
 
         for bracket in &self.brackets {
             if bracket.role == BracketRole::Open {
-                chunks.push(bracket.kind);
+                chunks.push(&bracket.kind);
             } else {
                 let expected = chunks.pop().unwrap();
-                if expected != bracket.kind {
-                    return SyntaxError::Corrupted(bracket.kind);
+                if expected != &bracket.kind {
+                    return SyntaxError::Corrupted(&bracket.kind);
                 }
             }
         }

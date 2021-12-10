@@ -1,12 +1,12 @@
 use crate::bracket::BracketKind;
 
 #[derive(Debug)]
-pub enum SyntaxError {
-    Corrupted(BracketKind),
-    Incomplete(Vec<BracketKind>),
+pub enum SyntaxError<'a> {
+    Corrupted(&'a BracketKind),
+    Incomplete(Vec<&'a BracketKind>),
 }
 
-impl SyntaxError {
+impl<'a> SyntaxError<'a> {
     pub fn is_corrupted(&self) -> bool {
         match self {
             SyntaxError::Corrupted(_) => true,

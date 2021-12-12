@@ -1,0 +1,38 @@
+mod network;
+mod route;
+
+use std::fs;
+use std::path::Path;
+
+use network::Network;
+
+#[derive(Debug)]
+pub struct Problem {
+    network: Network,
+}
+
+impl Problem {
+    pub fn new<P: AsRef<Path>>(path: P) -> Self {
+        let network: Network = fs::read_to_string(&path).unwrap().parse().unwrap();
+
+        Self { network }
+    }
+
+    pub fn part_one(&self) -> usize {
+        let paths = self.network.find_routes();
+
+        paths.len()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_part_one() {
+        let problem = Problem::new("example.txt");
+
+        assert_eq!(problem.part_one(), 226);
+    }
+}

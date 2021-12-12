@@ -36,19 +36,19 @@ impl FromStr for Network {
 }
 
 impl Network {
-    pub fn find_routes(&self) -> Vec<Route> {
-        let mut result = vec![];
+    pub fn find_routes<R: Route>(&self) -> usize {
+        let mut result = 0;
 
         let mut queue = VecDeque::new();
-        queue.push_back(Route::default());
+        queue.push_back(R::default());
 
         while let Some(route) = queue.pop_front() {
-            if route.position == "end" {
-                result.push(route);
+            if route.position() == "end" {
+                result += 1;
             } else {
                 for next in self
                     .connections
-                    .get(&route.position)
+                    .get(route.position())
                     .unwrap()
                     .iter()
                     .flat_map(|next| route.step(next))

@@ -7,4 +7,5 @@ fn main() {
     let problem = Problem::new(path);
 
     println!("Part 1: {}", problem.part_one());
+    println!("Part 2: {}", problem.part_two());
 }

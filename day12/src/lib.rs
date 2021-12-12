@@ -5,6 +5,7 @@ use std::fs;
 use std::path::Path;
 
 use network::Network;
+use route::{PartOneRoute, PartTwoRoute};
 
 #[derive(Debug)]
 pub struct Problem {
@@ -19,9 +20,11 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> usize {
-        let paths = self.network.find_routes();
+        self.network.find_routes::<PartOneRoute>()
+    }
 
-        paths.len()
+    pub fn part_two(&self) -> usize {
+        self.network.find_routes::<PartTwoRoute>()
     }
 }
 
@@ -34,5 +37,12 @@ mod tests {
         let problem = Problem::new("example.txt");
 
         assert_eq!(problem.part_one(), 226);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt");
+
+        assert_eq!(problem.part_two(), 3509);
     }
 }

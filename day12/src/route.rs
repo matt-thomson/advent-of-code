@@ -1,16 +1,16 @@
 use std::collections::BTreeSet;
 
 #[derive(Debug)]
-pub struct Route {
-    position: String,
-    small_caves: BTreeSet<String>,
+pub struct Route<'a> {
+    position: &'a str,
+    small_caves: BTreeSet<&'a str>,
     can_repeat: bool,
 }
 
-impl Route {
+impl<'a> Route<'a> {
     pub fn new(can_repeat: bool) -> Self {
         Self {
-            position: "start".to_string(),
+            position: "start",
             small_caves: BTreeSet::new(),
             can_repeat,
         }
@@ -20,13 +20,13 @@ impl Route {
         &self.position
     }
 
-    pub fn step(&self, next: &str) -> Option<Self> {
+    pub fn step(&self, next: &'a str) -> Option<Self> {
         if self.small_caves.contains(next) {
             if !self.can_repeat {
                 None
             } else {
                 Some(Self {
-                    position: next.to_string(),
+                    position: next,
                     small_caves: self.small_caves.clone(),
                     can_repeat: false,
                 })
@@ -35,11 +35,11 @@ impl Route {
             let mut small_caves = self.small_caves.clone();
 
             if next == next.to_lowercase() {
-                small_caves.insert(next.to_string());
+                small_caves.insert(next);
             }
 
             Some(Self {
-                position: next.to_string(),
+                position: next,
                 small_caves,
                 can_repeat: self.can_repeat,
             })

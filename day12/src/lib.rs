@@ -19,11 +19,11 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> usize {
-        self.network.find_routes(false)
+        self.network.routes(false)
     }
 
     pub fn part_two(&self) -> usize {
-        self.network.find_routes(true)
+        self.network.routes(true)
     }
 }
 

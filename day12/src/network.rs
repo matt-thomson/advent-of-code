@@ -1,4 +1,4 @@
-use std::collections::{BTreeSet, HashMap, VecDeque};
+use std::collections::{BTreeSet, HashMap};
 use std::convert::Infallible;
 use std::str::FromStr;
 
@@ -36,28 +36,21 @@ impl FromStr for Network {
 }
 
 impl Network {
-    pub fn find_routes(&self, can_repeat: bool) -> usize {
-        let mut result = 0;
+    pub fn routes(&self, can_repeat: bool) -> usize {
+        self.routes_from(&Route::new(can_repeat))
+    }
 
-        let mut queue = VecDeque::new();
-        queue.push_back(Route::new(can_repeat));
-
-        while let Some(route) = queue.pop_front() {
-            if route.position() == "end" {
-                result += 1;
-            } else {
-                for next in self
-                    .connections
-                    .get(route.position())
-                    .unwrap()
-                    .iter()
-                    .flat_map(|next| route.step(next))
-                {
-                    queue.push_back(next);
-                }
-            }
+    fn routes_from(&self, route: &Route) -> usize {
+        if route.position() == "end" {
+            1
+        } else {
+            self.connections
+                .get(route.position())
+                .unwrap()
+                .iter()
+                .flat_map(|next| route.step(next))
+                .map(|route| self.routes_from(&route))
+                .sum()
         }
-
-        result
     }
 }

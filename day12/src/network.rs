@@ -36,11 +36,11 @@ impl FromStr for Network {
 }
 
 impl Network {
-    pub fn find_routes<R: Route>(&self) -> usize {
+    pub fn find_routes(&self, can_repeat: bool) -> usize {
         let mut result = 0;
 
         let mut queue = VecDeque::new();
-        queue.push_back(R::default());
+        queue.push_back(Route::new(can_repeat));
 
         while let Some(route) = queue.pop_front() {
             if route.position() == "end" {

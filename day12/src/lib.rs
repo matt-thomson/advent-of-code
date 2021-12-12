@@ -5,7 +5,6 @@ use std::fs;
 use std::path::Path;
 
 use network::Network;
-use route::{PartOneRoute, PartTwoRoute};
 
 #[derive(Debug)]
 pub struct Problem {
@@ -20,11 +19,11 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> usize {
-        self.network.find_routes::<PartOneRoute>()
+        self.network.find_routes(false)
     }
 
     pub fn part_two(&self) -> usize {
-        self.network.find_routes::<PartTwoRoute>()
+        self.network.find_routes(true)
     }
 }
 

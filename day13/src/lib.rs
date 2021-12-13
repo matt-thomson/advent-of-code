@@ -28,6 +28,12 @@ impl Problem {
     pub fn part_one(&self) -> usize {
         self.paper.apply_fold(&self.folds[0]).num_dots()
     }
+
+    pub fn part_two(&self) -> Paper {
+        self.folds
+            .iter()
+            .fold(self.paper.clone(), |paper, fold| paper.apply_fold(fold))
+    }
 }
 
 #[cfg(test)]

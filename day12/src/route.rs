@@ -17,7 +17,7 @@ impl<'a> Route<'a> {
     }
 
     pub fn position(&self) -> &str {
-        &self.position
+        self.position
     }
 
     pub fn step(&self, next: &'a str) -> Option<Self> {

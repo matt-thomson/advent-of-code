@@ -19,7 +19,12 @@ impl Problem {
 
     pub fn part_one(&self) -> usize {
         let mut grid = self.grid.clone();
-        (0..100).map(|_| grid.step()).sum()
+        (1..=100).map(|_| grid.step()).sum()
+    }
+
+    pub fn part_two(&self) -> usize {
+        let mut grid = self.grid.clone();
+        (1..).find(|_| grid.step() == 100).unwrap()
     }
 }
 
@@ -32,5 +37,12 @@ mod tests {
         let problem = Problem::new("example.txt");
 
         assert_eq!(problem.part_one(), 1656);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt");
+
+        assert_eq!(problem.part_two(), 195);
     }
 }

@@ -5,10 +5,9 @@ use std::path::Path;
 
 #[derive(Debug)]
 pub struct Problem {
-    template: HashMap<(char, char), u64>,
-    rules: HashMap<(char, char), char>,
-    first: char,
-    last: char,
+    template: HashMap<[char; 2], u64>,
+    rules: HashMap<[char; 2], char>,
+    ends: [char; 2],
 }
 
 impl Problem {
@@ -20,19 +19,18 @@ impl Problem {
         let polymers: Vec<_> = lines.next().unwrap().unwrap().chars().collect();
         polymers
             .windows(2)
-            .for_each(|pair| *template.entry((pair[0], pair[1])).or_insert(0) += 1);
+            .for_each(|pair| *template.entry([pair[0], pair[1]]).or_insert(0) += 1);
 
         let rules = lines
             .skip(1)
             .map(|line| line.unwrap().chars().collect::<Vec<_>>())
-            .map(|chars| ((chars[0], chars[1]), chars[6]))
+            .map(|chars| (chars[0..2].try_into().unwrap(), chars[6]))
             .collect();
 
         Self {
             template,
             rules,
-            first: *polymers.first().unwrap(),
-            last: *polymers.last().unwrap(),
+            ends: [*polymers.first().unwrap(), *polymers.last().unwrap()],
         }
     }
 
@@ -45,29 +43,28 @@ impl Problem {
     }
 
     fn run(&self, steps: usize) -> u64 {
-        let pairs = (0..steps).fold(self.template.clone(), |pairs, _| self.step(&pairs));
+        let mut pairs = (0..steps).fold(self.template.clone(), |pairs, _| self.step(&pairs));
+        *pairs.entry(self.ends).or_insert(0) += 1;
+
         let mut counts = HashMap::new();
 
-        for (&(first, second), &count) in pairs.iter() {
-            *counts.entry(first).or_insert(0) += count;
-            *counts.entry(second).or_insert(0) += count;
+        for (&pair, &count) in pairs.iter() {
+            pair.iter()
+                .for_each(|polymer| *counts.entry(*polymer).or_insert(0) += count);
         }
-
-        *counts.entry(self.first).or_insert(0) += 1;
-        *counts.entry(self.last).or_insert(0) += 1;
 
         (counts.values().max().unwrap() - counts.values().min().unwrap()) / 2
     }
 
-    fn step(&self, pairs: &HashMap<(char, char), u64>) -> HashMap<(char, char), u64> {
+    fn step(&self, pairs: &HashMap<[char; 2], u64>) -> HashMap<[char; 2], u64> {
         let mut result = HashMap::new();
 
         for (&pair, &count) in pairs {
-            let (first, second) = pair;
             let new = *self.rules.get(&pair).unwrap();
 
-            *result.entry((first, new)).or_insert(0) += count;
-            *result.entry((new, second)).or_insert(0) += count;
+            [[pair[0], new], [new, pair[1]]]
+                .iter()
+                .for_each(|pair| *result.entry(*pair).or_insert(0) += count);
         }
 
         result

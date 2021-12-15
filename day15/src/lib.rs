@@ -18,17 +18,25 @@ impl Problem {
         Self { grid }
     }
 
-    pub fn part_one(&self) -> u32 {
+    pub fn part_one(&self) -> usize {
+        self.solve(1)
+    }
+
+    pub fn part_two(&self) -> usize {
+        self.solve(5)
+    }
+
+    fn solve(&self, repeats: usize) -> usize {
         let (risk_levels, end) = dijkstra_partial(
             &(0, 0),
             |&position| {
                 self.grid
-                    .neighbours(position)
+                    .neighbours(position, repeats)
                     .iter()
                     .map(|&next| (next, self.grid.risk_level(next)))
                     .collect::<Vec<_>>()
             },
-            |&(x, y)| x == self.grid.width() - 1 && y == self.grid.height() - 1,
+            |&(x, y)| x == self.grid.width(repeats) - 1 && y == self.grid.height(repeats) - 1,
         );
 
         let (_, risk_level) = risk_levels[&end.unwrap()];
@@ -46,5 +54,12 @@ mod tests {
         let problem = Problem::new("example.txt");
 
         assert_eq!(problem.part_one(), 40);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt");
+
+        assert_eq!(problem.part_two(), 315);
     }
 }

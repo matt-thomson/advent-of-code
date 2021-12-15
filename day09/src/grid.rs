@@ -65,7 +65,7 @@ impl Grid {
         }
 
         if x < self.heights[0].len() - 1 {
-            result.push((x + 1, y))
+            result.push((x + 1, y));
         }
 
         if y > 0 {

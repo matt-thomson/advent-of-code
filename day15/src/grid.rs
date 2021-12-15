@@ -37,7 +37,7 @@ impl Grid {
         }
 
         if x < (self.risk_levels[0].len() * repeats) - 1 {
-            result.push((x + 1, y))
+            result.push((x + 1, y));
         }
 
         if y > 0 {

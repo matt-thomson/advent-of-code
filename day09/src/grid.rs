@@ -13,7 +13,7 @@ impl FromStr for Grid {
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         let heights = input
             .lines()
-            .map(|line| line.bytes().map(|c| (c - b'0') as u32).collect())
+            .map(|line| line.bytes().map(|c| u32::from(c - b'0')).collect())
             .collect();
 
         Ok(Self { heights })

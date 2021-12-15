@@ -60,7 +60,7 @@ impl Problem {
         let mut result = HashMap::new();
 
         for (&pair, &count) in pairs {
-            let new = *self.rules.get(&pair).unwrap();
+            let new = self.rules[&pair];
 
             [[pair[0], new], [new, pair[1]]]
                 .iter()

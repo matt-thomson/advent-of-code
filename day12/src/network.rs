@@ -44,9 +44,7 @@ impl Network {
         if route.position() == "end" {
             1
         } else {
-            self.connections
-                .get(route.position())
-                .unwrap()
+            self.connections[route.position()]
                 .iter()
                 .flat_map(|next| route.step(next))
                 .map(|route| self.routes_from(&route))

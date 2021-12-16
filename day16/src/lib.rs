@@ -27,7 +27,8 @@ impl Problem {
 
     pub fn part_one(&self) -> u32 {
         dbg!(self);
-        unimplemented!()
+
+        self.packets.iter().map(|packet| packet.version_sum()).sum()
     }
 }
 

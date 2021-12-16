@@ -6,7 +6,7 @@ use crate::bit_stream::bits;
 pub struct Packet {
     version: u32,
     _type_id: u32,
-    value: u32,
+    _value: u32,
 }
 
 impl FromStr for Packet {
@@ -21,10 +21,10 @@ impl FromStr for Packet {
         let mut buffer = vec![];
 
         loop {
-            let first = &bits.by_ref().next().unwrap();
+            let first = bits.by_ref().next().unwrap();
             buffer.extend(bits.by_ref().take(4));
 
-            if *first == 0 {
+            if first == 0 {
                 break;
             }
         }
@@ -34,8 +34,14 @@ impl FromStr for Packet {
         Ok(Self {
             version,
             _type_id: type_id,
-            value,
+            _value: value,
         })
+    }
+}
+
+impl Packet {
+    pub fn version_sum(&self) -> u32 {
+        self.version
     }
 }
 

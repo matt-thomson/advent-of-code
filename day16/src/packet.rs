@@ -1,6 +1,7 @@
-use std::{convert::Infallible, str::FromStr};
+use std::convert::Infallible;
+use std::str::FromStr;
 
-use crate::bit_stream::bits;
+use crate::bit_stream::BitStream;
 
 #[derive(Debug)]
 pub struct Packet {
@@ -18,9 +19,9 @@ impl FromStr for Packet {
     type Err = Infallible;
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
-        let mut bits = bits(input).into_iter();
+        let mut bit_stream = input.parse().unwrap();
 
-        Ok(read_packet(&mut bits))
+        Ok(read_packet(&mut bit_stream))
     }
 }
 
@@ -39,31 +40,26 @@ impl Packet {
     }
 }
 
-fn read_packet<I>(bits: &mut I) -> Packet
-where
-    I: Iterator<Item = usize>,
-{
-    let version = decimal(&mut bits.by_ref().take(3));
-    let type_id = decimal(&mut bits.by_ref().take(3));
+fn read_packet(bit_stream: &mut BitStream) -> Packet {
+    let version = bit_stream.read_decimal(3);
+    let type_id = bit_stream.read_decimal(3);
 
     if type_id == 4 {
-        let value = read_literal(&mut bits.by_ref());
+        let value = read_literal(bit_stream);
 
         Packet {
             version,
             content: Content::Literal(value),
         }
     } else {
-        match bits.next().unwrap() {
+        match bit_stream.read_bit() {
             0 => {
-                let length = decimal(&mut bits.by_ref().take(15));
-                let rest: Vec<_> = bits.take(length).collect();
-
-                let mut content = rest.into_iter().peekable();
+                let length = bit_stream.read_decimal(15);
+                let mut rest = bit_stream.substream(length);
                 let mut packets = vec![];
 
-                while content.peek().is_some() {
-                    packets.push(read_packet(&mut content.by_ref()));
+                while !rest.at_end() {
+                    packets.push(read_packet(&mut rest));
                 }
 
                 Packet {
@@ -72,14 +68,11 @@ where
                 }
             }
             1 => {
-                let num_packets = decimal(&mut bits.by_ref().take(11));
-                let rest: Vec<_> = bits.collect();
-
-                let mut content = rest.into_iter().peekable();
+                let num_packets = bit_stream.read_decimal(11);
                 let mut packets = vec![];
 
                 for _ in 0..num_packets {
-                    packets.push(read_packet(&mut content.by_ref()));
+                    packets.push(read_packet(bit_stream));
                 }
 
                 Packet {
@@ -92,27 +85,17 @@ where
     }
 }
 
-fn read_literal<I>(bits: &mut I) -> usize
-where
-    I: Iterator<Item = usize>,
-{
-    let mut buffer = vec![];
+fn read_literal(bit_stream: &mut BitStream) -> usize {
+    let mut result = 0;
 
     loop {
-        let first = bits.by_ref().next().unwrap();
-        buffer.extend(bits.by_ref().take(4));
+        let first = bit_stream.read_bit();
+        result = result * 16 + bit_stream.read_decimal(4);
 
         if first == 0 {
             break;
         }
     }
 
-    decimal(&mut buffer.into_iter())
-}
-
-fn decimal<I>(bits: &mut I) -> usize
-where
-    I: Iterator<Item = usize>,
-{
-    bits.fold(0, |acc, bit| acc * 2 + bit)
+    result
 }

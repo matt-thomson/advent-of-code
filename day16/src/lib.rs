@@ -26,8 +26,6 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> usize {
-        dbg!(self);
-
         self.packets.iter().map(|packet| packet.version_sum()).sum()
     }
 }
@@ -40,6 +38,6 @@ mod tests {
     fn test_part_one() {
         let problem = Problem::new("example.txt");
 
-        assert_eq!(problem.part_one(), 29);
+        assert_eq!(problem.part_one(), 111);
     }
 }

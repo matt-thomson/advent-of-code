@@ -1,32 +1,26 @@
 mod bit_stream;
 mod packet;
 
-use std::fs::File;
-use std::io::{BufRead, BufReader};
+use std::fs;
 use std::path::Path;
 
 use packet::Packet;
 
 #[derive(Debug)]
 pub struct Problem {
-    packets: Vec<Packet>,
+    packet: Packet,
 }
 
 impl Problem {
     pub fn new<P: AsRef<Path>>(path: P) -> Self {
-        let file = File::open(&path).unwrap();
-        let reader = BufReader::new(file);
+        let input = fs::read_to_string(path).unwrap();
+        let packet = input.trim().parse().unwrap();
 
-        let packets: Vec<_> = reader
-            .lines()
-            .map(|line| line.unwrap().parse().unwrap())
-            .collect();
-
-        Self { packets }
+        Self { packet }
     }
 
     pub fn part_one(&self) -> usize {
-        self.packets.iter().map(|packet| packet.version_sum()).sum()
+        self.packet.version_sum()
     }
 }
 
@@ -38,6 +32,6 @@ mod tests {
     fn test_part_one() {
         let problem = Problem::new("example.txt");
 
-        assert_eq!(problem.part_one(), 111);
+        assert_eq!(problem.part_one(), 20);
     }
 }

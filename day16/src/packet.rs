@@ -99,3 +99,23 @@ fn read_literal(bit_stream: &mut BitStream) -> usize {
 
     result
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    use rstest::rstest;
+
+    #[rstest]
+    #[case("D2FE28", 6)]
+    #[case("38006F45291200", 9)]
+    #[case("EE00D40C823060", 14)]
+    #[case("8A004A801A8002F478", 16)]
+    #[case("620080001611562C8802118E34", 12)]
+    #[case("C0015000016115A2E0802F182340", 23)]
+    #[case("A0016C880162017C3686B18A3D4780", 31)]
+    fn test_version_sum(#[case] input: &str, #[case] expected: usize) {
+        let packet: Packet = input.parse().unwrap();
+        assert_eq!(packet.version_sum(), expected);
+    }
+}

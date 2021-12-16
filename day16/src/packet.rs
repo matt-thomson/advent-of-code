@@ -10,9 +10,35 @@ pub struct Packet {
 }
 
 #[derive(Debug)]
-pub enum Content {
+enum Operation {
+    Sum,
+    Product,
+    Minimum,
+    Maximum,
+    GreaterThan,
+    LessThan,
+    EqualTo,
+}
+
+impl Operation {
+    fn from_type_id(type_id: usize) -> Self {
+        match type_id {
+            0 => Operation::Sum,
+            1 => Operation::Product,
+            2 => Operation::Minimum,
+            3 => Operation::Maximum,
+            5 => Operation::GreaterThan,
+            6 => Operation::LessThan,
+            7 => Operation::EqualTo,
+            _ => panic!("unknown type ID {}", type_id),
+        }
+    }
+}
+
+#[derive(Debug)]
+enum Content {
     Literal(usize),
-    Operator(usize, Vec<Packet>),
+    Operator(Operation, Vec<Packet>),
 }
 
 impl FromStr for Packet {
@@ -40,9 +66,35 @@ impl Packet {
     }
 
     pub fn value(&self) -> usize {
-        match self.content {
-            Content::Literal(value) => value,
-            _ => unimplemented!(),
+        match &self.content {
+            Content::Literal(value) => *value,
+            Content::Operator(operation, packets) => match operation {
+                Operation::Sum => packets.iter().map(|packet| packet.value()).sum(),
+                Operation::Product => packets.iter().map(|packet| packet.value()).product(),
+                Operation::Minimum => packets.iter().map(|packet| packet.value()).min().unwrap(),
+                Operation::Maximum => packets.iter().map(|packet| packet.value()).max().unwrap(),
+                Operation::GreaterThan => {
+                    if packets[0].value() > packets[1].value() {
+                        1
+                    } else {
+                        0
+                    }
+                }
+                Operation::LessThan => {
+                    if packets[0].value() < packets[1].value() {
+                        1
+                    } else {
+                        0
+                    }
+                }
+                Operation::EqualTo => {
+                    if packets[0].value() == packets[1].value() {
+                        1
+                    } else {
+                        0
+                    }
+                }
+            },
         }
     }
 }
@@ -59,6 +111,8 @@ fn read_packet(bit_stream: &mut BitStream) -> Packet {
             content: Content::Literal(value),
         }
     } else {
+        let operation = Operation::from_type_id(type_id);
+
         match bit_stream.read_bit() {
             0 => {
                 let length = bit_stream.read_decimal(15);
@@ -71,7 +125,7 @@ fn read_packet(bit_stream: &mut BitStream) -> Packet {
 
                 Packet {
                     version,
-                    content: Content::Operator(type_id, packets),
+                    content: Content::Operator(operation, packets),
                 }
             }
             1 => {
@@ -84,7 +138,7 @@ fn read_packet(bit_stream: &mut BitStream) -> Packet {
 
                 Packet {
                     version,
-                    content: Content::Operator(type_id, packets),
+                    content: Content::Operator(operation, packets),
                 }
             }
             _ => unreachable!(),
@@ -128,6 +182,14 @@ mod tests {
 
     #[rstest]
     #[case("D2FE28", 2021)]
+    #[case("C200B40A82", 3)]
+    #[case("04005AC33890", 54)]
+    #[case("880086C3E88112", 7)]
+    #[case("CE00C43D881120", 9)]
+    #[case("D8005AC2A8F0", 1)]
+    #[case("F600BC2D8F", 0)]
+    #[case("9C005AC2F8F0", 0)]
+    #[case("9C0141080250320F1802104A08", 1)]
     fn test_value(#[case] input: &str, #[case] expected: usize) {
         let packet: Packet = input.parse().unwrap();
         assert_eq!(packet.value(), expected);

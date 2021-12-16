@@ -54,23 +54,40 @@ where
             content: Content::Literal(value),
         }
     } else {
-        if bits.next().unwrap() == 0 {
-            let length = decimal(&mut bits.by_ref().take(15));
-            let rest: Vec<_> = bits.take(length).collect();
+        match bits.next().unwrap() {
+            0 => {
+                let length = decimal(&mut bits.by_ref().take(15));
+                let rest: Vec<_> = bits.take(length).collect();
 
-            let mut content = rest.into_iter().peekable();
-            let mut packets = vec![];
+                let mut content = rest.into_iter().peekable();
+                let mut packets = vec![];
 
-            while content.peek().is_some() {
-                packets.push(read_packet(&mut content.by_ref()));
+                while content.peek().is_some() {
+                    packets.push(read_packet(&mut content.by_ref()));
+                }
+
+                Packet {
+                    version,
+                    content: Content::Operator(type_id, packets),
+                }
             }
+            1 => {
+                let num_packets = decimal(&mut bits.by_ref().take(11));
+                let rest: Vec<_> = bits.collect();
 
-            Packet {
-                version,
-                content: Content::Operator(type_id, packets),
+                let mut content = rest.into_iter().peekable();
+                let mut packets = vec![];
+
+                for _ in 0..num_packets {
+                    packets.push(read_packet(&mut content.by_ref()));
+                }
+
+                Packet {
+                    version,
+                    content: Content::Operator(type_id, packets),
+                }
             }
-        } else {
-            unreachable!();
+            _ => unreachable!(),
         }
     }
 }

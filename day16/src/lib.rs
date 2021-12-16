@@ -40,6 +40,6 @@ mod tests {
     fn test_part_one() {
         let problem = Problem::new("example.txt");
 
-        assert_eq!(problem.part_one(), 15);
+        assert_eq!(problem.part_one(), 29);
     }
 }

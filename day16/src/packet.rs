@@ -5,8 +5,13 @@ use crate::bit_stream::bits;
 #[derive(Debug)]
 pub struct Packet {
     version: u32,
-    _type_id: u32,
-    _value: u32,
+    _content: Content,
+}
+
+#[derive(Debug)]
+pub enum Content {
+    Literal(u32),
+    Operator(u32, Vec<Packet>),
 }
 
 impl FromStr for Packet {
@@ -18,24 +23,16 @@ impl FromStr for Packet {
         let version = decimal(&mut bits.by_ref().take(3));
         let type_id = decimal(&mut bits.by_ref().take(3));
 
-        let mut buffer = vec![];
+        if type_id == 4 {
+            let value = read_literal(&mut bits.by_ref());
 
-        loop {
-            let first = bits.by_ref().next().unwrap();
-            buffer.extend(bits.by_ref().take(4));
-
-            if first == 0 {
-                break;
-            }
+            return Ok(Self {
+                version,
+                _content: Content::Literal(value),
+            });
         }
 
-        let value = decimal(&mut buffer.into_iter());
-
-        Ok(Self {
-            version,
-            _type_id: type_id,
-            _value: value,
-        })
+        unreachable!()
     }
 }
 
@@ -43,6 +40,24 @@ impl Packet {
     pub fn version_sum(&self) -> u32 {
         self.version
     }
+}
+
+fn read_literal<I>(bits: &mut I) -> u32
+where
+    I: Iterator<Item = u32>,
+{
+    let mut buffer = vec![];
+
+    loop {
+        let first = bits.by_ref().next().unwrap();
+        buffer.extend(bits.by_ref().take(4));
+
+        if first == 0 {
+            break;
+        }
+    }
+
+    decimal(&mut buffer.into_iter())
 }
 
 fn decimal<I>(bits: &mut I) -> u32

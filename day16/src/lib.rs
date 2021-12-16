@@ -22,6 +22,10 @@ impl Problem {
     pub fn part_one(&self) -> usize {
         self.packet.version_sum()
     }
+
+    pub fn part_two(&self) -> usize {
+        self.packet.value()
+    }
 }
 
 #[cfg(test)]
@@ -33,5 +37,12 @@ mod tests {
         let problem = Problem::new("example.txt");
 
         assert_eq!(problem.part_one(), 20);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt");
+
+        assert_eq!(problem.part_two(), 1);
     }
 }

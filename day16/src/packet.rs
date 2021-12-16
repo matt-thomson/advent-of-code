@@ -38,6 +38,13 @@ impl Packet {
             }
         }
     }
+
+    pub fn value(&self) -> usize {
+        match self.content {
+            Content::Literal(value) => value,
+            _ => unimplemented!(),
+        }
+    }
 }
 
 fn read_packet(bit_stream: &mut BitStream) -> Packet {
@@ -117,5 +124,12 @@ mod tests {
     fn test_version_sum(#[case] input: &str, #[case] expected: usize) {
         let packet: Packet = input.parse().unwrap();
         assert_eq!(packet.version_sum(), expected);
+    }
+
+    #[rstest]
+    #[case("D2FE28", 2021)]
+    fn test_value(#[case] input: &str, #[case] expected: usize) {
+        let packet: Packet = input.parse().unwrap();
+        assert_eq!(packet.value(), expected);
     }
 }

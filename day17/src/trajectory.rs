@@ -6,14 +6,6 @@ pub struct Trajectory {
     max_height: i32,
 }
 
-#[derive(Debug)]
-pub enum Outcome {
-    InFlight,
-    HitTarget(i32),
-    Overshot,
-    Sank,
-}
-
 impl Trajectory {
     pub fn new(dx: i32, dy: i32) -> Self {
         let position = Position::new(dx, dy);
@@ -36,8 +28,29 @@ impl Trajectory {
     pub fn outcome(&self, target: &Target) -> Option<Outcome> {
         if target.contains(&self.position) {
             Some(Outcome::HitTarget(self.max_height))
+        } else if target.sank(&self.position) {
+            Some(Outcome::Sank)
+        } else if target.overshot(&self.position) {
+            Some(Outcome::Overshot)
         } else {
             None
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum Outcome {
+    HitTarget(i32),
+    Overshot,
+    Sank,
+}
+
+impl Outcome {
+    pub fn max_height(&self) -> Option<i32> {
+        match self {
+            Outcome::HitTarget(max_height) => Some(*max_height),
+            Outcome::Overshot => None,
+            Outcome::Sank => None,
         }
     }
 }

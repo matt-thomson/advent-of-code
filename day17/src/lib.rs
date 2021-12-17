@@ -21,10 +21,12 @@ impl Problem {
         Self { target }
     }
 
-    pub fn part_one(&self) -> usize {
-        dbg!(self.trajectory(7, 2));
-
-        unimplemented!()
+    pub fn part_one(&self) -> i32 {
+        (1..=500)
+            .flat_map(|dx| (1..=500).map(move |dy| (dx, dy)))
+            .filter_map(|(dx, dy)| self.trajectory(dx, dy).max_height())
+            .max()
+            .unwrap()
     }
 
     fn trajectory(&self, dx: i32, dy: i32) -> Outcome {

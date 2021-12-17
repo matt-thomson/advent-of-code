@@ -43,4 +43,12 @@ impl Target {
         (self.x_min..=self.x_max).contains(&position.x)
             && (self.y_min..=self.y_max).contains(&position.y)
     }
+
+    pub fn sank(&self, position: &Position) -> bool {
+        position.y < self.y_min
+    }
+
+    pub fn overshot(&self, position: &Position) -> bool {
+        position.x > self.x_max
+    }
 }

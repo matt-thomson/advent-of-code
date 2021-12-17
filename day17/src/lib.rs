@@ -29,6 +29,13 @@ impl Problem {
             .unwrap()
     }
 
+    pub fn part_two(&self) -> usize {
+        (1..=500)
+            .flat_map(|dx| (-500..=500).map(move |dy| (dx, dy)))
+            .filter_map(|(dx, dy)| self.trajectory(dx, dy).max_height())
+            .count()
+    }
+
     fn trajectory(&self, dx: i32, dy: i32) -> Outcome {
         let mut trajectory = Trajectory::new(dx, dy);
 
@@ -51,5 +58,12 @@ mod tests {
         let problem = Problem::new("example.txt");
 
         assert_eq!(problem.part_one(), 45);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt");
+
+        assert_eq!(problem.part_two(), 112);
     }
 }

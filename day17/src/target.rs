@@ -4,12 +4,22 @@ use std::str::FromStr;
 use lazy_static::lazy_static;
 use regex::Regex;
 
+use crate::position::Position;
+
 #[derive(Debug)]
 pub struct Target {
     x_min: i32,
     x_max: i32,
     y_min: i32,
     y_max: i32,
+}
+
+#[derive(Debug)]
+pub enum Outcome {
+    InFlight,
+    HitTarget,
+    Overshot,
+    Sank,
 }
 
 impl FromStr for Target {
@@ -33,5 +43,17 @@ impl FromStr for Target {
             y_min,
             y_max,
         })
+    }
+}
+
+impl Target {
+    pub fn outcome(&self, position: &Position) -> Option<Outcome> {
+        if (self.x_min..=self.x_max).contains(&position.x)
+            && (self.y_min..=self.y_max).contains(&position.y)
+        {
+            Some(Outcome::HitTarget)
+        } else {
+            None
+        }
     }
 }

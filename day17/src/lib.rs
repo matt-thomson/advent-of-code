@@ -1,9 +1,12 @@
+mod position;
 mod target;
 
 use std::fs;
 use std::path::Path;
 
-use target::Target;
+use target::{Outcome, Target};
+
+use crate::position::Position;
 
 #[derive(Debug)]
 pub struct Problem {
@@ -19,9 +22,21 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> usize {
-        dbg!(self);
+        dbg!(self.trajectory(7, 2));
 
         unimplemented!()
+    }
+
+    fn trajectory(&self, dx: i32, dy: i32) -> Outcome {
+        let mut position = Position::new(dx, dy);
+
+        loop {
+            if let Some(outcome) = self.target.outcome(&position) {
+                return outcome;
+            }
+
+            position = position.step();
+        }
     }
 }
 

@@ -14,14 +14,6 @@ pub struct Target {
     y_max: i32,
 }
 
-#[derive(Debug)]
-pub enum Outcome {
-    InFlight,
-    HitTarget,
-    Overshot,
-    Sank,
-}
-
 impl FromStr for Target {
     type Err = Infallible;
 
@@ -47,13 +39,8 @@ impl FromStr for Target {
 }
 
 impl Target {
-    pub fn outcome(&self, position: &Position) -> Option<Outcome> {
-        if (self.x_min..=self.x_max).contains(&position.x)
+    pub fn contains(&self, position: &Position) -> bool {
+        (self.x_min..=self.x_max).contains(&position.x)
             && (self.y_min..=self.y_max).contains(&position.y)
-        {
-            Some(Outcome::HitTarget)
-        } else {
-            None
-        }
     }
 }

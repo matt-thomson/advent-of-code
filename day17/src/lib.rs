@@ -1,12 +1,12 @@
 mod position;
 mod target;
+mod trajectory;
 
 use std::fs;
 use std::path::Path;
 
-use target::{Outcome, Target};
-
-use crate::position::Position;
+use target::Target;
+use trajectory::{Outcome, Trajectory};
 
 #[derive(Debug)]
 pub struct Problem {
@@ -28,14 +28,14 @@ impl Problem {
     }
 
     fn trajectory(&self, dx: i32, dy: i32) -> Outcome {
-        let mut position = Position::new(dx, dy);
+        let mut trajectory = Trajectory::new(dx, dy);
 
         loop {
-            if let Some(outcome) = self.target.outcome(&position) {
+            if let Some(outcome) = trajectory.outcome(&self.target) {
                 return outcome;
             }
 
-            position = position.step();
+            trajectory = trajectory.step();
         }
     }
 }

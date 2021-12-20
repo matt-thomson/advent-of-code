@@ -26,7 +26,6 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> u32 {
-        dbg!(self);
         unimplemented!()
     }
 }

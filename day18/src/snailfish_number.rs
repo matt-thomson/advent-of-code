@@ -3,7 +3,7 @@ use std::str::FromStr;
 
 use crate::lexer::Lexer;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum SnailfishNumber {
     Number(u32),
     Pair(Box<SnailfishNumber>, Box<SnailfishNumber>),
@@ -43,6 +43,12 @@ fn read_number(lexer: &mut Lexer) -> SnailfishNumber {
     }
 }
 
+impl SnailfishNumber {
+    fn step_reduce(&self) -> Option<Self> {
+        unimplemented!();
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -60,5 +66,12 @@ mod tests {
     fn should_parse_snailfish_number(#[case] input: &str) {
         let snailfish_number: Result<SnailfishNumber, _> = input.parse();
         assert!(snailfish_number.is_ok());
+    }
+
+    #[rstest]
+    #[case("[[[[[9,8],1],2],3],4]", "[[[[0,9],2],3],4]")]
+    fn should_explode(#[case] input: SnailfishNumber, #[case] expected: SnailfishNumber) {
+        let exploded: SnailfishNumber = input.step_reduce().unwrap();
+        assert_eq!(exploded, expected);
     }
 }

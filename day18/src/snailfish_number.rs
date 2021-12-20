@@ -60,6 +60,25 @@ impl SnailfishNumber {
         result
     }
 
+    pub fn magnitude(&self) -> u32 {
+        let mut entries = self.entries.clone();
+
+        while entries.len() > 1 {
+            for i in 0..(entries.len() - 1) {
+                if entries[i].depth == entries[i + 1].depth {
+                    entries[i].value = entries[i].value * 3 + entries[i + 1].value * 2;
+                    entries[i].depth -= 1;
+
+                    entries.remove(i + 1);
+
+                    break;
+                }
+            }
+        }
+
+        entries[0].value
+    }
+
     fn reduce(&mut self) {
         while self.explode() || self.split() {}
     }
@@ -186,5 +205,17 @@ mod tests {
     ) {
         let result = first.add(&second);
         assert_eq!(result, expected);
+    }
+
+    #[rstest]
+    #[case("[[1,2],[[3,4],5]]", 143)]
+    #[case("[[[[0,7],4],[[7,8],[6,0]]],[8,1]]", 1384)]
+    #[case("[[[[1,1],[2,2]],[3,3]],[4,4]]", 445)]
+    #[case("[[[[3,0],[5,3]],[4,4]],[5,5]]", 791)]
+    #[case("[[[[5,0],[7,4]],[5,5]],[6,6]]", 1137)]
+    #[case("[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]", 3488)]
+    fn should_calculate_magniture(#[case] input: SnailfishNumber, #[case] expected: u32) {
+        dbg!(&input);
+        assert_eq!(input.magnitude(), expected);
     }
 }

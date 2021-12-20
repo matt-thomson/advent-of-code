@@ -51,7 +51,13 @@ impl SnailfishNumber {
     fn explode(&mut self) -> bool {
         for i in 0..(self.entries.len() - 1) {
             if self.entries[i].depth == 5 {
-                self.entries[i + 2].value += self.entries[i + 1].value;
+                if i > 0 {
+                    self.entries[i - 1].value += self.entries[i].value;
+                }
+
+                if i < self.entries.len() - 2 {
+                    self.entries[i + 2].value += self.entries[i + 1].value;
+                }
 
                 self.entries[i].value = 0;
                 self.entries[i].depth = 4;
@@ -87,6 +93,7 @@ mod tests {
 
     #[rstest]
     #[case("[[[[[9,8],1],2],3],4]", "[[[[0,9],2],3],4]")]
+    #[case("[7,[6,[5,[4,[3,2]]]]]", "[7,[6,[5,[7,0]]]]")]
     fn should_explode(#[case] mut input: SnailfishNumber, #[case] expected: SnailfishNumber) {
         assert!(input.explode());
         assert_eq!(input, expected);

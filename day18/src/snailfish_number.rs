@@ -6,7 +6,7 @@ pub struct SnailfishNumber {
     entries: Vec<Entry>,
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 struct Entry {
     depth: usize,
     value: u32,
@@ -48,6 +48,18 @@ impl FromStr for SnailfishNumber {
 }
 
 impl SnailfishNumber {
+    pub fn add(&self, other: &Self) -> Self {
+        let mut entries = self.entries.clone();
+        entries.extend(other.entries.clone());
+
+        entries.iter_mut().for_each(|entry| entry.depth += 1);
+
+        let mut result = Self { entries };
+        result.reduce();
+
+        result
+    }
+
     fn reduce(&mut self) {
         while self.explode() || self.split() {}
     }
@@ -159,5 +171,20 @@ mod tests {
     fn should_reduce(#[case] mut input: SnailfishNumber, #[case] expected: SnailfishNumber) {
         input.reduce();
         assert_eq!(input, expected);
+    }
+
+    #[rstest]
+    #[case(
+        "[[[[4,3],4],4],[7,[[8,4],9]]]",
+        "[1,1]",
+        "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]"
+    )]
+    fn should_add(
+        #[case] first: SnailfishNumber,
+        #[case] second: SnailfishNumber,
+        #[case] expected: SnailfishNumber,
+    ) {
+        let result = first.add(&second);
+        assert_eq!(result, expected);
     }
 }

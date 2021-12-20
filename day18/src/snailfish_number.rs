@@ -1,7 +1,7 @@
 use std::convert::Infallible;
 use std::str::FromStr;
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct SnailfishNumber {
     entries: Vec<Entry>,
 }
@@ -108,7 +108,7 @@ impl SnailfishNumber {
 
     fn split(&mut self) -> bool {
         for i in 0..(self.entries.len()) {
-            if self.entries[i].value > 10 {
+            if self.entries[i].value >= 10 {
                 let left = self.entries[i].value / 2;
                 let right = left + if self.entries[i].value % 2 == 0 { 0 } else { 1 };
 

@@ -25,7 +25,12 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> u32 {
-        unimplemented!()
+        self.snailfish_numbers
+            .iter()
+            .cloned()
+            .reduce(|acc, next| acc.add(&next))
+            .unwrap()
+            .magnitude()
     }
 }
 
@@ -34,7 +39,6 @@ mod tests {
     use super::*;
 
     #[test]
-    #[ignore]
     fn test_part_one() {
         let problem = Problem::new("example.txt");
 

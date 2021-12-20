@@ -70,6 +70,30 @@ impl SnailfishNumber {
 
         false
     }
+
+    fn split(&mut self) -> bool {
+        for i in 0..(self.entries.len()) {
+            if self.entries[i].value > 10 {
+                let left = self.entries[i].value / 2;
+                let right = left + if self.entries[i].value % 2 == 0 { 0 } else { 1 };
+
+                self.entries[i].value = left;
+                self.entries[i].depth += 1;
+
+                self.entries.insert(
+                    i + 1,
+                    Entry {
+                        value: right,
+                        depth: self.entries[i].depth,
+                    },
+                );
+
+                return true;
+            }
+        }
+
+        false
+    }
 }
 
 #[cfg(test)]
@@ -102,6 +126,24 @@ mod tests {
     #[case("[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]", "[[3,[2,[8,0]]],[9,[5,[7,0]]]]")]
     fn should_explode(#[case] mut input: SnailfishNumber, #[case] expected: SnailfishNumber) {
         assert!(input.explode());
+        assert_eq!(input, expected);
+    }
+
+    #[rstest]
+    #[case(
+        "[[[[0,7],4],[15,[0,13]]],[1,1]]",
+        "[[[[0,7],4],[[7,8],[0,13]]],[1,1]]"
+    )]
+    #[case(
+        "[[[[0,7],4],[14,[0,13]]],[1,1]]",
+        "[[[[0,7],4],[[7,7],[0,13]]],[1,1]]"
+    )]
+    #[case(
+        "[[[[0,7],4],[[7,8],[0,13]]],[1,1]]",
+        "[[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]"
+    )]
+    fn should_split(#[case] mut input: SnailfishNumber, #[case] expected: SnailfishNumber) {
+        assert!(input.split());
         assert_eq!(input, expected);
     }
 }

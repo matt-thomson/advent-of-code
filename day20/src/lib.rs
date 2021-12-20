@@ -26,9 +26,16 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> usize {
-        self.image
-            .enhance(&self.enhancer)
-            .enhance(&self.enhancer)
+        self.solve(2)
+    }
+
+    pub fn part_two(&self) -> usize {
+        self.solve(50)
+    }
+
+    fn solve(&self, iterations: usize) -> usize {
+        (0..iterations)
+            .fold(self.image.clone(), |image, _| image.enhance(&self.enhancer))
             .lit_pixels()
     }
 }
@@ -42,5 +49,12 @@ mod tests {
         let problem = Problem::new("example.txt");
 
         assert_eq!(problem.part_one(), 35);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt");
+
+        assert_eq!(problem.part_two(), 3351);
     }
 }

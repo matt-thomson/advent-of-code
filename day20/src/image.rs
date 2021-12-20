@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use crate::enhancer::Enhancer;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Image {
     pixels: HashSet<(isize, isize)>,
     outside: bool,

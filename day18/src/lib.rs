@@ -32,6 +32,23 @@ impl Problem {
             .unwrap()
             .magnitude()
     }
+
+    pub fn part_two(&self) -> u32 {
+        self.snailfish_numbers
+            .iter()
+            .flat_map(|number| {
+                self.snailfish_numbers.iter().filter_map(move |other| {
+                    if number != other {
+                        Some(number.add(other))
+                    } else {
+                        None
+                    }
+                })
+            })
+            .map(|number| number.magnitude())
+            .max()
+            .unwrap()
+    }
 }
 
 #[cfg(test)]
@@ -43,5 +60,12 @@ mod tests {
         let problem = Problem::new("example.txt");
 
         assert_eq!(problem.part_one(), 4140);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt");
+
+        assert_eq!(problem.part_two(), 3993);
     }
 }

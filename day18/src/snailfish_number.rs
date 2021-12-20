@@ -48,6 +48,10 @@ impl FromStr for SnailfishNumber {
 }
 
 impl SnailfishNumber {
+    fn reduce(&mut self) {
+        while self.explode() || self.split() {}
+    }
+
     fn explode(&mut self) -> bool {
         for i in 0..(self.entries.len() - 1) {
             if self.entries[i].depth == 5 {
@@ -144,6 +148,16 @@ mod tests {
     )]
     fn should_split(#[case] mut input: SnailfishNumber, #[case] expected: SnailfishNumber) {
         assert!(input.split());
+        assert_eq!(input, expected);
+    }
+
+    #[rstest]
+    #[case(
+        "[[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]",
+        "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]"
+    )]
+    fn should_reduce(#[case] mut input: SnailfishNumber, #[case] expected: SnailfishNumber) {
+        input.reduce();
         assert_eq!(input, expected);
     }
 }

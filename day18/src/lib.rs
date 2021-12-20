@@ -25,7 +25,6 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> u32 {
-        dbg!(self);
         unimplemented!()
     }
 }
@@ -35,6 +34,7 @@ mod tests {
     use super::*;
 
     #[test]
+    #[ignore]
     fn test_part_one() {
         let problem = Problem::new("example.txt");
 

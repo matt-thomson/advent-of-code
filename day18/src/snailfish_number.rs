@@ -19,25 +19,24 @@ impl FromStr for SnailfishNumber {
         let mut entries = vec![];
         let mut depth = 0;
         let mut value = 0;
+        let mut in_number = false;
 
         for c in input.chars() {
             match c {
                 '[' => depth += 1,
-                ']' => {
-                    if value != 0 {
+                ']' | ',' => {
+                    if in_number {
                         entries.push(Entry { depth, value });
                         value = 0;
+                        in_number = false;
                     }
 
-                    depth -= 1;
-                }
-                ',' => {
-                    if value != 0 {
-                        entries.push(Entry { depth, value });
-                        value = 0;
+                    if c == ']' {
+                        depth -= 1;
                     }
                 }
                 '0'..='9' => {
+                    in_number = true;
                     value = value * 10 + c.to_digit(10).unwrap();
                 }
                 _ => panic!("unexpected character {}", c),
@@ -49,8 +48,21 @@ impl FromStr for SnailfishNumber {
 }
 
 impl SnailfishNumber {
-    fn step_reduce(&self) -> Option<Self> {
-        unimplemented!();
+    fn explode(&mut self) -> bool {
+        for i in 0..(self.entries.len() - 1) {
+            if self.entries[i].depth == 5 {
+                self.entries[i + 2].value += self.entries[i + 1].value;
+
+                self.entries[i].value = 0;
+                self.entries[i].depth = 4;
+
+                self.entries.remove(i + 1);
+
+                return true;
+            }
+        }
+
+        false
     }
 }
 
@@ -75,8 +87,8 @@ mod tests {
 
     #[rstest]
     #[case("[[[[[9,8],1],2],3],4]", "[[[[0,9],2],3],4]")]
-    fn should_explode(#[case] input: SnailfishNumber, #[case] expected: SnailfishNumber) {
-        let exploded: SnailfishNumber = input.step_reduce().unwrap();
-        assert_eq!(exploded, expected);
+    fn should_explode(#[case] mut input: SnailfishNumber, #[case] expected: SnailfishNumber) {
+        assert!(input.explode());
+        assert_eq!(input, expected);
     }
 }

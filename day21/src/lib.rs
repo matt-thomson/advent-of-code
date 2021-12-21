@@ -1,12 +1,12 @@
 mod dice;
-mod player;
+mod state;
 
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 
 use crate::dice::Dice;
-use crate::player::Player;
+use crate::state::State;
 
 #[derive(Debug)]
 pub struct Problem {
@@ -37,17 +37,14 @@ impl Problem {
 
     pub fn part_one(&self) -> u32 {
         let mut dice = Dice::new();
-        let mut players: [Player; 2] = self.starting_positions.map(Player::new);
+        let mut state = State::new(&self.starting_positions);
 
-        for i in [0, 1].into_iter().cycle() {
-            players[i].step(dice.roll());
-
-            if players[i].score >= 1000 {
-                return players[1 - i].score * dice.rolls;
-            }
+        while state.winner(1000).is_none() {
+            state = state.next(dice.roll());
         }
 
-        unreachable!()
+        let score = state.score(1 - state.winner(1000).unwrap());
+        score * dice.rolls
     }
 }
 

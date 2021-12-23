@@ -10,4 +10,4 @@ test:
   cargo test --locked
 
 run day input:
-  cargo run --locked --bin day$(printf "%02d" {{day}}) {{input}}
+  cargo run --locked --release --bin day$(printf "%02d" {{day}}) {{input}}

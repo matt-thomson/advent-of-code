@@ -209,9 +209,9 @@ dependencies = [
 
 [[package]]
 name = "pathfinding"
-version = "3.0.5"
+version = "3.0.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8a64bfa665d8821a903701c7bb440e7f72b1f05387b390cc23f498cc23148099"
+checksum = "921c4e0a27f609346a0c5674ae2bc9cca4376cb0ab7429f0a33964ba8bf71cc6"
 dependencies = [
  "fixedbitset",
  "indexmap",
@@ -219,6 +219,7 @@ dependencies = [
  "itertools",
  "num-traits",
  "rustc-hash",
+ "thiserror",
 ]
 
 [[package]]
@@ -327,6 +328,26 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-xid",
+]
+
+[[package]]
+name = "thiserror"
+version = "1.0.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "854babe52e4df1653706b98fcfc05843010039b406875930a70e4d9644e5c417"
+dependencies = [
+ "thiserror-impl",
+]
+
+[[package]]
+name = "thiserror-impl"
+version = "1.0.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "aa32fd3f627f367fe16f893e2597ae3c05020f8bba2666a4e6ea73d377e5714b"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]

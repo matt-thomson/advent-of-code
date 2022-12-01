@@ -1,0 +1,17 @@
+on: [push]
+
+name: CI
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: ruby/setup-ruby@v1.72.1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+      - name: Rubocop
+        run: bin/rubocop
+      - name: RSpec
+        run: bin/rspec

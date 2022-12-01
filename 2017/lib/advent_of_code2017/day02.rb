@@ -10,10 +10,10 @@ module AdventOfCode2017
       solve(input) { |numbers| score_part_two(numbers) }
     end
 
-    def self.solve(input)
+    def self.solve(input, &block)
       input.split("\n")
            .map { |line| line.split.map(&:to_i) }
-           .map { |numbers| yield(numbers) }
+           .map(&block)
            .inject(0) { |sum, x| sum + x }
     end
     private_class_method :solve

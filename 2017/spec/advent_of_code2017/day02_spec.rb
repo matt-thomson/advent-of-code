@@ -25,7 +25,7 @@ RSpec.describe AdventOfCode2017::Day02 do
         5 9 2 8
         9 4 7 3
         3 8 6 5
-        INPUT
+      INPUT
     end
 
     it { is_expected.to eq(9) }

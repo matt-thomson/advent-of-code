@@ -10,9 +10,9 @@ module AdventOfCode2017
       solve(input) { |word| word.chars.sort.join }
     end
 
-    def self.solve(input)
+    def self.solve(input, &block)
       input.split("\n")
-           .map { |line| line.split.map { |word| yield word } }
+           .map { |line| line.split.map(&block) }
            .select { |words| words.uniq == words }
            .count
     end

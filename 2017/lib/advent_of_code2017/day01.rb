@@ -9,7 +9,7 @@ module AdventOfCode2017
     def self.solve_part_two(input)
       solve(input) do |digits|
         first = digits[0...(digits.length / 2)]
-        second = digits[(digits.length / 2)..-1]
+        second = digits[(digits.length / 2)..]
 
         first.zip(second)
       end * 2

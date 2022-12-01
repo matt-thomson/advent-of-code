@@ -22,7 +22,7 @@ module AdventOfCode2020
       }.freeze
 
       def initialize(input)
-        @fields = input.split(/\s/).map { |field| field.split(':') }.to_h
+        @fields = input.split(/\s/).to_h { |field| field.split(':') }
       end
 
       def valid_structure?

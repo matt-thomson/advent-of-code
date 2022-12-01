@@ -56,7 +56,7 @@ module AdventOfCode2020
           'W' => -> { [ship, [waypoint_x - value, waypoint_y]] },
           'L' => -> { [ship, rotate_left(waypoint, value / 90)] },
           'R' => -> { [ship, rotate_right(waypoint, value / 90)] },
-          'F' => -> { [[ship_x + waypoint_x * value, ship_y + waypoint_y * value], waypoint] }
+          'F' => -> { [[ship_x + (waypoint_x * value), ship_y + (waypoint_y * value)], waypoint] }
         }.fetch(action).call
       end
       # rubocop:enable Metrics/AbcSize

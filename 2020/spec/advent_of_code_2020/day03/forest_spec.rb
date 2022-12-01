@@ -14,28 +14,28 @@ RSpec.describe AdventOfCode2020::Day03::Forest do
       let(:x) { 1 }
       let(:y) { 2 }
 
-      it { is_expected.to eq(true) }
+      it { is_expected.to be(true) }
     end
 
     context 'with an open space in the initial area' do
       let(:x) { 2 }
       let(:y) { 2 }
 
-      it { is_expected.to eq(false) }
+      it { is_expected.to be(false) }
     end
 
     context 'with a tree beyond the initial area' do
       let(:x) { 12 }
       let(:y) { 2 }
 
-      it { is_expected.to eq(true) }
+      it { is_expected.to be(true) }
     end
 
     context 'with an open space beyond the initial area' do
       let(:x) { 13 }
       let(:y) { 2 }
 
-      it { is_expected.to eq(false) }
+      it { is_expected.to be(false) }
     end
   end
 end

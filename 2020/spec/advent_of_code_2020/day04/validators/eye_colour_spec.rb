@@ -11,13 +11,13 @@ RSpec.describe AdventOfCode2020::Day04::Validators::EyeColour do
     context 'with a valid input' do
       let(:input) { 'brn' }
 
-      it { is_expected.to eq(true) }
+      it { is_expected.to be(true) }
     end
 
     context 'with an invalid input' do
       let(:input) { 'wat' }
 
-      it { is_expected.to eq(false) }
+      it { is_expected.to be(false) }
     end
   end
 end

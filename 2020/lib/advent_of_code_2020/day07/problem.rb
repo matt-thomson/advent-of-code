@@ -8,10 +8,10 @@ module AdventOfCode2020
   module Day07
     class Problem
       def initialize(path)
-        @rules = File.readlines(path)
-                     .map { |line| Rule.parse(line) }
-                     .map { |rule| [rule.colour, rule] }
-                     .to_h
+        @rules = File.readlines(path).to_h do |line|
+          rule = Rule.parse(line)
+          [rule.colour, rule]
+        end
       end
 
       def part_one

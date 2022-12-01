@@ -11,19 +11,19 @@ RSpec.describe AdventOfCode2020::Day04::Validators::PassportID do
     context 'with a valid input' do
       let(:input) { '000000001' }
 
-      it { is_expected.to eq(true) }
+      it { is_expected.to be(true) }
     end
 
     context 'with an invalid character' do
       let(:input) { '00000000a' }
 
-      it { is_expected.to eq(false) }
+      it { is_expected.to be(false) }
     end
 
     context 'with the wrong length' do
       let(:input) { '00000001' }
 
-      it { is_expected.to eq(false) }
+      it { is_expected.to be(false) }
     end
   end
 end

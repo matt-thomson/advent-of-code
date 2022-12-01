@@ -11,25 +11,25 @@ RSpec.describe AdventOfCode2020::Day04::Validators::HairColour do
     context 'with a valid input' do
       let(:input) { '#123abc' }
 
-      it { is_expected.to eq(true) }
+      it { is_expected.to be(true) }
     end
 
     context 'with an invalid character' do
       let(:input) { '#123abz' }
 
-      it { is_expected.to eq(false) }
+      it { is_expected.to be(false) }
     end
 
     context 'with no leading hash' do
       let(:input) { '123abc' }
 
-      it { is_expected.to eq(false) }
+      it { is_expected.to be(false) }
     end
 
     context 'with the wrong length' do
       let(:input) { '#123ab' }
 
-      it { is_expected.to eq(false) }
+      it { is_expected.to be(false) }
     end
   end
 end

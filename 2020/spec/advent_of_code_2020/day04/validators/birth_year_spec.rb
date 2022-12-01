@@ -11,25 +11,25 @@ RSpec.describe AdventOfCode2020::Day04::Validators::BirthYear do
     context 'with a valid input' do
       let(:input) { '2002' }
 
-      it { is_expected.to eq(true) }
+      it { is_expected.to be(true) }
     end
 
     context 'with a year that is too late' do
       let(:input) { '2003' }
 
-      it { is_expected.to eq(false) }
+      it { is_expected.to be(false) }
     end
 
     context 'with a year that is too early' do
       let(:input) { '1919' }
 
-      it { is_expected.to eq(false) }
+      it { is_expected.to be(false) }
     end
 
     context 'with non-digits' do
       let(:input) { 'abcd' }
 
-      it { is_expected.to eq(false) }
+      it { is_expected.to be(false) }
     end
   end
 end

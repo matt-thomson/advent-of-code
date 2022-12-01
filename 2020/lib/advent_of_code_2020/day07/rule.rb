@@ -16,11 +16,10 @@ module AdventOfCode2020
       def self.parse_conditions(input)
         return {} if input == 'no other bags'
 
-        input
-          .split(', ')
-          .map { |c| c.match(CONDITION_REGEX) }
-          .map { |match| [match[:colour], match[:count].to_i] }
-          .to_h
+        input.split(', ').to_h do |c|
+          match = c.match(CONDITION_REGEX)
+          [match[:colour], match[:count].to_i]
+        end
       end
       private_class_method :parse_conditions
 

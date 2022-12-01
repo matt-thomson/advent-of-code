@@ -9,4 +9,4 @@ edition = "2021"
 doctest = false
 
 [dev-dependencies]
-rstest = "0.12.0"
+rstest = "0.16.0"

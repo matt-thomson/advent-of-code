@@ -1,0 +1,12 @@
+[package]
+name = "day02"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.55"
+strum = { version = "0.23.0", features = ["derive"] }
+strum_macros = "0.23.1"
+
+[lib]
+doctest = false

@@ -1,0 +1,6 @@
+{
+  "extends": [
+    "config:base",
+    "github>Turbo87/renovate-config//rust/updateToolchain"
+  ]
+}

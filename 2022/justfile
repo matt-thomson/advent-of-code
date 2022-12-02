@@ -1,0 +1,13 @@
+# just manual: https://github.com/casey/just/#readme
+
+_default:
+  @just --list
+
+lint:
+  cargo clippy --locked -- -D warnings
+
+test:
+  cargo nextest run --locked
+
+run day input:
+  cargo run --locked --release --package day$(printf "%02d" {{day}}) -- {{input}}

@@ -38,7 +38,7 @@ impl FromStr for Stacks {
 }
 
 impl Stacks {
-    pub fn apply(&mut self, step: &Step) -> Result<()> {
+    pub fn apply_9000(&mut self, step: &Step) -> Result<()> {
         for _ in 0..step.count {
             let item = self.0[step.from - 1]
                 .pop()

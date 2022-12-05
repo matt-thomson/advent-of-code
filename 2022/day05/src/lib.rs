@@ -32,10 +32,14 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> Result<String> {
+        self.solve(|stacks, step| stacks.apply_9000(step))
+    }
+
+    fn solve<F: Fn(&mut Stacks, &Step) -> Result<()>>(&self, apply: F) -> Result<String> {
         let mut stacks = self.stacks.clone();
 
         for step in self.steps.iter() {
-            stacks.apply(step)?;
+            apply(&mut stacks, step)?;
         }
 
         stacks.tops()

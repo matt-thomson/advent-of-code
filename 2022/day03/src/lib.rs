@@ -9,14 +9,14 @@ use rucksack::Rucksack;
 
 #[derive(Debug)]
 pub struct Problem {
-    rucksacks: Vec<Rucksack>,
+    rucksacks: Vec<String>,
 }
 
 impl Problem {
     pub fn new<P: AsRef<Path>>(path: P) -> Result<Self> {
         let rucksacks = fs::read_to_string(path)?
             .lines()
-            .map(split_rucksack)
+            .map(String::from)
             .collect();
 
         Ok(Self { rucksacks })
@@ -25,6 +25,7 @@ impl Problem {
     pub fn part_one(&self) -> Result<u64> {
         self.rucksacks
             .iter()
+            .map(|rucksack| split_rucksack(rucksack))
             .map(|rucksack| rucksack.duplicate()?.priority())
             .try_fold(0, |acc, priority| priority.map(|priority| acc + priority))
     }

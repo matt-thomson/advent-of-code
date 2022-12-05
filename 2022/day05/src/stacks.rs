@@ -50,6 +50,26 @@ impl Stacks {
         Ok(())
     }
 
+    pub fn apply_9001(&mut self, step: &Step) -> Result<()> {
+        let mut temp = vec![];
+
+        for _ in 0..step.count {
+            let item = self.0[step.from - 1]
+                .pop()
+                .ok_or_else(|| eyre!("reached empty stack"))?;
+
+            temp.push(item);
+        }
+
+        temp.reverse();
+
+        for item in temp {
+            self.0[step.to - 1].push(item);
+        }
+
+        Ok(())
+    }
+
     pub fn tops(&self) -> Result<String> {
         self.0
             .iter()

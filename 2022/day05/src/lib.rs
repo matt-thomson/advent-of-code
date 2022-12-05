@@ -35,6 +35,10 @@ impl Problem {
         self.solve(|stacks, step| stacks.apply_9000(step))
     }
 
+    pub fn part_two(&self) -> Result<String> {
+        self.solve(|stacks, step| stacks.apply_9001(step))
+    }
+
     fn solve<F: Fn(&mut Stacks, &Step) -> Result<()>>(&self, apply: F) -> Result<String> {
         let mut stacks = self.stacks.clone();
 
@@ -56,5 +60,13 @@ mod tests {
         let result = problem.part_one().unwrap();
 
         assert_eq!(result, "CMZ");
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt").unwrap();
+        let result = problem.part_two().unwrap();
+
+        assert_eq!(result, "MCD");
     }
 }

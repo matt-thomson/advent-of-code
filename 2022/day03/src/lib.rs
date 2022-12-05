@@ -14,14 +14,12 @@ pub struct Problem {
 
 impl Problem {
     pub fn new<P: AsRef<Path>>(path: P) -> Result<Self> {
-        let rucksacks: Result<Vec<_>> = fs::read_to_string(path)?
+        let rucksacks = fs::read_to_string(path)?
             .lines()
-            .map(|line| Ok(line.trim().parse()?))
+            .map(split_rucksack)
             .collect();
 
-        Ok(Self {
-            rucksacks: rucksacks?,
-        })
+        Ok(Self { rucksacks })
     }
 
     pub fn part_one(&self) -> Result<u64> {
@@ -30,6 +28,11 @@ impl Problem {
             .map(|rucksack| rucksack.duplicate()?.priority())
             .try_fold(0, |acc, priority| priority.map(|priority| acc + priority))
     }
+}
+
+fn split_rucksack(input: &str) -> Rucksack {
+    let (first, second) = input.split_at(input.len() / 2);
+    Rucksack::new(&[first, second])
 }
 
 #[cfg(test)]

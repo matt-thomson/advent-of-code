@@ -1,6 +1,4 @@
 use std::collections::BTreeSet;
-use std::convert::Infallible;
-use std::str::FromStr;
 
 use eyre::{eyre, Result};
 
@@ -11,23 +9,16 @@ pub struct Rucksack {
     groups: Vec<BTreeSet<Item>>,
 }
 
-impl FromStr for Rucksack {
-    type Err = Infallible;
-
-    fn from_str(input: &str) -> Result<Self, Self::Err> {
-        let items: Vec<_> = input.chars().map(Item::from).collect();
-        let (first, second) = items.split_at(items.len() / 2);
-
-        Ok(Self {
-            groups: vec![
-                BTreeSet::from_iter(first.iter().cloned()),
-                BTreeSet::from_iter(second.iter().cloned()),
-            ],
-        })
-    }
-}
-
 impl Rucksack {
+    pub fn new(input: &[&str]) -> Self {
+        let groups = input
+            .iter()
+            .map(|group| group.chars().map(Item::from).collect())
+            .collect();
+
+        Self { groups }
+    }
+
     pub fn duplicate(&self) -> Result<Item> {
         let mut intersection = self.groups[0].clone();
 

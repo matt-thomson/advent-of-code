@@ -23,18 +23,21 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> Result<u64> {
-        self.rucksacks
+        let rucksacks = self
+            .rucksacks
             .iter()
-            .map(|rucksack| split_rucksack(rucksack))
-            .map(|rucksack| rucksack.duplicate()?.priority())
-            .try_fold(0, |acc, priority| priority.map(|priority| acc + priority))
+            .map(|rucksack| split_rucksack(rucksack));
+
+        self.solve(rucksacks)
     }
 
     pub fn part_two(&self) -> Result<u64> {
-        let chunks: Vec<_> = self.rucksacks.chunks(3).map(Rucksack::new).collect();
+        let chunks = self.rucksacks.chunks(3).map(Rucksack::new);
+        self.solve(chunks)
+    }
 
-        chunks
-            .iter()
+    fn solve<R: Iterator<Item = Rucksack>>(&self, rucksacks: R) -> Result<u64> {
+        rucksacks
             .map(|rucksack| rucksack.duplicate()?.priority())
             .try_fold(0, |acc, priority| priority.map(|priority| acc + priority))
     }

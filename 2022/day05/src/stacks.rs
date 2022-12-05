@@ -62,10 +62,7 @@ impl Stacks {
         }
 
         temp.reverse();
-
-        for item in temp {
-            self.0[step.to - 1].push(item);
-        }
+        self.0[step.to - 1].extend(temp);
 
         Ok(())
     }

@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::Path;
 
-use anyhow::{anyhow, Result};
+use eyre::{eyre, Result};
 
 #[derive(Debug)]
 pub struct Problem {
@@ -41,7 +41,7 @@ impl Problem {
 
         Ok(calories
             .get(0..count)
-            .ok_or_else(|| anyhow!("not enough elves"))?
+            .ok_or_else(|| eyre!("not enough elves"))?
             .iter()
             .sum())
     }

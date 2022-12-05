@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::Path;
 
-use anyhow::{anyhow, Result};
+use eyre::{eyre, Result};
 
 #[derive(Debug)]
 pub struct Problem {
@@ -45,7 +45,7 @@ fn score_part_one(round: &str) -> Result<u64> {
         "C X" => Ok(7),
         "C Y" => Ok(2),
         "C Z" => Ok(6),
-        _ => Err(anyhow!("invalid round {round}")),
+        _ => Err(eyre!("invalid round {round}")),
     }
 }
 
@@ -60,7 +60,7 @@ fn score_part_two(round: &str) -> Result<u64> {
         "C X" => Ok(2),
         "C Y" => Ok(6),
         "C Z" => Ok(7),
-        _ => Err(anyhow!("invalid round {round}")),
+        _ => Err(eyre!("invalid round {round}")),
     }
 }
 

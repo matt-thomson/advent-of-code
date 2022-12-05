@@ -10,10 +10,10 @@ pub struct Rucksack {
 }
 
 impl Rucksack {
-    pub fn new(input: &[&str]) -> Self {
+    pub fn new<T: AsRef<str>>(input: &[T]) -> Self {
         let groups = input
             .iter()
-            .map(|group| group.chars().map(Item::from).collect())
+            .map(|group| group.as_ref().chars().map(Item::from).collect())
             .collect();
 
         Self { groups }

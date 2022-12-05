@@ -29,6 +29,15 @@ impl Problem {
             .map(|rucksack| rucksack.duplicate()?.priority())
             .try_fold(0, |acc, priority| priority.map(|priority| acc + priority))
     }
+
+    pub fn part_two(&self) -> Result<u64> {
+        let chunks: Vec<_> = self.rucksacks.chunks(3).map(Rucksack::new).collect();
+
+        chunks
+            .iter()
+            .map(|rucksack| rucksack.duplicate()?.priority())
+            .try_fold(0, |acc, priority| priority.map(|priority| acc + priority))
+    }
 }
 
 fn split_rucksack(input: &str) -> Rucksack {
@@ -46,5 +55,13 @@ mod tests {
         let result = problem.part_one().unwrap();
 
         assert_eq!(result, 157);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt").unwrap();
+        let result = problem.part_two().unwrap();
+
+        assert_eq!(result, 70);
     }
 }

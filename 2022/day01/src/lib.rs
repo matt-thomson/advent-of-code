@@ -36,7 +36,7 @@ impl Problem {
 
     fn solve(&self, count: usize) -> Result<u64> {
         let mut calories: Vec<_> = self.elves.iter().map(|elf| elf.iter().sum()).collect();
-        calories.sort();
+        calories.sort_unstable();
         calories.reverse();
 
         Ok(calories

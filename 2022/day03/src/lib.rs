@@ -28,19 +28,19 @@ impl Problem {
             .iter()
             .map(|rucksack| split_rucksack(rucksack));
 
-        self.solve(rucksacks)
+        solve(rucksacks)
     }
 
     pub fn part_two(&self) -> Result<u64> {
         let chunks = self.rucksacks.chunks(3).map(Rucksack::new);
-        self.solve(chunks)
+        solve(chunks)
     }
+}
 
-    fn solve<R: Iterator<Item = Rucksack>>(&self, rucksacks: R) -> Result<u64> {
-        rucksacks
-            .map(|rucksack| rucksack.duplicate()?.priority())
-            .try_fold(0, |acc, priority| priority.map(|priority| acc + priority))
-    }
+fn solve<R: Iterator<Item = Rucksack>>(rucksacks: R) -> Result<u64> {
+    rucksacks
+        .map(|rucksack| rucksack.duplicate()?.priority())
+        .try_fold(0, |acc, priority| priority.map(|priority| acc + priority))
 }
 
 fn split_rucksack(input: &str) -> Rucksack {

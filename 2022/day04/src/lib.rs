@@ -14,10 +14,7 @@ pub struct Problem {
 
 impl Problem {
     pub fn new<P: AsRef<Path>>(path: P) -> Result<Self> {
-        let pairs: Result<Vec<Pair>> = fs::read_to_string(path)?
-            .lines()
-            .map(|line| line.parse())
-            .collect();
+        let pairs: Result<Vec<Pair>> = fs::read_to_string(path)?.lines().map(str::parse).collect();
 
         Ok(Self { pairs: pairs? })
     }

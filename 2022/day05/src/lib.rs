@@ -24,25 +24,22 @@ impl Problem {
 
         Ok(Self {
             stacks: stacks.parse()?,
-            steps: steps
-                .lines()
-                .map(|line| line.parse())
-                .collect::<Result<Vec<_>>>()?,
+            steps: steps.lines().map(str::parse).collect::<Result<Vec<_>>>()?,
         })
     }
 
     pub fn part_one(&self) -> Result<String> {
-        self.solve(|stacks, step| stacks.apply_9000(step))
+        self.solve(Stacks::apply_9000)
     }
 
     pub fn part_two(&self) -> Result<String> {
-        self.solve(|stacks, step| stacks.apply_9001(step))
+        self.solve(Stacks::apply_9001)
     }
 
     fn solve<F: Fn(&mut Stacks, &Step) -> Result<()>>(&self, apply: F) -> Result<String> {
         let mut stacks = self.stacks.clone();
 
-        for step in self.steps.iter() {
+        for step in &self.steps {
             apply(&mut stacks, step)?;
         }
 

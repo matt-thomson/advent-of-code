@@ -24,8 +24,15 @@ impl FromStr for Pair {
 }
 
 impl Pair {
-    pub fn overlaps(&self) -> bool {
+    pub fn fully_overlaps(&self) -> bool {
         contains(&self.first, &self.second) || contains(&self.second, &self.first)
+    }
+
+    pub fn partly_overlaps(&self) -> bool {
+        let lower = self.first.start().max(self.second.start());
+        let upper = self.first.end().min(self.second.end());
+
+        lower <= upper
     }
 }
 

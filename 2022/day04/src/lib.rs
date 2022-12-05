@@ -23,7 +23,15 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> usize {
-        self.pairs.iter().filter(|pair| pair.overlaps()).count()
+        self.solve(|pair| pair.fully_overlaps())
+    }
+
+    pub fn part_two(&self) -> usize {
+        self.solve(|pair| pair.partly_overlaps())
+    }
+
+    fn solve<P: Fn(&&Pair) -> bool>(&self, predicate: P) -> usize {
+        self.pairs.iter().filter(predicate).count()
     }
 }
 
@@ -37,5 +45,13 @@ mod tests {
         let result = problem.part_one();
 
         assert_eq!(result, 2);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt").unwrap();
+        let result = problem.part_two();
+
+        assert_eq!(result, 4);
     }
 }

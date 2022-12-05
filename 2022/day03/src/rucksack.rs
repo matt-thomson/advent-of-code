@@ -8,8 +8,8 @@ use crate::item::Item;
 
 #[derive(Debug)]
 pub struct Rucksack {
-    first: Vec<Item>,
-    second: Vec<Item>,
+    first: BTreeSet<Item>,
+    second: BTreeSet<Item>,
 }
 
 impl FromStr for Rucksack {
@@ -20,22 +20,19 @@ impl FromStr for Rucksack {
         let (first, second) = items.split_at(items.len() / 2);
 
         Ok(Self {
-            first: first.to_vec(),
-            second: second.to_vec(),
+            first: BTreeSet::from_iter(first.iter().cloned()),
+            second: BTreeSet::from_iter(second.iter().cloned()),
         })
     }
 }
 
 impl Rucksack {
-    pub fn duplicate(&self) -> Result<&Item> {
-        let first = BTreeSet::from_iter(self.first.iter());
-        let second = BTreeSet::from_iter(self.second.iter());
-
-        let mut intersection = first.intersection(&second);
+    pub fn duplicate(&self) -> Result<Item> {
+        let mut intersection = self.first.intersection(&self.second);
 
         intersection
             .next()
             .ok_or_else(|| eyre!("no item in both compartments"))
-            .copied()
+            .cloned()
     }
 }

@@ -4,9 +4,9 @@ use eyre::ErrReport;
 
 #[derive(Debug)]
 pub struct Step {
-    count: usize,
-    from: usize,
-    to: usize,
+    pub count: usize,
+    pub from: usize,
+    pub to: usize,
 }
 
 impl FromStr for Step {

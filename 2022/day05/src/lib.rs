@@ -31,8 +31,28 @@ impl Problem {
         })
     }
 
-    pub fn part_one(&self) -> String {
-        dbg!(self);
-        todo!()
+    pub fn part_one(&self) -> Result<String> {
+        let mut stacks = self.stacks.clone();
+
+        for step in self.steps.iter() {
+            for _ in 0..step.count {
+                stacks.apply(step.from, step.to)?;
+            }
+        }
+
+        stacks.tops()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::Problem;
+
+    #[test]
+    fn test_part_one() {
+        let problem = Problem::new("example.txt").unwrap();
+        let result = problem.part_one().unwrap();
+
+        assert_eq!(result, "CMZ");
     }
 }

@@ -2,6 +2,8 @@ use std::str::FromStr;
 
 use eyre::{eyre, ErrReport, Result};
 
+use crate::step::Step;
+
 #[derive(Clone, Debug)]
 pub struct Stacks(Vec<Vec<char>>);
 
@@ -36,12 +38,15 @@ impl FromStr for Stacks {
 }
 
 impl Stacks {
-    pub fn apply(&mut self, from: usize, to: usize) -> Result<()> {
-        let item = self.0[from - 1]
-            .pop()
-            .ok_or_else(|| eyre!("reached empty stack"))?;
+    pub fn apply(&mut self, step: &Step) -> Result<()> {
+        for _ in 0..step.count {
+            let item = self.0[step.from - 1]
+                .pop()
+                .ok_or_else(|| eyre!("reached empty stack"))?;
 
-        self.0[to - 1].push(item);
+            self.0[step.to - 1].push(item);
+        }
+
         Ok(())
     }
 

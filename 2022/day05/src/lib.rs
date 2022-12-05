@@ -35,9 +35,7 @@ impl Problem {
         let mut stacks = self.stacks.clone();
 
         for step in self.steps.iter() {
-            for _ in 0..step.count {
-                stacks.apply(step.from, step.to)?;
-            }
+            stacks.apply(step)?;
         }
 
         stacks.tops()

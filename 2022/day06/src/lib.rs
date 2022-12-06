@@ -27,12 +27,20 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> Result<usize> {
+        self.solve(4)
+    }
+
+    pub fn part_two(&self) -> Result<usize> {
+        self.solve(14)
+    }
+
+    fn solve(&self, marker_size: usize) -> Result<usize> {
         self.characters
-            .windows(4)
+            .windows(marker_size)
             .enumerate()
             .find(|(_, window)| all_different(window))
-            .map(|(index, _)| index + 4)
-            .ok_or_else(|| eyre!("couldn't find start marker"))
+            .map(|(index, _)| index + marker_size)
+            .ok_or_else(|| eyre!("couldn't find marker"))
     }
 }
 
@@ -62,6 +70,24 @@ mod tests {
     #[case("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", 11)]
     fn test_more_part_one_cases(#[case] problem: Problem, #[case] expected: usize) {
         let result = problem.part_one().unwrap();
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt").unwrap();
+        let result = problem.part_two().unwrap();
+
+        assert_eq!(result, 19);
+    }
+
+    #[rstest]
+    #[case("bvwbjplbgvbhsrlpgdmjqwftvncz", 23)]
+    #[case("nppdvjthqldpwncqszvftbrmjlhg", 23)]
+    #[case("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", 29)]
+    #[case("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", 26)]
+    fn test_more_part_two_cases(#[case] problem: Problem, #[case] expected: usize) {
+        let result = problem.part_two().unwrap();
         assert_eq!(result, expected);
     }
 }

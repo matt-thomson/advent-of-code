@@ -7,7 +7,7 @@ use eyre::{eyre, Result};
 
 #[derive(Debug)]
 pub struct Problem {
-    characters: Vec<char>,
+    characters: Vec<usize>,
 }
 
 impl FromStr for Problem {
@@ -15,7 +15,11 @@ impl FromStr for Problem {
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         Ok(Self {
-            characters: input.chars().collect(),
+            characters: input
+                .trim()
+                .chars()
+                .map(|c| (c as usize) - ('a' as usize))
+                .collect(),
         })
     }
 }
@@ -44,7 +48,7 @@ impl Problem {
     }
 }
 
-fn all_different(items: &[char]) -> bool {
+fn all_different(items: &[usize]) -> bool {
     let set = BTreeSet::from_iter(items.iter());
     set.len() == items.len()
 }

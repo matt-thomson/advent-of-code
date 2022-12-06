@@ -1,23 +1,33 @@
-use std::collections::BTreeSet;
+use std::convert::Infallible;
 use std::fs;
 use std::path::Path;
+use std::{collections::BTreeSet, str::FromStr};
 
 use eyre::{eyre, Result};
 
 #[derive(Debug)]
 pub struct Problem {
-    input: String,
+    characters: Vec<char>,
+}
+
+impl FromStr for Problem {
+    type Err = Infallible;
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        Ok(Self {
+            characters: input.chars().collect(),
+        })
+    }
 }
 
 impl Problem {
     pub fn new<P: AsRef<Path>>(path: P) -> Result<Self> {
         let input = fs::read_to_string(path)?;
-        Ok(Self { input })
+        Ok(input.parse()?)
     }
 
     pub fn part_one(&self) -> Result<usize> {
-        let chars: Vec<char> = self.input.chars().collect();
-        chars
+        self.characters
             .windows(4)
             .enumerate()
             .find(|(_, window)| all_different(window))
@@ -50,10 +60,8 @@ mod tests {
     #[case("nppdvjthqldpwncqszvftbrmjlhg", 6)]
     #[case("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", 10)]
     #[case("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", 11)]
-    fn test_more_part_one_cases(#[case] input: String, #[case] expected: usize) {
-        let problem = Problem { input };
+    fn test_more_part_one_cases(#[case] problem: Problem, #[case] expected: usize) {
         let result = problem.part_one().unwrap();
-
         assert_eq!(result, expected);
     }
 }

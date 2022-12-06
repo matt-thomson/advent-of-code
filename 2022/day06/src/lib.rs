@@ -1,7 +1,7 @@
 use std::convert::Infallible;
 use std::fs;
 use std::path::Path;
-use std::{collections::BTreeSet, str::FromStr};
+use std::str::FromStr;
 
 use eyre::{eyre, Result};
 
@@ -39,18 +39,23 @@ impl Problem {
     }
 
     fn solve(&self, marker_size: usize) -> Result<usize> {
-        self.characters
-            .windows(marker_size)
-            .enumerate()
-            .find(|(_, window)| all_different(window))
-            .map(|(index, _)| index + marker_size)
-            .ok_or_else(|| eyre!("couldn't find marker"))
-    }
-}
+        let mut counts = [0; 26];
 
-fn all_different(items: &[usize]) -> bool {
-    let set = BTreeSet::from_iter(items.iter());
-    set.len() == items.len()
+        for i in 0..marker_size {
+            counts[self.characters[i]] += 1;
+        }
+
+        for window_start in 0..(self.characters.len() - marker_size) {
+            if counts.iter().all(|count| *count <= 1) {
+                return Ok(window_start + marker_size);
+            }
+
+            counts[self.characters[window_start]] -= 1;
+            counts[self.characters[window_start + marker_size]] += 1;
+        }
+
+        Err(eyre!("couldn't find marker"))
+    }
 }
 
 #[cfg(test)]

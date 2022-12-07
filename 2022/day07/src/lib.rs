@@ -25,10 +25,8 @@ impl Problem {
 
     pub fn part_one(&self) -> Result<u64> {
         Ok(self
-            .root
-            .directories()
-            .iter()
-            .map(|entry| entry.size())
+            .directory_sizes()
+            .into_iter()
             .filter(|size| *size <= 100000)
             .sum())
     }
@@ -36,13 +34,19 @@ impl Problem {
     pub fn part_two(&self) -> Result<u64> {
         let space_needed = self.root.size() - 40000000;
 
+        self.directory_sizes()
+            .into_iter()
+            .filter(|size| *size >= space_needed)
+            .min()
+            .ok_or_else(|| eyre!("no directory big enough"))
+    }
+
+    fn directory_sizes(&self) -> Vec<u64> {
         self.root
             .directories()
             .iter()
             .map(|entry| entry.size())
-            .filter(|size| *size >= space_needed)
-            .min()
-            .ok_or_else(|| eyre!("no directory big enough"))
+            .collect()
     }
 }
 

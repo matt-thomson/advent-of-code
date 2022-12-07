@@ -26,6 +26,8 @@ impl Problem {
         let root = process_lines(&mut self.terminal_lines.iter())?;
 
         println!("{:?}", root);
+        println!("{}", root.size());
+
         todo!()
     }
 }

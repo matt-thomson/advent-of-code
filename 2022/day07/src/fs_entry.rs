@@ -30,6 +30,13 @@ impl FsEntry {
         }
     }
 
+    pub fn size(&self) -> u64 {
+        match self {
+            FsEntry::File { size, .. } => *size,
+            FsEntry::Directory { children, .. } => children.iter().map(FsEntry::size).sum(),
+        }
+    }
+
     fn print_tree(&self, f: &mut Formatter<'_>, indent: usize) -> std::fmt::Result {
         match self {
             FsEntry::File { name, size } => {

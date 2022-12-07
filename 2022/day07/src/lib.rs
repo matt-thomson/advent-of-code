@@ -32,6 +32,18 @@ impl Problem {
             .filter(|size| *size <= 100000)
             .sum())
     }
+
+    pub fn part_two(&self) -> Result<u64> {
+        let root = process_lines(&mut self.terminal_lines.iter())?;
+        let space_needed = root.size() - 40000000;
+
+        root.directories()
+            .iter()
+            .map(|entry| entry.size())
+            .filter(|size| *size >= space_needed)
+            .min()
+            .ok_or_else(|| eyre!("no directory big enough"))
+    }
 }
 
 fn process_lines<'a, I: Iterator<Item = &'a TerminalLine>>(lines: &mut I) -> Result<FsEntry> {

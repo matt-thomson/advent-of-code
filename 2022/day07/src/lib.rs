@@ -92,3 +92,24 @@ fn process_lines(lines: &[TerminalLine]) -> Result<FsEntry> {
 
     unreachable!()
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::Problem;
+
+    #[test]
+    fn test_part_one() {
+        let problem = Problem::new("example.txt").unwrap();
+        let result = problem.part_one().unwrap();
+
+        assert_eq!(result, 95437);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt").unwrap();
+        let result = problem.part_two().unwrap();
+
+        assert_eq!(result, 24933642);
+    }
+}

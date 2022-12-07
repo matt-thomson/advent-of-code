@@ -11,21 +11,21 @@ use crate::terminal_line::TerminalLine;
 
 #[derive(Debug)]
 pub struct Problem {
-    terminal_lines: Vec<TerminalLine>,
+    root: FsEntry,
 }
 
 impl Problem {
     pub fn new<P: AsRef<Path>>(path: P) -> Result<Self> {
         let input = fs::read_to_string(path)?;
         let terminal_lines = input.lines().map(str::parse).collect::<Result<Vec<_>>>()?;
+        let root = process_lines(&terminal_lines)?;
 
-        Ok(Self { terminal_lines })
+        Ok(Self { root })
     }
 
     pub fn part_one(&self) -> Result<u64> {
-        let root = process_lines(&mut self.terminal_lines.iter())?;
-
-        Ok(root
+        Ok(self
+            .root
             .directories()
             .iter()
             .map(|entry| entry.size())
@@ -34,10 +34,10 @@ impl Problem {
     }
 
     pub fn part_two(&self) -> Result<u64> {
-        let root = process_lines(&mut self.terminal_lines.iter())?;
-        let space_needed = root.size() - 40000000;
+        let space_needed = self.root.size() - 40000000;
 
-        root.directories()
+        self.root
+            .directories()
             .iter()
             .map(|entry| entry.size())
             .filter(|size| *size >= space_needed)
@@ -46,7 +46,7 @@ impl Problem {
     }
 }
 
-fn process_lines<'a, I: Iterator<Item = &'a TerminalLine>>(lines: &mut I) -> Result<FsEntry> {
+fn process_lines(lines: &[TerminalLine]) -> Result<FsEntry> {
     let mut entries = vec![FsEntry::Directory {
         name: "/".to_string(),
         children: vec![],

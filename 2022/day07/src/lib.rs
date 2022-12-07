@@ -23,15 +23,14 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> Result<u64> {
-        let entries = process_lines(&mut self.terminal_lines.iter())?;
-        let root = &entries[0];
+        let root = process_lines(&mut self.terminal_lines.iter())?;
 
         println!("{:?}", root);
         todo!()
     }
 }
 
-fn process_lines<'a, I: Iterator<Item = &'a TerminalLine>>(lines: &mut I) -> Result<Vec<FsEntry>> {
+fn process_lines<'a, I: Iterator<Item = &'a TerminalLine>>(lines: &mut I) -> Result<FsEntry> {
     let mut entries = vec![FsEntry::Directory {
         name: "/".to_string(),
         children: vec![],
@@ -67,5 +66,13 @@ fn process_lines<'a, I: Iterator<Item = &'a TerminalLine>>(lines: &mut I) -> Res
         }
     }
 
-    Ok(entries)
+    while let Some(entry) = entries.pop() {
+        if let Some(parent) = entries.last_mut() {
+            parent.add_child(entry)?;
+        } else {
+            return Ok(entry);
+        }
+    }
+
+    unreachable!()
 }

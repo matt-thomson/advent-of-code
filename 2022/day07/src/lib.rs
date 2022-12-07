@@ -24,8 +24,9 @@ impl Problem {
 
     pub fn part_one(&self) -> Result<u64> {
         let entries = process_lines(&mut self.terminal_lines.iter())?;
-        dbg!(entries);
+        let root = &entries[0];
 
+        println!("{:?}", root);
         todo!()
     }
 }

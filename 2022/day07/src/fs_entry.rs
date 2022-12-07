@@ -37,6 +37,21 @@ impl FsEntry {
         }
     }
 
+    pub fn directories(&self) -> Vec<&FsEntry> {
+        match self {
+            FsEntry::File { .. } => vec![],
+            FsEntry::Directory { children, .. } => {
+                let mut result = vec![self];
+
+                for child in children {
+                    result.extend(child.directories());
+                }
+
+                result
+            }
+        }
+    }
+
     fn print_tree(&self, f: &mut Formatter<'_>, indent: usize) -> std::fmt::Result {
         match self {
             FsEntry::File { name, size } => {

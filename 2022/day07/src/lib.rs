@@ -25,10 +25,12 @@ impl Problem {
     pub fn part_one(&self) -> Result<u64> {
         let root = process_lines(&mut self.terminal_lines.iter())?;
 
-        println!("{:?}", root);
-        println!("{}", root.size());
-
-        todo!()
+        Ok(root
+            .directories()
+            .iter()
+            .map(|entry| entry.size())
+            .filter(|size| *size <= 100000)
+            .sum())
     }
 }
 

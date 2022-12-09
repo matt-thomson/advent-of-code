@@ -27,7 +27,7 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> usize {
-        let mut rope = Rope::<1>::new();
+        let mut rope = Rope::<2>::default();
         let mut visited: HashSet<_> = rope.tails().into_iter().collect();
 
         for direction in self.directions.iter() {

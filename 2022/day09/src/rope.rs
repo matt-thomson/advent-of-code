@@ -1,46 +1,51 @@
 use crate::direction::Direction;
 
 pub struct Rope<const N: usize> {
-    head: (i64, i64),
-    tail: [(i64, i64); N],
+    knots: [(i64, i64); N],
+}
+
+impl<const N: usize> Default for Rope<N> {
+    fn default() -> Self {
+        Self { knots: [(0, 0); N] }
+    }
 }
 
 impl<const N: usize> Rope<N> {
-    pub fn new() -> Self {
-        Self {
-            head: (0, 0),
-            tail: [(0, 0); N],
-        }
-    }
-
     pub fn step(&mut self, direction: &Direction) {
+        let mut head = self.knots.get_mut(0).unwrap();
+
         match direction {
-            Direction::Up => self.head.1 += 1,
-            Direction::Down => self.head.1 -= 1,
-            Direction::Left => self.head.0 -= 1,
-            Direction::Right => self.head.0 += 1,
+            Direction::Up => head.1 += 1,
+            Direction::Down => head.1 -= 1,
+            Direction::Left => head.0 -= 1,
+            Direction::Right => head.0 += 1,
         }
 
-        let dx = self.head.0.abs_diff(self.tail[0].0);
-        let dy = self.head.1.abs_diff(self.tail[0].1);
+        for i in 0..(self.knots.len() - 1) {
+            let first = self.knots[i];
+            let mut second = self.knots.get_mut(i + 1).unwrap();
 
-        if dx > 1 || dy > 1 {
-            if self.head.0 > self.tail[0].0 {
-                self.tail[0].0 += 1;
-            } else if self.head.0 < self.tail[0].0 {
-                self.tail[0].0 -= 1;
-            }
+            let dx = first.0.abs_diff(second.0);
+            let dy = first.1.abs_diff(second.1);
 
-            if self.head.1 > self.tail[0].1 {
-                self.tail[0].1 += 1;
-            } else if self.head.1 < self.tail[0].1 {
-                self.tail[0].1 -= 1;
+            if dx > 1 || dy > 1 {
+                if first.0 > second.0 {
+                    second.0 += 1;
+                } else if first.0 < second.0 {
+                    second.0 -= 1;
+                }
+
+                if first.1 > second.1 {
+                    second.1 += 1;
+                } else if first.1 < second.1 {
+                    second.1 -= 1;
+                }
             }
         }
     }
 
-    pub fn tails(&self) -> [(i64, i64); N] {
-        self.tail.clone()
+    pub fn tails(&self) -> Vec<(i64, i64)> {
+        self.knots[1..].to_vec()
     }
 }
 
@@ -84,10 +89,12 @@ mod tests {
         #[case] expected_head: (i64, i64),
         #[case] expected_tail: (i64, i64),
     ) {
-        let mut rope = Rope { head, tail: [tail] };
+        let mut rope = Rope {
+            knots: [head, tail],
+        };
+
         rope.step(&direction);
 
-        assert_eq!(rope.head, expected_head);
-        assert_eq!(rope.tail, [expected_tail]);
+        assert_eq!(rope.knots, [expected_head, expected_tail]);
     }
 }

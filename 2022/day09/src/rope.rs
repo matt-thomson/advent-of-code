@@ -1,12 +1,18 @@
 use crate::direction::Direction;
 
-#[derive(Default)]
-pub struct Rope {
+pub struct Rope<const N: usize> {
     head: (i64, i64),
-    tail: (i64, i64),
+    tail: [(i64, i64); N],
 }
 
-impl Rope {
+impl<const N: usize> Rope<N> {
+    pub fn new() -> Self {
+        Self {
+            head: (0, 0),
+            tail: [(0, 0); N],
+        }
+    }
+
     pub fn step(&mut self, direction: &Direction) {
         match direction {
             Direction::Up => self.head.1 += 1,
@@ -15,26 +21,26 @@ impl Rope {
             Direction::Right => self.head.0 += 1,
         }
 
-        let dx = self.head.0.abs_diff(self.tail.0);
-        let dy = self.head.1.abs_diff(self.tail.1);
+        let dx = self.head.0.abs_diff(self.tail[0].0);
+        let dy = self.head.1.abs_diff(self.tail[0].1);
 
         if dx > 1 || dy > 1 {
-            if self.head.0 > self.tail.0 {
-                self.tail.0 += 1;
-            } else if self.head.0 < self.tail.0 {
-                self.tail.0 -= 1;
+            if self.head.0 > self.tail[0].0 {
+                self.tail[0].0 += 1;
+            } else if self.head.0 < self.tail[0].0 {
+                self.tail[0].0 -= 1;
             }
 
-            if self.head.1 > self.tail.1 {
-                self.tail.1 += 1;
-            } else if self.head.1 < self.tail.1 {
-                self.tail.1 -= 1;
+            if self.head.1 > self.tail[0].1 {
+                self.tail[0].1 += 1;
+            } else if self.head.1 < self.tail[0].1 {
+                self.tail[0].1 -= 1;
             }
         }
     }
 
-    pub fn tail(&self) -> (i64, i64) {
-        self.tail
+    pub fn tails(&self) -> [(i64, i64); N] {
+        self.tail.clone()
     }
 }
 
@@ -78,10 +84,10 @@ mod tests {
         #[case] expected_head: (i64, i64),
         #[case] expected_tail: (i64, i64),
     ) {
-        let mut rope = Rope { head, tail };
+        let mut rope = Rope { head, tail: [tail] };
         rope.step(&direction);
 
         assert_eq!(rope.head, expected_head);
-        assert_eq!(rope.tail, expected_tail);
+        assert_eq!(rope.tail, [expected_tail]);
     }
 }

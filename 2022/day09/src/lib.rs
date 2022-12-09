@@ -18,10 +18,7 @@ pub struct Problem {
 impl Problem {
     pub fn new<P: AsRef<Path>>(path: P) -> Result<Self> {
         let input = fs::read_to_string(path)?;
-        let directions = input
-            .lines()
-            .flat_map(|line| parse_line(line).unwrap())
-            .collect();
+        let directions = input.lines().flat_map(parse_line).flatten().collect();
 
         Ok(Self { directions })
     }

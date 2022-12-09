@@ -27,12 +27,12 @@ impl Problem {
         Ok(self
             .directory_sizes()
             .into_iter()
-            .filter(|size| *size <= 100000)
+            .filter(|size| *size <= 100_000)
             .sum())
     }
 
     pub fn part_two(&self) -> Result<u64> {
-        let space_needed = self.root.size() - 40000000;
+        let space_needed = self.root.size() - 40_000_000;
 
         self.directory_sizes()
             .into_iter()
@@ -58,8 +58,6 @@ fn process_lines(lines: &[TerminalLine]) -> Result<FsEntry> {
 
     for line in lines {
         match line {
-            TerminalLine::List => {}
-            TerminalLine::ChangeRoot => {}
             TerminalLine::ChangeOut => {
                 let current = entries.pop().unwrap();
                 entries
@@ -82,7 +80,7 @@ fn process_lines(lines: &[TerminalLine]) -> Result<FsEntry> {
                         size: *size,
                     })?;
             }
-            TerminalLine::Directory { name: _name } => {}
+            TerminalLine::List | TerminalLine::ChangeRoot | TerminalLine::Directory { .. } => {}
         }
     }
 
@@ -114,6 +112,6 @@ mod tests {
         let problem = Problem::new("example.txt").unwrap();
         let result = problem.part_two().unwrap();
 
-        assert_eq!(result, 24933642);
+        assert_eq!(result, 24_933_642);
     }
 }

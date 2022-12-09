@@ -40,8 +40,8 @@ impl Problem {
         let mut visited: HashSet<_> = HashSet::new();
         visited.insert(rope.tail());
 
-        for direction in self.directions.iter() {
-            rope.step(&direction);
+        for direction in &self.directions {
+            rope.step(direction);
             visited.insert(rope.tail());
         }
 

@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use crate::direction::Direction;
 
 pub struct Rope<const N: usize> {
@@ -29,23 +31,23 @@ impl<const N: usize> Rope<N> {
             let dy = first.1.abs_diff(second.1);
 
             if dx > 1 || dy > 1 {
-                if first.0 > second.0 {
-                    second.0 += 1;
-                } else if first.0 < second.0 {
-                    second.0 -= 1;
-                }
+                match first.0.cmp(&second.0) {
+                    Ordering::Greater => second.0 += 1,
+                    Ordering::Less => second.0 -= 1,
+                    Ordering::Equal => {}
+                };
 
-                if first.1 > second.1 {
-                    second.1 += 1;
-                } else if first.1 < second.1 {
-                    second.1 -= 1;
-                }
+                match first.1.cmp(&second.1) {
+                    Ordering::Greater => second.1 += 1,
+                    Ordering::Less => second.1 -= 1,
+                    Ordering::Equal => {}
+                };
             }
         }
     }
 
     pub fn tail(&self) -> (i64, i64) {
-        self.knots.last().unwrap().clone()
+        *self.knots.last().unwrap()
     }
 }
 

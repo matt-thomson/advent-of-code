@@ -28,11 +28,13 @@ impl Problem {
 
     pub fn part_one(&self) -> usize {
         let mut rope = Rope::<2>::default();
-        let mut visited: HashSet<_> = rope.tails().into_iter().collect();
+
+        let mut visited: HashSet<_> = HashSet::new();
+        visited.insert(rope.tail());
 
         for direction in self.directions.iter() {
             rope.step(&direction);
-            visited.extend(rope.tails());
+            visited.insert(rope.tail());
         }
 
         visited.len()

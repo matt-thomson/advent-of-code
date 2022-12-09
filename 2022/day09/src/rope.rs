@@ -44,8 +44,8 @@ impl<const N: usize> Rope<N> {
         }
     }
 
-    pub fn tails(&self) -> Vec<(i64, i64)> {
-        self.knots[1..].to_vec()
+    pub fn tail(&self) -> (i64, i64) {
+        self.knots.last().unwrap().clone()
     }
 }
 

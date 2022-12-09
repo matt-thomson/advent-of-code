@@ -1,3 +1,17 @@
-fn main() {
-    println!("Hello, world!");
+use std::env;
+use std::error::Error;
+
+use day09::Problem;
+use eyre::eyre;
+
+fn main() -> Result<(), Box<dyn Error>> {
+    let path = env::args()
+        .nth(1)
+        .ok_or_else(|| eyre!("must supply path"))?;
+
+    let problem = Problem::new(path)?;
+
+    println!("Part one: {}", problem.part_one());
+
+    Ok(())
 }

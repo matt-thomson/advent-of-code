@@ -32,6 +32,10 @@ impl Rope {
             }
         }
     }
+
+    pub fn tail(&self) -> (i64, i64) {
+        self.tail
+    }
 }
 
 #[cfg(test)]

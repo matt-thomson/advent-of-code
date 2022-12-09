@@ -2,6 +2,7 @@ use std::str::FromStr;
 
 use eyre::{eyre, ErrReport};
 
+#[derive(Clone, Debug)]
 pub enum Direction {
     Up,
     Down,

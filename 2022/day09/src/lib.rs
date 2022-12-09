@@ -27,7 +27,15 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> usize {
-        let mut rope = Rope::<2>::default();
+        self.solve::<2>()
+    }
+
+    pub fn part_two(&self) -> usize {
+        self.solve::<10>()
+    }
+
+    fn solve<const N: usize>(&self) -> usize {
+        let mut rope = Rope::<N>::default();
 
         let mut visited: HashSet<_> = HashSet::new();
         visited.insert(rope.tail());
@@ -54,13 +62,25 @@ fn parse_line(line: &str) -> Result<impl Iterator<Item = Direction>> {
 
 #[cfg(test)]
 mod tests {
+    use rstest::rstest;
+
     use crate::Problem;
 
     #[test]
     fn test_part_one() {
-        let problem = Problem::new("example.txt").unwrap();
+        let problem = Problem::new("example1.txt").unwrap();
         let result = problem.part_one();
 
         assert_eq!(result, 13);
+    }
+
+    #[rstest]
+    #[case("example1.txt", 1)]
+    #[case("example2.txt", 36)]
+    fn test_part_two(#[case] filename: String, #[case] expected: usize) {
+        let problem = Problem::new(filename).unwrap();
+        let result = problem.part_two();
+
+        assert_eq!(result, expected);
     }
 }

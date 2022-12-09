@@ -23,10 +23,17 @@ impl Problem {
         (0..self.forest.width())
             .map(|x| {
                 (0..self.forest.height())
-                    .filter(|y| self.forest.is_visible(x, *y))
+                    .filter(|&y| self.forest.is_visible(x, y))
                     .count()
             })
             .sum()
+    }
+
+    pub fn part_two(&self) -> usize {
+        (0..self.forest.width())
+            .flat_map(|x| (0..self.forest.height()).map(move |y| self.forest.scenic_score(x, y)))
+            .max()
+            .unwrap_or(0)
     }
 }
 
@@ -40,5 +47,13 @@ mod tests {
         let result = problem.part_one();
 
         assert_eq!(result, 21);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt").unwrap();
+        let result = problem.part_two();
+
+        assert_eq!(result, 8);
     }
 }

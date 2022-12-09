@@ -1,6 +1,8 @@
 use std::convert::Infallible;
 use std::str::FromStr;
 
+use take_until::TakeUntilExt;
+
 #[derive(Debug)]
 pub struct Forest(Vec<Vec<u64>>);
 
@@ -37,6 +39,17 @@ impl Forest {
             || self.is_visible_from_right(x, y)
     }
 
+    pub fn scenic_score(&self, x: usize, y: usize) -> usize {
+        [
+            self.viewing_distance_top(x, y),
+            self.viewing_distance_bottom(x, y),
+            self.viewing_distance_left(x, y),
+            self.viewing_distance_right(x, y),
+        ]
+        .iter()
+        .product()
+    }
+
     fn is_visible_from_top(&self, x: usize, y: usize) -> bool {
         (0..y).all(|other_y| self.tree(x, other_y) < self.tree(x, y))
     }
@@ -51,5 +64,31 @@ impl Forest {
 
     fn is_visible_from_right(&self, x: usize, y: usize) -> bool {
         ((x + 1)..self.height()).all(|other_x| self.tree(other_x, y) < self.tree(x, y))
+    }
+
+    fn viewing_distance_top(&self, x: usize, y: usize) -> usize {
+        (0..y)
+            .rev()
+            .take_until(|&other_y| self.tree(x, other_y) >= self.tree(x, y))
+            .count()
+    }
+
+    fn viewing_distance_bottom(&self, x: usize, y: usize) -> usize {
+        ((y + 1)..self.height())
+            .take_until(|&other_y| self.tree(x, other_y) >= self.tree(x, y))
+            .count()
+    }
+
+    fn viewing_distance_left(&self, x: usize, y: usize) -> usize {
+        (0..x)
+            .rev()
+            .take_until(|&other_x| self.tree(other_x, y) >= self.tree(x, y))
+            .count()
+    }
+
+    fn viewing_distance_right(&self, x: usize, y: usize) -> usize {
+        ((x + 1)..self.height())
+            .take_until(|&other_x| self.tree(other_x, y) >= self.tree(x, y))
+            .count()
     }
 }

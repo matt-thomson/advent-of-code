@@ -13,5 +13,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     println!("Part one: {}", problem.part_one());
 
+    println!("Part two:");
+    println!("{}", problem.part_two());
+
     Ok(())
 }

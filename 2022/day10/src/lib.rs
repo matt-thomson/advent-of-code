@@ -5,6 +5,7 @@ use std::fs;
 use std::path::Path;
 
 use eyre::Result;
+use itertools::Itertools;
 
 use crate::cpu::Cpu;
 use crate::instruction::Instruction;
@@ -34,6 +35,27 @@ impl Problem {
             .map(|(cycle, x)| (cycle as i64 + 1) * x)
             .sum()
     }
+
+    pub fn part_two(&self) -> String {
+        let cpu = Cpu::new(&self.instructions);
+
+        cpu.chunks(40)
+            .into_iter()
+            .map(|line| draw_line(line))
+            .join("\n")
+    }
+}
+
+fn draw_line<I: Iterator<Item = i64>>(line: I) -> String {
+    line.enumerate()
+        .map(|(position, x)| {
+            if x.abs_diff(position as i64) <= 1 {
+                '█'
+            } else {
+                ' '
+            }
+        })
+        .collect()
 }
 
 #[cfg(test)]

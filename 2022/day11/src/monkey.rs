@@ -1,9 +1,10 @@
 use eyre::Result;
 use nom::{
     bytes::complete::tag,
+    character::complete::{line_ending, space0},
     combinator::map,
     multi::separated_list1,
-    sequence::{delimited, preceded},
+    sequence::{delimited, preceded, terminated, tuple},
     IResult,
 };
 
@@ -21,6 +22,28 @@ pub struct Monkey {
 impl Monkey {
     pub fn parse_all(input: &str) -> Result<Vec<Self>> {
         todo!()
+    }
+
+    fn parse(input: &str) -> IResult<&str, Self> {
+        map(
+            tuple((
+                terminated(monkey_identifier, line_ending),
+                preceded(space0, terminated(starting_items, line_ending)),
+                preceded(space0, terminated(operation, line_ending)),
+                preceded(space0, terminated(divisible_test, line_ending)),
+                preceded(space0, terminated(throw_if_true, line_ending)),
+                preceded(space0, terminated(throw_if_false, line_ending)),
+            )),
+            |(_, starting_items, operation, divisible_test, throw_if_true, throw_if_false)| {
+                Monkey {
+                    starting_items,
+                    operation,
+                    divisible_test,
+                    throw_if_true,
+                    throw_if_false,
+                }
+            },
+        )(input)
     }
 }
 
@@ -68,50 +91,21 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_monkey_identifier() {
-        let input = "Monkey 3:";
-        let (_, result) = monkey_identifier(input).finish().unwrap();
+    fn test_parse_monkey() {
+        let input = "Monkey 0:
+          Starting items: 79, 98
+          Operation: new = old * 19
+          Test: divisible by 23
+            If true: throw to monkey 2
+            If false: throw to monkey 3
+        ";
 
-        assert_eq!(result, 3);
-    }
+        let (_, monkey) = Monkey::parse(input).finish().unwrap();
 
-    #[test]
-    fn test_starting_items() {
-        let input = "Starting items: 79, 98";
-        let (_, result) = starting_items(input).finish().unwrap();
-
-        assert_eq!(result, [79, 98]);
-    }
-
-    #[test]
-    fn test_operation() {
-        let input = "Operation: new = old * 19";
-        let (_, result) = operation(input).finish().unwrap();
-
-        assert_eq!(result, Operation::Multiply(19));
-    }
-
-    #[test]
-    fn test_divisible_test() {
-        let input = "Test: divisible by 23";
-        let (_, result) = divisible_test(input).finish().unwrap();
-
-        assert_eq!(result, 23);
-    }
-
-    #[test]
-    fn test_throw_if_true() {
-        let input = "If true: throw to monkey 2";
-        let (_, result) = throw_if_true(input).finish().unwrap();
-
-        assert_eq!(result, 2);
-    }
-
-    #[test]
-    fn test_throw_if_false() {
-        let input = "If false: throw to monkey 3";
-        let (_, result) = throw_if_false(input).finish().unwrap();
-
-        assert_eq!(result, 3);
+        assert_eq!(monkey.starting_items, [79, 98]);
+        assert_eq!(monkey.operation, Operation::Multiply(19));
+        assert_eq!(monkey.divisible_test, 23);
+        assert_eq!(monkey.throw_if_true, 2);
+        assert_eq!(monkey.throw_if_false, 3);
     }
 }

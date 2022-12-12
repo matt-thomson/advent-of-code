@@ -9,7 +9,7 @@ use nom::{
     Finish,
 };
 
-#[derive(Debug, PartialEq, Eq, Clone)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum Instruction {
     NoOp,
     Add(i64),

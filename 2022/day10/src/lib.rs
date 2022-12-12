@@ -1,3 +1,4 @@
+mod cpu;
 mod instruction;
 
 use std::fs;
@@ -5,6 +6,7 @@ use std::path::Path;
 
 use eyre::Result;
 
+use crate::cpu::Cpu;
 use crate::instruction::Instruction;
 
 #[derive(Debug)]
@@ -23,8 +25,8 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> i64 {
-        dbg!(self);
-        todo!()
+        let cpu = Cpu::new(&self.instructions);
+        cpu.skip(18).step_by(40).take(6).sum()
     }
 }
 

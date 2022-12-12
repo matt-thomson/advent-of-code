@@ -23,9 +23,9 @@ impl Problem {
 
     pub fn part_one(&self) -> Result<usize> {
         bfs(
-            self.heightmap.start(),
+            self.heightmap.end(),
             |position| self.heightmap.neighbours(*position),
-            |position| position == self.heightmap.end(),
+            |position| position == self.heightmap.start(),
         )
         .ok_or_else(|| eyre!("couldn't find path"))
         .map(|path| path.len() - 1)

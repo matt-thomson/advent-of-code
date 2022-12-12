@@ -70,7 +70,7 @@ impl Heightmap {
         .flatten()
         .filter(|(x, _)| *x < self.heights[0].len())
         .filter(|(_, y)| *y < self.heights.len())
-        .filter(|to| self.height(*to) <= self.height(from) + 1)
+        .filter(|to| self.height(*to) + 1 >= self.height(from))
         .collect()
     }
 

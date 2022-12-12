@@ -37,7 +37,7 @@ fn char_to_height(c: char) -> Result<u8> {
         _ => Err(eyre!("invalid character {c}"))?,
     };
 
-    Ok((normalized as u8) - ('a' as u8))
+    Ok((normalized as u8) - b'a')
 }
 
 fn find_coordinates(input: &str, target: char) -> Result<(usize, usize)> {
@@ -45,8 +45,7 @@ fn find_coordinates(input: &str, target: char) -> Result<(usize, usize)> {
         .lines()
         .map(|line| line.find(target))
         .enumerate()
-        .flat_map(|(y, x)| x.map(|x| (x, y)))
-        .next()
+        .find_map(|(y, x)| x.map(|x| (x, y)))
         .ok_or_else(|| eyre!("couldn't find {target}"))
 }
 

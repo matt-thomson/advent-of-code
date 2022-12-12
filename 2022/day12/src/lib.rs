@@ -3,7 +3,8 @@ mod heightmap;
 use std::fs;
 use std::path::Path;
 
-use eyre::Result;
+use eyre::{eyre, Result};
+use pathfinding::prelude::bfs;
 
 use crate::heightmap::Heightmap;
 
@@ -20,8 +21,26 @@ impl Problem {
         Ok(Self { heightmap })
     }
 
-    pub fn part_one(&self) -> usize {
-        dbg!(self);
-        todo!()
+    pub fn part_one(&self) -> Result<usize> {
+        bfs(
+            self.heightmap.start(),
+            |position| self.heightmap.neighbours(*position),
+            |position| position == self.heightmap.end(),
+        )
+        .ok_or_else(|| eyre!("couldn't find path"))
+        .map(|path| path.len() - 1)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::Problem;
+
+    #[test]
+    fn test_part_one() {
+        let problem = Problem::new("example.txt").unwrap();
+        let result = problem.part_one().unwrap();
+
+        assert_eq!(result, 31);
     }
 }

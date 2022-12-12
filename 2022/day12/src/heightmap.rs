@@ -49,3 +49,32 @@ fn find_coordinates(input: &str, target: char) -> Result<(usize, usize)> {
         .next()
         .ok_or_else(|| eyre!("couldn't find {target}"))
 }
+
+impl Heightmap {
+    pub fn start(&self) -> &(usize, usize) {
+        &self.start
+    }
+
+    pub fn end(&self) -> &(usize, usize) {
+        &self.end
+    }
+
+    pub fn neighbours(&self, from @ (x, y): (usize, usize)) -> Vec<(usize, usize)> {
+        [
+            x.checked_sub(1).map(|x| (x, y)),
+            Some((x + 1, y)),
+            y.checked_sub(1).map(|y| (x, y)),
+            Some((x, y + 1)),
+        ]
+        .into_iter()
+        .flatten()
+        .filter(|(x, _)| *x < self.heights[0].len())
+        .filter(|(_, y)| *y < self.heights.len())
+        .filter(|to| self.height(*to) <= self.height(from) + 1)
+        .collect()
+    }
+
+    fn height(&self, (x, y): (usize, usize)) -> u8 {
+        self.heights[y][x]
+    }
+}

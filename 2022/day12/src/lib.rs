@@ -22,20 +22,18 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> Result<usize> {
-        bfs(
-            self.heightmap.end(),
-            |position| self.heightmap.neighbours(*position),
-            |position| position == self.heightmap.start(),
-        )
-        .ok_or_else(|| eyre!("couldn't find path"))
-        .map(|path| path.len() - 1)
+        self.solve(|position| position == self.heightmap.start())
     }
 
     pub fn part_two(&self) -> Result<usize> {
+        self.solve(|position| self.heightmap.height(*position) == 0)
+    }
+
+    fn solve<F: Fn(&(usize, usize)) -> bool>(&self, success: F) -> Result<usize> {
         bfs(
             self.heightmap.end(),
             |position| self.heightmap.neighbours(*position),
-            |position| self.heightmap.height(*position) == 0,
+            success,
         )
         .ok_or_else(|| eyre!("couldn't find path"))
         .map(|path| path.len() - 1)

@@ -1,11 +1,11 @@
-use eyre::Result;
+use eyre::{eyre, Result};
 use nom::{
     bytes::complete::tag,
     character::complete::{line_ending, space0},
     combinator::map,
     multi::separated_list1,
     sequence::{delimited, preceded, terminated, tuple},
-    IResult,
+    Finish, IResult,
 };
 
 use crate::operation::Operation;
@@ -21,7 +21,11 @@ pub struct Monkey {
 
 impl Monkey {
     pub fn parse_all(input: &str) -> Result<Vec<Self>> {
-        todo!()
+        let (_, monkeys) = separated_list1(line_ending, Self::parse)(input)
+            .finish()
+            .map_err(|s| eyre!(s.to_string()))?;
+
+        Ok(monkeys)
     }
 
     fn parse(input: &str) -> IResult<&str, Self> {

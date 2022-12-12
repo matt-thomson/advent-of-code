@@ -28,10 +28,10 @@ impl Problem {
         let cpu = Cpu::new(&self.instructions);
 
         cpu.enumerate()
-            .skip(18)
+            .skip(19)
             .step_by(40)
             .take(6)
-            .map(|(cycle, x)| (cycle as i64 + 2) * x)
+            .map(|(cycle, x)| (cycle as i64 + 1) * x)
             .sum()
     }
 }

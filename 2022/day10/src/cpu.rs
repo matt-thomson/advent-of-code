@@ -11,9 +11,9 @@ pub struct Cpu {
 impl Cpu {
     pub fn new(instructions: &[Instruction]) -> Self {
         Self {
-            x: 1,
+            x: 0,
             instructions: instructions.iter().copied().collect(),
-            pending_add: None,
+            pending_add: Some(1),
         }
     }
 }

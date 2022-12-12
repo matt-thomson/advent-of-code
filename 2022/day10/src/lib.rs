@@ -26,7 +26,13 @@ impl Problem {
 
     pub fn part_one(&self) -> i64 {
         let cpu = Cpu::new(&self.instructions);
-        cpu.skip(18).step_by(40).take(6).sum()
+
+        cpu.enumerate()
+            .skip(18)
+            .step_by(40)
+            .take(6)
+            .map(|(cycle, x)| (cycle as i64 + 2) * x)
+            .sum()
     }
 }
 

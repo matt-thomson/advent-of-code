@@ -6,7 +6,6 @@ pub struct Cpu {
     x: i64,
     instructions: VecDeque<Instruction>,
     pending_add: Option<i64>,
-    cycle_count: usize,
 }
 
 impl Cpu {
@@ -15,7 +14,6 @@ impl Cpu {
             x: 1,
             instructions: instructions.iter().copied().collect(),
             pending_add: None,
-            cycle_count: 1,
         }
     }
 }
@@ -35,8 +33,6 @@ impl Iterator for Cpu {
             return None;
         }
 
-        self.cycle_count += 1;
-
-        Some((self.cycle_count as i64) * self.x)
+        Some(self.x)
     }
 }

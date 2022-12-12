@@ -74,7 +74,7 @@ impl Heightmap {
         .collect()
     }
 
-    fn height(&self, (x, y): (usize, usize)) -> u8 {
+    pub fn height(&self, (x, y): (usize, usize)) -> u8 {
         self.heights[y][x]
     }
 }

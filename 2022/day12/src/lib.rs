@@ -30,6 +30,16 @@ impl Problem {
         .ok_or_else(|| eyre!("couldn't find path"))
         .map(|path| path.len() - 1)
     }
+
+    pub fn part_two(&self) -> Result<usize> {
+        bfs(
+            self.heightmap.end(),
+            |position| self.heightmap.neighbours(*position),
+            |position| self.heightmap.height(*position) == 0,
+        )
+        .ok_or_else(|| eyre!("couldn't find path"))
+        .map(|path| path.len() - 1)
+    }
 }
 
 #[cfg(test)]
@@ -42,5 +52,13 @@ mod tests {
         let result = problem.part_one().unwrap();
 
         assert_eq!(result, 31);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt").unwrap();
+        let result = problem.part_two().unwrap();
+
+        assert_eq!(result, 29);
     }
 }

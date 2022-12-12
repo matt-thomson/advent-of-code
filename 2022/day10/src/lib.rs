@@ -18,7 +18,7 @@ pub struct Problem {
 impl Problem {
     pub fn new<P: AsRef<Path>>(path: P) -> Result<Self> {
         let input = fs::read_to_string(path)?;
-        let instructions: Result<Vec<_>> = input.lines().map(|line| line.parse()).collect();
+        let instructions: Result<Vec<_>> = input.lines().map(str::parse).collect();
 
         Ok(Self {
             instructions: instructions?,
@@ -41,7 +41,7 @@ impl Problem {
 
         cpu.chunks(40)
             .into_iter()
-            .map(|line| draw_line(line))
+            .map(draw_line)
             .join("\n")
     }
 }

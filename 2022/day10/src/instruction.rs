@@ -23,7 +23,7 @@ impl FromStr for Instruction {
             value(Self::NoOp, tag("noop")),
             map(
                 preceded(tag("addx "), nom::character::complete::i64),
-                |value| Self::Add(value),
+                Self::Add,
             ),
         ));
 

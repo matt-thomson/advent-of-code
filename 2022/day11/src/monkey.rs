@@ -50,8 +50,8 @@ impl Monkey {
         )(input)
     }
 
-    pub fn inspect(&self, worry_level: u64) -> (u64, usize) {
-        let worry_level = self.operation.apply(worry_level) / 3;
+    pub fn inspect(&self, worry_level: u64, divisor: u64) -> (u64, usize) {
+        let worry_level = self.operation.apply(worry_level) / divisor;
 
         let destination = if worry_level % self.divisible_test == 0 {
             self.throw_if_true

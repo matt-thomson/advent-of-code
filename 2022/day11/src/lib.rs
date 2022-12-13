@@ -22,6 +22,10 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> u64 {
+        self.solve(20, 3)
+    }
+
+    fn solve(&self, rounds: usize, divisor: u64) -> u64 {
         let mut items: Vec<_> = self
             .monkeys
             .iter()
@@ -30,11 +34,11 @@ impl Problem {
 
         let mut activity = vec![0_u64; self.monkeys.len()];
 
-        for _ in 0..20 {
+        for _ in 0..rounds {
             for i in 0..items.len() {
                 let results: Vec<_> = items[i]
                     .iter()
-                    .map(|worry_level| self.monkeys[i].inspect(*worry_level))
+                    .map(|worry_level| self.monkeys[i].inspect(*worry_level, divisor))
                     .collect();
 
                 for (worry_level, destination) in results {

@@ -49,6 +49,18 @@ impl Monkey {
             },
         )(input)
     }
+
+    pub fn inspect(&self, worry_level: u64) -> (u64, usize) {
+        let worry_level = self.operation.apply(worry_level) / 3;
+
+        let destination = if worry_level % self.divisible_test == 0 {
+            self.throw_if_true
+        } else {
+            self.throw_if_false
+        };
+
+        (worry_level, destination)
+    }
 }
 
 fn monkey_identifier(input: &str) -> IResult<&str, usize> {

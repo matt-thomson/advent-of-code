@@ -27,6 +27,14 @@ impl Operation {
             ),
         ))(input)
     }
+
+    pub fn apply(&self, worry_level: u64) -> u64 {
+        match self {
+            Operation::Add(other) => worry_level + other,
+            Operation::Multiply(other) => worry_level * other,
+            Operation::Square => worry_level * worry_level,
+        }
+    }
 }
 
 #[cfg(test)]

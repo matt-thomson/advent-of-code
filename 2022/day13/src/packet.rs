@@ -7,7 +7,7 @@ use nom::{
     sequence::delimited, Finish, IResult,
 };
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub enum Packet {
     Number(u64),
     List(Vec<Packet>),

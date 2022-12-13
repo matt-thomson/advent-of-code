@@ -34,6 +34,39 @@ impl Problem {
             .map(|(index, _)| index + 1)
             .sum()
     }
+
+    pub fn part_two(&self) -> usize {
+        let mut packets: Vec<Packet> = self
+            .packet_pairs
+            .iter()
+            .cloned()
+            .flat_map(|(first, second)| [first, second])
+            .collect();
+
+        let first_divider = Packet::List(vec![Packet::Number(2)]);
+        let second_divider = Packet::List(vec![Packet::Number(6)]);
+
+        packets.push(first_divider.clone());
+        packets.push(second_divider.clone());
+
+        packets.sort();
+
+        let first_index = packets
+            .iter()
+            .enumerate()
+            .find(move |(_, packet)| **packet == first_divider)
+            .map(|(index, _)| index + 1)
+            .unwrap();
+
+        let second_index = packets
+            .iter()
+            .enumerate()
+            .find(move |(_, packet)| **packet == second_divider)
+            .map(|(index, _)| index + 1)
+            .unwrap();
+
+        first_index * second_index
+    }
 }
 
 #[cfg(test)]
@@ -46,5 +79,13 @@ mod tests {
         let result = problem.part_one();
 
         assert_eq!(result, 13);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt").unwrap();
+        let result = problem.part_two();
+
+        assert_eq!(result, 140);
     }
 }

@@ -61,6 +61,10 @@ impl Monkey {
 
         (worry_level, destination)
     }
+
+    pub fn starting_items(&self) -> &[u64] {
+        &self.starting_items
+    }
 }
 
 fn monkey_identifier(input: &str) -> IResult<&str, usize> {

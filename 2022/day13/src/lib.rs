@@ -27,8 +27,12 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> usize {
-        dbg!(self);
-        todo!()
+        self.packet_pairs
+            .iter()
+            .enumerate()
+            .filter(|(_, (first, second))| first < second)
+            .map(|(index, _)| index + 1)
+            .sum()
     }
 }
 

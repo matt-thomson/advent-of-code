@@ -277,6 +277,7 @@ name = "day13"
 version = "0.1.0"
 dependencies = [
  "eyre",
+ "itertools",
  "nom",
  "rstest",
 ]

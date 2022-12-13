@@ -25,7 +25,13 @@ impl Problem {
         self.solve(20, 3)
     }
 
+    pub fn part_two(&self) -> u64 {
+        self.solve(10000, 1)
+    }
+
     fn solve(&self, rounds: usize, divisor: u64) -> u64 {
+        let modulus = self.monkeys.iter().map(Monkey::divisible_test).product();
+
         let mut items: Vec<_> = self
             .monkeys
             .iter()
@@ -38,7 +44,7 @@ impl Problem {
             for i in 0..items.len() {
                 let results: Vec<_> = items[i]
                     .iter()
-                    .map(|worry_level| self.monkeys[i].inspect(*worry_level, divisor))
+                    .map(|worry_level| self.monkeys[i].inspect(*worry_level, divisor, modulus))
                     .collect();
 
                 for (worry_level, destination) in results {
@@ -67,5 +73,13 @@ mod tests {
         let result = problem.part_one();
 
         assert_eq!(result, 10605);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt").unwrap();
+        let result = problem.part_two();
+
+        assert_eq!(result, 2713310158);
     }
 }

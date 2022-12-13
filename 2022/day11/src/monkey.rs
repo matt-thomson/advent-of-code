@@ -50,8 +50,8 @@ impl Monkey {
         )(input)
     }
 
-    pub fn inspect(&self, worry_level: u64, divisor: u64) -> (u64, usize) {
-        let worry_level = self.operation.apply(worry_level) / divisor;
+    pub fn inspect(&self, worry_level: u64, divisor: u64, modulus: u64) -> (u64, usize) {
+        let worry_level = (self.operation.apply(worry_level) / divisor) % modulus;
 
         let destination = if worry_level % self.divisible_test == 0 {
             self.throw_if_true
@@ -64,6 +64,10 @@ impl Monkey {
 
     pub fn starting_items(&self) -> &[u64] {
         &self.starting_items
+    }
+
+    pub fn divisible_test(&self) -> u64 {
+        self.divisible_test
     }
 }
 

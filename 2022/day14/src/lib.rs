@@ -24,15 +24,26 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> Result<usize> {
-        let mut cave = Cave::new(&self.rocks)?;
-        let mut count = 0;
-
-        while cave.drop() {
-            count += 1;
-        }
-
-        Ok(count)
+        let cave = Cave::new(&self.rocks)?;
+        solve(cave)
     }
+
+    pub fn part_two(&self) -> Result<usize> {
+        let mut cave = Cave::new(&self.rocks)?;
+        cave.add_floor();
+
+        solve(cave)
+    }
+}
+
+fn solve(mut cave: Cave) -> Result<usize> {
+    let mut count = 0;
+
+    while cave.drop() {
+        count += 1;
+    }
+
+    Ok(count)
 }
 
 #[cfg(test)]
@@ -45,5 +56,13 @@ mod tests {
         let result = problem.part_one().unwrap();
 
         assert_eq!(result, 24);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt").unwrap();
+        let result = problem.part_two().unwrap();
+
+        assert_eq!(result, 93);
     }
 }

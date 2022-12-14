@@ -1,3 +1,4 @@
+mod cave;
 mod rock;
 mod segment;
 
@@ -6,6 +7,7 @@ use std::path::Path;
 
 use eyre::Result;
 
+use crate::cave::Cave;
 use crate::rock::Rock;
 
 #[derive(Debug)]
@@ -21,8 +23,10 @@ impl Problem {
         Ok(Self { rocks: rocks? })
     }
 
-    pub fn part_one(&self) -> usize {
-        dbg!(self);
+    pub fn part_one(&self) -> Result<usize> {
+        let cave = Cave::new(&self.rocks)?;
+        dbg!(cave);
+
         todo!();
     }
 }

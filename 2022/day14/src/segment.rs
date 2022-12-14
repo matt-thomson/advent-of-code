@@ -7,6 +7,10 @@ pub struct Segment {
 }
 
 impl Segment {
+    pub fn new(from: (usize, usize), to: (usize, usize)) -> Self {
+        Self { from, to }
+    }
+
     pub fn points(&self) -> Result<Vec<(usize, usize)>> {
         let (from_x, from_y) = self.from;
         let (to_x, to_y) = self.to;

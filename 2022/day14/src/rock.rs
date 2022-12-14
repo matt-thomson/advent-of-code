@@ -2,12 +2,13 @@ use std::str::FromStr;
 
 use eyre::{eyre, ErrReport};
 use nom::{
-    bytes::complete::tag, multi::separated_list1, sequence::separated_pair, Finish, IResult,
+    bytes::complete::tag, combinator::map, multi::separated_list1, sequence::separated_pair,
+    Finish, IResult,
 };
 
 #[derive(Debug)]
 pub struct Rock {
-    points: Vec<(u16, u16)>,
+    points: Vec<(usize, usize)>,
 }
 
 impl FromStr for Rock {
@@ -22,10 +23,10 @@ impl FromStr for Rock {
     }
 }
 
-fn parse_pair(input: &str) -> IResult<&str, (u16, u16)> {
+fn parse_pair(input: &str) -> IResult<&str, (usize, usize)> {
     separated_pair(
-        nom::character::complete::u16,
+        map(nom::character::complete::u16, usize::from),
         tag(","),
-        nom::character::complete::u16,
+        map(nom::character::complete::u16, usize::from),
     )(input)
 }

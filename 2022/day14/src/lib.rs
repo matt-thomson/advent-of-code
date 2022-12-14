@@ -1,4 +1,5 @@
 mod rock;
+mod segment;
 
 use std::fs;
 use std::path::Path;

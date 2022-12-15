@@ -17,7 +17,7 @@ pub struct Problem {
 impl Problem {
     pub fn new<P: AsRef<Path>>(path: P) -> Result<Self> {
         let input = fs::read_to_string(path)?;
-        let readings: Result<Vec<Reading>> = input.lines().map(|line| line.parse()).collect();
+        let readings: Result<Vec<Reading>> = input.lines().map(str::parse).collect();
 
         Ok(Self {
             readings: readings?,
@@ -65,7 +65,7 @@ impl Problem {
                     }
                 }
 
-                return Ok(x * 4000000 + y);
+                return Ok(x * 4_000_000 + y);
             }
         }
 
@@ -90,6 +90,6 @@ mod tests {
         let problem = Problem::new("example.txt").unwrap();
         let result = problem.part_two(20).unwrap();
 
-        assert_eq!(result, 56000011);
+        assert_eq!(result, 56_000_011);
     }
 }

@@ -80,6 +80,6 @@ mod tests {
         let problem = Problem::new("example.txt").unwrap();
         let result = problem.part_two();
 
-        assert_eq!(result, 2713310158);
+        assert_eq!(result, 2_713_310_158);
     }
 }

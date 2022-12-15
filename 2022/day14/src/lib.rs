@@ -18,32 +18,32 @@ pub struct Problem {
 impl Problem {
     pub fn new<P: AsRef<Path>>(path: P) -> Result<Self> {
         let input = fs::read_to_string(path)?;
-        let rocks: Result<Vec<Rock>> = input.lines().map(|line| line.parse()).collect();
+        let rocks: Result<Vec<Rock>> = input.lines().map(str::parse).collect();
 
         Ok(Self { rocks: rocks? })
     }
 
     pub fn part_one(&self) -> Result<usize> {
         let cave = Cave::new(&self.rocks)?;
-        solve(cave)
+        Ok(solve(cave))
     }
 
     pub fn part_two(&self) -> Result<usize> {
         let mut cave = Cave::new(&self.rocks)?;
         cave.add_floor();
 
-        solve(cave)
+        Ok(solve(cave))
     }
 }
 
-fn solve(mut cave: Cave) -> Result<usize> {
+fn solve(mut cave: Cave) -> usize {
     let mut count = 0;
 
     while cave.drop() {
         count += 1;
     }
 
-    Ok(count)
+    count
 }
 
 #[cfg(test)]

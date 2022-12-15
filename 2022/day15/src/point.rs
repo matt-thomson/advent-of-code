@@ -16,4 +16,8 @@ impl Point {
     pub fn y(&self) -> i64 {
         self.y
     }
+
+    pub fn distance(&self, other: &Self) -> u64 {
+        self.x.abs_diff(other.x) + self.y.abs_diff(other.y)
+    }
 }

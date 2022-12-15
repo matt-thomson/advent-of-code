@@ -12,6 +12,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let problem = Problem::new(path)?;
 
     println!("Part one: {}", problem.part_one(2000000));
+    println!("Part one: {}", problem.part_two(4000000));
 
     Ok(())
 }

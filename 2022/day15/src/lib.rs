@@ -47,6 +47,34 @@ impl Problem {
 
         clear.len()
     }
+
+    pub fn part_two(&self, maximum: i64) -> i64 {
+        (0..=maximum)
+            .find_map(|y| self.check_row(y, maximum))
+            .unwrap()
+    }
+
+    fn check_row(&self, y: i64, maximum: i64) -> Option<i64> {
+        let mut x = 0;
+
+        'outer: while x < maximum {
+            for reading in &self.readings {
+                let beacon_distance = reading.sensor().distance(reading.beacon());
+                let row_distance = reading.sensor().y().abs_diff(y);
+
+                if let Some(range) = beacon_distance.checked_sub(row_distance) {
+                    if x.abs_diff(reading.sensor().x()) <= range {
+                        x = reading.sensor().x() + (range as i64) + 1;
+                        continue 'outer;
+                    }
+                }
+            }
+
+            return Some(x * 4000000 + y);
+        }
+
+        None
+    }
 }
 
 #[cfg(test)]
@@ -59,5 +87,13 @@ mod tests {
         let result = problem.part_one(10);
 
         assert_eq!(result, 26);
+    }
+
+    #[test]
+    fn test_part_two() {
+        let problem = Problem::new("example.txt").unwrap();
+        let result = problem.part_two(20);
+
+        assert_eq!(result, 56000011);
     }
 }

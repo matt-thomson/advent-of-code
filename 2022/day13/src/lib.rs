@@ -51,19 +51,8 @@ impl Problem {
 
         packets.sort();
 
-        let first_index = packets
-            .iter()
-            .enumerate()
-            .find(move |(_, packet)| **packet == first_divider)
-            .map(|(index, _)| index + 1)
-            .unwrap();
-
-        let second_index = packets
-            .iter()
-            .enumerate()
-            .find(move |(_, packet)| **packet == second_divider)
-            .map(|(index, _)| index + 1)
-            .unwrap();
+        let first_index = packets.binary_search(&first_divider).unwrap() + 1;
+        let second_index = packets.binary_search(&second_divider).unwrap() + 1;
 
         first_index * second_index
     }

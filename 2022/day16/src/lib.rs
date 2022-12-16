@@ -51,7 +51,7 @@ impl Problem {
                 .ok_or_else(|| eyre!("couldn't find valve {}", state.position()))?;
 
             for tunnel in valve.tunnels() {
-                let next_state = state.step(tunnel);
+                let next_state = state.step(*tunnel);
                 states
                     .entry(next_state)
                     .and_modify(|next_pressure: &mut u64| {

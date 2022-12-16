@@ -3,18 +3,19 @@ use std::str::FromStr;
 use eyre::{eyre, ErrReport};
 use nom::{
     branch::alt,
-    bytes::complete::{tag, take},
+    bytes::complete::tag,
+    character::complete::anychar,
     combinator::map,
     multi::separated_list1,
-    sequence::{preceded, tuple},
+    sequence::{pair, preceded, tuple},
     Finish, IResult,
 };
 
 #[derive(Debug)]
 pub struct Valve {
-    name: String,
+    name: u64,
     flow_rate: u64,
-    tunnels: Vec<String>,
+    tunnels: Vec<u64>,
 }
 
 impl FromStr for Valve {
@@ -46,20 +47,22 @@ impl FromStr for Valve {
     }
 }
 
-fn parse_name(input: &str) -> IResult<&str, String> {
-    map(take(2usize), ToString::to_string)(input)
+fn parse_name(input: &str) -> IResult<&str, u64> {
+    map(pair(anychar, anychar), |(first, second)| {
+        (first as u64 - 'A' as u64) * 26 + (second as u64 - 'A' as u64)
+    })(input)
 }
 
 impl Valve {
-    pub fn name(&self) -> &str {
-        &self.name
+    pub fn name(&self) -> u64 {
+        self.name
     }
 
     pub fn flow_rate(&self) -> u64 {
         self.flow_rate
     }
 
-    pub fn tunnels(&self) -> &[String] {
+    pub fn tunnels(&self) -> &[u64] {
         &self.tunnels
     }
 }
@@ -73,8 +76,8 @@ mod tests {
         let input = "Valve BB has flow rate=13; tunnels lead to valves CC, AA";
         let valve: Valve = input.parse().unwrap();
 
-        assert_eq!(valve.name, "BB");
+        assert_eq!(valve.name, 27);
         assert_eq!(valve.flow_rate, 13);
-        assert_eq!(valve.tunnels, ["CC", "AA"]);
+        assert_eq!(valve.tunnels, [54, 0]);
     }
 }

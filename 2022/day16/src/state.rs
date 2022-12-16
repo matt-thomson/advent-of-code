@@ -1,33 +1,24 @@
-#[derive(Debug, Hash, PartialEq, Eq)]
+#[derive(Default, Debug, Hash, PartialEq, Eq)]
 pub struct State {
-    position: String,
-    opened: Vec<String>,
-}
-
-impl Default for State {
-    fn default() -> Self {
-        Self {
-            position: "AA".to_string(),
-            opened: Vec::default(),
-        }
-    }
+    position: u64,
+    opened: Vec<u64>,
 }
 
 impl State {
-    pub fn position(&self) -> &str {
-        &self.position
+    pub fn position(&self) -> u64 {
+        self.position
     }
 
-    pub fn step(&self, position: &str) -> Self {
+    pub fn step(&self, position: u64) -> Self {
         Self {
-            position: position.to_string(),
+            position,
             opened: self.opened.clone(),
         }
     }
 
-    pub fn open(&self, valve: &str) -> Self {
+    pub fn open(&self, valve: u64) -> Self {
         let mut opened = self.opened.clone();
-        opened.push(valve.to_string());
+        opened.push(valve);
         opened.sort_unstable();
 
         Self {
@@ -36,7 +27,7 @@ impl State {
         }
     }
 
-    pub fn is_open(&self, name: &str) -> bool {
-        self.opened.contains(&name.to_string())
+    pub fn is_open(&self, name: u64) -> bool {
+        self.opened.contains(&name)
     }
 }

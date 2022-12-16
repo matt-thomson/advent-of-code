@@ -22,7 +22,7 @@ impl State {
         opened.sort_unstable();
 
         Self {
-            position: self.position.clone(),
+            position: self.position,
             opened,
         }
     }

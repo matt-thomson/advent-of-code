@@ -36,12 +36,9 @@ impl Problem {
                 .max()
                 .ok_or_else(|| eyre!("no states remaining"))?;
 
-            states = states
-                .into_iter()
-                .filter(|(_, flow_rate)| {
-                    flow_rate + time_remaining * total_flow_rate >= max_flow_rate
-                })
-                .collect();
+            states.retain(|(_, flow_rate)| {
+                flow_rate + time_remaining * total_flow_rate >= max_flow_rate
+            });
         }
 
         states

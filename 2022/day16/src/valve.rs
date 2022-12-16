@@ -47,7 +47,21 @@ impl FromStr for Valve {
 }
 
 fn parse_name(input: &str) -> IResult<&str, String> {
-    map(take(2usize), |name: &str| name.to_string())(input)
+    map(take(2usize), ToString::to_string)(input)
+}
+
+impl Valve {
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    pub fn flow_rate(&self) -> u64 {
+        self.flow_rate
+    }
+
+    pub fn tunnels(&self) -> &[String] {
+        &self.tunnels
+    }
 }
 
 #[cfg(test)]

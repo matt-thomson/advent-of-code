@@ -23,10 +23,25 @@ impl Problem {
     }
 
     pub fn part_one(&self) -> Result<u64> {
+        let total_flow_rate: u64 = self.valves.iter().map(|x| x.flow_rate()).sum();
         let mut states = vec![(State::default(), 0)];
 
         for time in 1..=30 {
-            states = self.advance_time(&states, 30 - time)?;
+            let time_remaining = 30 - time;
+            states = self.advance_time(&states, time_remaining)?;
+
+            let max_flow_rate = *states
+                .iter()
+                .map(|(_, flow_rate)| flow_rate)
+                .max()
+                .ok_or_else(|| eyre!("no states remaining"))?;
+
+            states = states
+                .into_iter()
+                .filter(|(_, flow_rate)| {
+                    flow_rate + time_remaining * total_flow_rate >= max_flow_rate
+                })
+                .collect();
         }
 
         states
